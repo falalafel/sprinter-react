@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles/index';
+import {withStyles} from '@material-ui/core/styles/index';
 import CssBaseline from '@material-ui/core/CssBaseline/index';
 import Drawer from '@material-ui/core/Drawer/index';
 import AppBar from '@material-ui/core/AppBar/index';
@@ -14,10 +14,11 @@ import Badge from '@material-ui/core/Badge/index';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
+import {mainListItems, secondaryListItems} from './listItems';
 import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
-import SimpleSelect from "./ProjectList";
+import SimpleSelect from "./SimpleSelect";
+import api from "../api";
 
 const drawerWidth = 240;
 
@@ -99,9 +100,10 @@ const styles = theme => ({
 });
 
 let id = 0;
+
 function createData(name, calories, fat, carbs, protein) {
     id += 1;
-    return { id, name, calories, fat, carbs, protein };
+    return {id, name, calories, fat, carbs, protein};
 }
 
 const data = [
@@ -116,28 +118,50 @@ const data = [
 class Dashboard extends React.Component {
     state = {
         open: true,
-        tableData: data
+        tableData: data,
+        activeProjectId: null,
+        activeSprintId: null
     };
 
     handleDrawerOpen = () => {
-        this.setState({ open: true });
+        this.setState({open: true});
     };
 
     handleDrawerClose = () => {
-        this.setState({ open: false });
+        this.setState({open: false});
+    };
+
+    projectNameExtract = (item) => {
+        return item.name
+    };
+
+    projectIdExtract = (item) => {
+        return item.projectId
+    };
+
+    sprintIdExtract = (item) => {
+        return item.sprintId
+    };
+
+    setActiveProject = (projectId) => {
+        this.setState({activeProjectId: projectId})
+    };
+
+    setActiveSprint = (sprintId) => {
+        this.setState({activeSprintId: sprintId})
     };
 
     forProjectFirstSprintDeclarations = (data) => {
-      this.setState({ tableData: data })
+        this.setState({tableData: data})
     };
 
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
 
         return (
             <div className={classes.root}>
-                <CssBaseline />
+                <CssBaseline/>
                 <AppBar
                     position="absolute"
                     className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
@@ -152,7 +176,7 @@ class Dashboard extends React.Component {
                                 this.state.open && classes.menuButtonHidden,
                             )}
                         >
-                            <MenuIcon />
+                            <MenuIcon/>
                         </IconButton>
                         <Typography
                             component="h1"
@@ -165,7 +189,7 @@ class Dashboard extends React.Component {
                         </Typography>
                         <IconButton color="inherit">
                             <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
+                                <NotificationsIcon/>
                             </Badge>
                         </IconButton>
                     </Toolbar>
@@ -179,20 +203,32 @@ class Dashboard extends React.Component {
                 >
                     <div className={classes.toolbarIcon}>
                         <IconButton onClick={this.handleDrawerClose}>
-                            <ChevronLeftIcon />
+                            <ChevronLeftIcon/>
                         </IconButton>
                     </div>
-                    <Divider />
+                    <Divider/>
                     <List>{mainListItems}</List>
-                    <Divider />
+                    <Divider/>
                     <List>{secondaryListItems}</List>
                 </Drawer>
                 <main className={classes.content}>
-                    <div className={classes.appBarSpacer} />
+                    <div className={classes.appBarSpacer}/>
                     <Typography variant="h5" gutterBottom component="h2">
                         Projects Overview
                     </Typography>
-                        <SimpleSelect />
+                    <SimpleSelect
+                        label={'project'}
+                        handleLabel={this.projectNameExtract}
+                        handleId={this.projectIdExtract}
+                        activeObjCallback={this.setActiveProject}
+                        endpoint={api.endpoints.getProjects()}/>
+                    <SimpleSelect
+                        label={'sprint'}
+                        handleLabel={this.sprintIdExtract}
+                        handleId={this.sprintIdExtract}
+                        activeObj={this.state.activeProjectId}
+                        activeObjCallback={this.setActiveSprint}
+                        endpoint={api.endpoints.getSprints(this.state.activeProjectId)}/>
                     <Typography variant="h4" gutterBottom component="h2">
                         Reported hours
                     </Typography>
@@ -203,7 +239,7 @@ class Dashboard extends React.Component {
                         Factor chart
                     </Typography>
                     <Typography component="div" className={classes.chartContainer}>
-                        <SimpleLineChart />
+                        <SimpleLineChart/>
                     </Typography>
                 </main>
             </div>
