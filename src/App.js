@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Route, Switch} from 'react-router-dom'
-import Dashboard from './pages/dashboard/Dashboard'
-import Home from './pages/home/Home';
+import Dashboard from './components/Dashboard'
+import Home from './components/Home';
 
 class App extends Component {
   render() {

@@ -1,22 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
+import { withStyles } from '@material-ui/core/styles/index';
+import CssBaseline from '@material-ui/core/CssBaseline/index';
+import Drawer from '@material-ui/core/Drawer/index';
+import AppBar from '@material-ui/core/AppBar/index';
+import Toolbar from '@material-ui/core/Toolbar/index';
+import List from '@material-ui/core/List/index';
+import Typography from '@material-ui/core/Typography/index';
+import Divider from '@material-ui/core/Divider/index';
+import IconButton from '@material-ui/core/IconButton/index';
+import Badge from '@material-ui/core/Badge/index';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
+import SimpleSelect from "./ProjectList";
 
 const drawerWidth = 240;
 
@@ -97,9 +98,25 @@ const styles = theme => ({
     },
 });
 
+let id = 0;
+function createData(name, calories, fat, carbs, protein) {
+    id += 1;
+    return { id, name, calories, fat, carbs, protein };
+}
+
+const data = [
+    createData('John Marina', 159, 6.0, 24, 4.0),
+    createData('Ann Monte', 237, 9.0, 37, 4.3),
+    createData('Sam Eclair', 262, 16.0, 24, 6.0),
+    createData('Woo Mee', 305, 3.7, 67, 4.3),
+    createData('Abid Amin', 356, 16.0, 49, 3.9),
+];
+
+
 class Dashboard extends React.Component {
     state = {
         open: true,
+        tableData: data
     };
 
     handleDrawerOpen = () => {
@@ -109,6 +126,11 @@ class Dashboard extends React.Component {
     handleDrawerClose = () => {
         this.setState({ open: false });
     };
+
+    forProjectFirstSprintDeclarations = (data) => {
+      this.setState({ tableData: data })
+    };
+
 
     render() {
         const { classes } = this.props;
@@ -167,11 +189,15 @@ class Dashboard extends React.Component {
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer} />
+                    <Typography variant="h5" gutterBottom component="h2">
+                        Projects Overview
+                    </Typography>
+                        <SimpleSelect />
                     <Typography variant="h4" gutterBottom component="h2">
                         Reported hours
                     </Typography>
                     <div className={classes.tableContainer}>
-                        <SimpleTable />
+                        <SimpleTable data={this.state.tableData}/>
                     </div>
                     <Typography variant="h4" gutterBottom component="h2">
                         Factor chart

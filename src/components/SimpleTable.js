@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles/index';
+import Table from '@material-ui/core/Table/index';
+import TableBody from '@material-ui/core/TableBody/index';
+import TableCell from '@material-ui/core/TableCell/index';
+import TableHead from '@material-ui/core/TableHead/index';
+import TableRow from '@material-ui/core/TableRow/index';
+import Paper from '@material-ui/core/Paper/index';
 
 const styles = {
     root: {
@@ -18,32 +18,17 @@ const styles = {
     },
 };
 
-let id = 0;
-function createData(name, calories, fat, carbs, protein) {
-    id += 1;
-    return { id, name, calories, fat, carbs, protein };
-}
-
-const data = [
-    createData('John Marina', 159, 6.0, 24, 4.0),
-    createData('Ann Monte', 237, 9.0, 37, 4.3),
-    createData('Sam Eclair', 262, 16.0, 24, 6.0),
-    createData('Woo Mee', 305, 3.7, 67, 4.3),
-    createData('Abid Amin', 356, 16.0, 49, 3.9),
-];
-
 function SimpleTable(props) {
-    const { classes } = props;
+    const { classes, data } = props;
 
     return (
         <Paper className={classes.root}>
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell align="right">Reported hours</TableCell>
+                        <TableCell>UserId</TableCell>
+                        <TableCell align="right">Reported available hours</TableCell>
                         <TableCell align="right">Left work</TableCell>
-                        <TableCell align="right">Available</TableCell>
                         <TableCell align="right">Comment</TableCell>
                     </TableRow>
                 </TableHead>
@@ -55,7 +40,6 @@ function SimpleTable(props) {
                             </TableCell>
                             <TableCell align="right">{n.calories}</TableCell>
                             <TableCell align="right">{n.fat}</TableCell>
-                            <TableCell align="right">{n.carbs}</TableCell>
                             <TableCell align="right">{n.protein}</TableCell>
                         </TableRow>
                     ))}
@@ -67,6 +51,7 @@ function SimpleTable(props) {
 
 SimpleTable.propTypes = {
     classes: PropTypes.object.isRequired,
+    data: PropTypes.array,
 };
 
 export default withStyles(styles)(SimpleTable);
