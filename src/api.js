@@ -1,6 +1,6 @@
 const host = 'localhost';
 const port = 8080;
-const url = endpoint => `http://${host}:${port}/${endpoint}`;
+const url = endpoint => `http://sprinter-api.herokuapp.com/${endpoint}`;
 
 export default {
     fetch: (path, action) => {
