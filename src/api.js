@@ -3,10 +3,11 @@ const port = 8080;
 const url = endpoint => `http://${host}:${port}/${endpoint}`;
 
 export default {
-    fetch: (path, action) => fetch(path).then(res => res.json())
+    fetch: (path, action) => {
+        fetch(path).then(res => res.json())
         .then(response => {
-            action(response);
-        }),
+            action(response)
+        })},
     endpoints: {
         getProjects: () => ({
             path: url('project'),
