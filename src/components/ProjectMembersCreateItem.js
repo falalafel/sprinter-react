@@ -20,11 +20,11 @@ const styles = {
 class ProjectMembresCreateItem extends React.Component {
 
     render() {
-        const { classes, userName, mail, isScrumMaster, toggleScrumMasterCallback, removeMemberCallback } = this.props;
+        const { classes, userName, userID, mail, isScrumMaster, toggleScrumMasterCallback, removeMemberCallback } = this.props;
     
         return (
             <div className={classes.root} >
-                <ListItem>
+                <ListItem >
                     <ListItemText
                         primary={ userName }
                         secondary={ mail }
@@ -33,7 +33,7 @@ class ProjectMembresCreateItem extends React.Component {
                         
                         <IconButton 
                             aria-label='Toggle scrum master'
-                            onClick={ () => toggleScrumMasterCallback() }
+                            onClick={ (userID) => toggleScrumMasterCallback(userID) }
                             title= { (isScrumMaster ? 'disable' : 'enable') + ' scrum master permissions' }
                         >
                             <PeopleIcon color={ isScrumMaster ? 'inherit' : 'disabled' } />
@@ -56,6 +56,7 @@ class ProjectMembresCreateItem extends React.Component {
 
 ProjectMembresCreateItem.propTypes = {
     userName: PropTypes.string,
+    userID: PropTypes.number,
     mail: PropTypes.string,
     isScrumMaster: PropTypes.bool,
     toggleScrumMasterCallback: PropTypes.func,
