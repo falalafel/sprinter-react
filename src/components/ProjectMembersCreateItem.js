@@ -2,75 +2,64 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton/index';
 import {withStyles} from '@material-ui/core/styles/index';
-import FilledInput from '@material-ui/core/FilledInput/index';
-import InputLabel from '@material-ui/core/InputLabel/index';
-import MenuItem from '@material-ui/core/MenuItem/index';
-import FormControl from '@material-ui/core/FormControl/index';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import PeopleIcon from '@material-ui/icons/People';
+import ClearIcon from '@material-ui/icons/Clear';
+
 
 const styles = {
     root: {
-        display: 'flex',
+        display: 'flexGrow',
         flexWrap: 'wrap',
-    },
-    userBar: {
-        padding: '5px 9px',
-        minWidth: 120,
-        background: 'black',
-        color: 'white',
-        float: 'left',
-        textAlign: 'center'
-    },
-    removeButton: {
-        background: '#ff0000',
-        color: '#fff',
-        border: 'none',
-        padding: '5px 9px',
-        borderRadius: '50%',
-        cursor: 'pointer',
-        float: 'left'
-    },
+    }
 };
 
 
 class ProjectMembresCreateItem extends React.Component {
-    state = {
-        isScrumMaster: false
-    };
-
-    getToggleButtonStyle = () => {
-        return {
-            background: this.state.isScrumMaster ? 'green' : 'red',
-            color: '#fff',
-            border: 'none',
-            padding: '5px 9px',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            float: 'left'
-        }
-    }
-
-    handleToggleScrumMaster = (event) => {
-        this.setState({ isScrumMaster: !this.state.isScrumMaster });
-    };
 
     render() {
-        const {userName, removeCallback} = this.props;
+        const { classes, userName, mail, isScrumMaster, toggleScrumMasterCallback, removeMemberCallback } = this.props;
+    
         return (
-            <div style={ styles.root }>
-                <div style={ styles.userBar }>
-                    { this.props.userName }
-                </div>
-                <IconButton style={ styles.removeButton }>X</IconButton>
-                <IconButton style={ this.getToggleButtonStyle() } onClick={ () => this.handleToggleScrumMaster() }>S</IconButton>
-            </div>
-        )
-    }
+            <div className={classes.root} >
+                <ListItem>
+                    <ListItemText
+                        primary={ userName }
+                        secondary={ mail }
+                    />
+                    <ListItemSecondaryAction>
+                        
+                        <IconButton 
+                            aria-label='Toggle scrum master'
+                            onClick={ () => toggleScrumMasterCallback() }
+                            title= { (isScrumMaster ? 'disable' : 'enable') + ' scrum master permissions' }
+                        >
+                            <PeopleIcon color={ isScrumMaster ? 'inherit' : 'disabled' } />
+                        </IconButton>
 
+                        <IconButton
+                            aria-label='Remove'
+                            onClick={ () => removeMemberCallback() }
+                            title='remove member'
+                        >
+                            <ClearIcon fontSize='small' />
+                        </IconButton>
+
+                    </ListItemSecondaryAction>   
+                </ListItem>
+            </div>
+        );
+    }
 }
 
 ProjectMembresCreateItem.propTypes = {
     userName: PropTypes.string,
-    removeCallback: PropTypes.func,
+    mail: PropTypes.string,
+    isScrumMaster: PropTypes.bool,
+    toggleScrumMasterCallback: PropTypes.func,
+    removeMemberCallback: PropTypes.func,
 };
 
-export default (ProjectMembresCreateItem);
+export default withStyles(styles)(ProjectMembresCreateItem);
