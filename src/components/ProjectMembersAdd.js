@@ -17,21 +17,6 @@ import {Button, ListItemText} from "@material-ui/core";
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import AddIcon from '@material-ui/icons/Add';
 
-
-// const tempUsers = [
-//     { userId: 1, name: "John Snow", mail: "dick@company.com" },
-//     { userId: 2, name: "Nicky Snow", mail: "dicky@company.com" },
-//     { userId: 3, name: "Harold Snow", mail: "dickold@company.com" },
-//     { userId: 4, name: "Mike Snow", mail: "dicke@company.com" },
-//     { userId: 5, name: "Stephen Snow", mail: "dickhen@company.com" },
-//     { userId: 6, name: "Caroline Snow", mail: "dickline@company.com" },
-//     { userId: 7, name: "Joshua Snow", mail: "dickua@company.com" },
-//     { userId: 8, name: "Mary-Anne Snow", mail: "dick-anne@company.com" },
-// ].map(user => ({
-//     ...user,
-//     value: user.userId,
-// }));
-
 const styles = theme => ({
     addUserButton: {
         marginTop: theme.spacing.unit,
