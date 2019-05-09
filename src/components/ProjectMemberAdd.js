@@ -13,31 +13,23 @@ import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
-import {Button} from "@material-ui/core";
+import {Button, ListItemText} from "@material-ui/core";
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import AddIcon from '@material-ui/icons/Add';
 
 
-const suggestions = [
-    { label: 'Afghanistan' },
-    { label: 'Aland Islands' },
-    { label: 'Albania' },
-    { label: 'Algeria' },
-    { label: 'American Samoa' },
-    { label: 'Andorra' },
-    { label: 'Angola' },
-    { label: 'Anguilla' },
-    { label: 'Antarctica' },
-    { label: 'Antigua and Barbuda' },
-    { label: 'Argentina' },
-    { label: 'Armenia' },
-    { label: 'Aruba' },
-    { label: 'Australia' },
-    { label: 'Austria' },
-    { label: 'Azerbaijan' },
-].map(suggestion => ({
-    value: suggestion.label,
-    label: suggestion.label + " (XDD@asd)",
+const tempUsers = [
+    { userId: 1, name: "John Snow", mail: "dick@company.com" },
+    { userId: 2, name: "Nicky Snow", mail: "dicky@company.com" },
+    { userId: 3, name: "Harold Snow", mail: "dickold@company.com" },
+    { userId: 4, name: "Mike Snow", mail: "dicke@company.com" },
+    { userId: 5, name: "Stephen Snow", mail: "dickhen@company.com" },
+    { userId: 6, name: "Caroline Snow", mail: "dickline@company.com" },
+    { userId: 7, name: "Joshua Snow", mail: "dickua@company.com" },
+    { userId: 8, name: "Mary-Anne Snow", mail: "dick-anne@company.com" },
+].map(user => ({
+    ...user,
+    value: user.userId,
 }));
 
 const styles = theme => ({
@@ -111,7 +103,7 @@ function NoOptionsMessage(props) {
 }
 
 function inputComponent({ inputRef, ...props }) {
-    return <div ref={inputRef} {...props} />;
+    return <div style={{height: 50}} ref={inputRef} {...props} />;
 }
 
 function Control(props) {
@@ -140,7 +132,7 @@ function Option(props) {
             component="div"
             className={props.selectProps.classes.option}
             style={{
-                fontWeight: props.isSelected ? 650 : 400,
+                background: props.isSelected ? 'primary' : 'secondary',
             }}
             {...props.innerProps}
         >
@@ -150,6 +142,30 @@ function Option(props) {
 
     );
 }
+
+const getOptionLabel = (option) => {
+    return option.name.trim() + ' ' + option.mail.trim();
+}
+
+const formatOptionLabel = option => (
+    <div className="option" >
+        <ListItemText primary={option.name} secondary={option.mail} />
+    </div>
+);
+
+const customFilterOption = (option, rawInput) => {
+    const words = rawInput.toUpperCase().split(' ');
+
+    const labelWords = option.label.toUpperCase().split(' ')
+    const mail = labelWords[labelWords.length - 1]
+    const name = labelWords.slice(0, -1).join(' ')
+
+    return words.reduce(
+        (acc, cur) => acc && (name.includes(cur) || mail.includes(cur)),
+        true,
+    );
+};
+
 
 function Placeholder(props) {
     return (
@@ -165,9 +181,7 @@ function Placeholder(props) {
 
 function SingleValue(props) {
     return (
-        <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
-            {props.children}
-        </Typography>
+        <div>{props.children}</div>
     );
 }
 
@@ -190,20 +204,21 @@ const components = {
 
 class ProjectMemberAdd extends React.Component {
     state = {
-        selectedUserID: null,
+        selectedUser: null,
     };
 
     addUserButtonAction = selectedUserID => {
-        this.props.addMemberCallback( this.state.selectedUserID );
+        this.props.addMemberCallback( this.state.selectedUser );
         this.setState({
-            selectedUserID: null,
+            selectedUser: null,
         });
     }
 
     handleChange = selected => {
         this.setState({
-            selectedUserID: selected,
+            selectedUser: selected,
         });
+        console.log(selected)
     };
 
     render() {
@@ -214,16 +229,19 @@ class ProjectMemberAdd extends React.Component {
                 <NoSsr>
                     <Select
                         classes={classes}
-                        options={suggestions}
+                        options={tempUsers}
                         components={components}
-                        value={this.state.selectedUserID}
-                        onChange={(value) => this.handleChange(value)}
+                        value={this.state.selectedUser}
+                        onChange={this.handleChange}
                         placeholder="Add new project member"
                         isClearable
+                        formatOptionLabel={formatOptionLabel}
+                        getOptionLabel={getOptionLabel}
+                        filterOption={customFilterOption}
                     />
                 </NoSsr>
                 <Button
-                    disabled={ !this.state.selectedUserID}
+                    disabled={ !this.state.selectedUser }
                     onClick={ () => this.addUserButtonAction( this.state.selectedUserID ) }
                     color="primary"
                     variant="contained"
