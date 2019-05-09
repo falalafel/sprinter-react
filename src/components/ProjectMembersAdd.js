@@ -2,19 +2,15 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import Select from 'react-select';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
-import CancelIcon from '@material-ui/icons/Cancel';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
 import {Button, ListItemText} from "@material-ui/core";
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
@@ -194,8 +190,6 @@ class ProjectMembersAdd extends React.Component {
 
     addUserButtonAction = () => {
         const { selectedUser } = this.state;
-
-        console.log(selectedUser)
         this.props.addMemberCallback( selectedUser.userId );
         this.setState({
             selectedUser: null,
@@ -206,7 +200,6 @@ class ProjectMembersAdd extends React.Component {
         this.setState({
             selectedUser: selectedUser,
         });
-        console.log("selected: ", selectedUser.userId)
     };
 
     render() {

@@ -31,14 +31,16 @@ class ProjectMembersCreate extends React.Component {
             mail,
             isScrumMaster
         }) => (
-            <ProjectMembersCreateItem
-                userName={name}
-                userId={userId}
-                mail={mail}
-                isScrumMaster={isScrumMaster}
-                toggleScrumMasterCallback={(userId) => this.props.toggleScrumMasterCallback(userId)}
-                removeMemberCallback={(userId) => this.props.removeMemberCallback(userId)}
-            />
+            <div key={userId}>
+                <ProjectMembersCreateItem
+                    userName={name}
+                    userId={userId}
+                    mail={mail}
+                    isScrumMaster={isScrumMaster}
+                    toggleScrumMasterCallback={(userId) => this.props.toggleScrumMasterCallback(userId)}
+                    removeMemberCallback={(userId) => this.props.removeMemberCallback(userId)}
+                />
+            </div>
         ))
 
         return (

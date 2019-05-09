@@ -19,7 +19,6 @@ class AddProject extends React.Component {
 
     componentDidMount() {
         this.fetchAndSetUsers()
-        console.log(this.state.usersList)
     }
 
     fetchAndSetUsers() {
@@ -31,8 +30,6 @@ class AddProject extends React.Component {
     }
 
     toggleScrumMaster = (userId) => {
-        console.log("toggle: ", userId)
-
         this.setState({members: this.state.members.map(
             user => user.userId === userId ? ({
                 ...user,
@@ -42,16 +39,12 @@ class AddProject extends React.Component {
     }
 
     removeMember = (userId) => {
-        console.log("remove: ", userId)
-
         this.setState({members: this.state.members.filter(
-            user => userId != user.userId
+            user => userId !== user.userId
         )})
     }
 
     addMember = (userId) => {
-        console.log("add: ", userId)
-
         const newMember = this.state.usersList.find(u => u.userId === userId)
         this.setState({members: [newMember].concat(this.state.members)})
     }
