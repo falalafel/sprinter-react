@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles/index';
 import ProjectMembersCreate from "./ProjectMembersCreate";
 import api from "../api";
+import ProjectConfig from "./ProjectConfig";
 
 const styles = {
     root: {},
@@ -52,6 +53,7 @@ class AddProject extends React.Component {
     };
 
     render() {
+
         const {classes} = this.props;
         const {members, usersList} = this.state;
 
@@ -69,6 +71,8 @@ class AddProject extends React.Component {
                     toggleScrumMasterCallback={(userId) => this.toggleScrumMaster(userId)}
                     removeMemberCallback={(userId) => this.removeMember(userId)}
                 />
+
+                <ProjectConfig/>
 
             </div>
         );
