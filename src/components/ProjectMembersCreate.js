@@ -1,7 +1,7 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles/index';
 import ProjectMembersCreateItem from "./ProjectMembersCreateItem";
-import ProjectMemberAdd from "./ProjectMemberAdd";
+import ProjectMembersAdd from "./ProjectMembersAdd";
 import PropTypes from "prop-types";
 import List from '@material-ui/core/List/index';
 import PeopleIcon from "@material-ui/core/SvgIcon/SvgIcon";
@@ -47,7 +47,7 @@ class TestComponent extends React.Component {
         return (
             <div className={classes.root}>
 
-                <ProjectMemberAdd addMemberCallback={(userID) => addMemberCallback(userID)}/>
+                <ProjectMembersAdd addMemberCallback={(userID) => addMemberCallback(userID)}/>
 
                 <div className={classes.dudududuuupa}>
                 </div>
