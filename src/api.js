@@ -18,6 +18,9 @@ export default {
         }),
         getDeclarations: (projectId, sprintId) => ({
             path: url(`project/${projectId}/sprint/${sprintId}/declaration`)
+        }),
+        getUsers: () => ({
+            path: url(`user`)
         })
     }
 }
