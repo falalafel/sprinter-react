@@ -12,70 +12,19 @@ const styles = theme => ({
     textField: {
         width: 400,
     },
-    addProjectButton: {
-        marginTop: theme.spacing.unit * 3,
-        width: 400,
-        height: 50,
-    }
 });
-
-function getCurrentDate() {
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
-
-    const result = yyyy + '-' + mm + '-' + dd;
-    return result
-}
 
 class ProjectConfig extends React.Component {
 
-    state = {
-        projectName: '',
-        startingDate: getCurrentDate(),
-        sprintLength: 7,
-        startingFactor: 2.5,
-        isValid: false,
-    };
-
-    validate() {
-        const {projectName, startingDate, sprintLength, startingFactor} = this.state;
-
-        const valid = (
-            (projectName.trim() !== '') &&
-            (startingDate.trim() !== '') &&
-            (Number.isInteger(sprintLength)) &&
-            (!isNaN(startingFactor))
-        )
-
-        this.setState({isValid: valid})
-    }
-
-    handleProjectNameChange = (event) => {
-        this.setState({projectName: event.currentTarget.value.trim()});
-        console.log(this.state.projectName);
-        this.validate()
-    }
-
-    handleStartingDateChange = (event) => {
-        this.setState({startingDate: event.target.value})
-        this.validate()
-    }
-
-    handleSprintLengthChange = (event) => {
-        this.setState({sprintLength: Math.max(1, Math.min(parseInt(event.target.value), 366))})
-        this.validate()
-    }
-
-    handleStartingFactorChange = (event) => {
-        this.setState({startingFactor: Math.max(0.1, Math.min(parseFloat(event.target.value), 10))})
-        this.validate()
-    }
-
     render() {
         const {classes} = this.props;
-        const {projectName, startingDate, sprintLength, startingFactor, isValid} = this.state;
+        const {
+            projectName, startingDate, sprintLength, startingFactor,
+            projectNameChangeCallback,
+            startingDateChangeCallback,
+            sprintLengthChangeCallback,
+            startingFactorChangeCallback,
+        } = this.props;
 
         return (
             <div className={classes.root}>
@@ -85,20 +34,18 @@ class ProjectConfig extends React.Component {
                         className={classes.textField}
                         margin="normal"
                         error={projectName === ''}
-                        value={projectName}
-                        onChange={(event) => this.handleProjectNameChange(event)}
+                        onChange={projectNameChangeCallback}
                     />
                     <br/>
                     <TextField
                         label="Starting date"
                         type="date"
                         InputLabelProps={{shrink: true}}
-                        // defaultValue={startingDate}
                         className={classes.textField}
                         margin="normal"
                         error={startingDate === ''}
                         value={startingDate}
-                        onChange={this.handleStartingDateChange}
+                        onChange={startingDateChangeCallback}
                     />
                     <br/>
                     <TextField
@@ -107,10 +54,9 @@ class ProjectConfig extends React.Component {
                         inputProps={{min: '1', max: '366', step: "1"}}
                         className={classes.textField}
                         margin="normal"
-                        // defaultValue="7"
                         error={!Number.isInteger(sprintLength)}
-                        value={isNaN(sprintLength) ? null : sprintLength}
-                        onChange={this.handleSprintLengthChange}
+                        value={isNaN(sprintLength) ? '' : sprintLength}
+                        onChange={sprintLengthChangeCallback}
                     />
                     <br/>
                     <TextField
@@ -119,23 +65,13 @@ class ProjectConfig extends React.Component {
                         inputProps={{min: '0.1', max: '10', step: "0.1"}}
                         className={classes.textField}
                         margin="normal"
-                        // defaultValue="2.5"
                         error={!startingFactor}
-                        value={isNaN(startingFactor) ? null : startingFactor}
-                        onChange={this.handleStartingFactorChange}
+                        value={isNaN(startingFactor) ? '' : startingFactor}
+                        onChange={startingFactorChangeCallback}
                     />
                     <br/>
 
                 </form>
-                <Button
-                    disabled={!isValid}
-                    onClick={() => this.addUserButtonAction()}
-                    color="primary"
-                    variant="contained"
-                    className={classes.addProjectButton}
-                >
-                    add project
-                </Button>
             </div>
         );
     }
@@ -143,6 +79,14 @@ class ProjectConfig extends React.Component {
 
 ProjectConfig.propTypes = {
     classes: PropTypes.object.isRequired,
+    projectName: PropTypes.string,
+    startingDate: PropTypes.string,
+    sprintLength: PropTypes.number,
+    startingFactor: PropTypes.number,
+    projectNameChangeCallback: PropTypes.func,
+    startingDateChangeCallback: PropTypes.func,
+    sprintLengthChangeCallback: PropTypes.func,
+    startingFactorChangeCallback: PropTypes.func,
 };
 
 export default withStyles(styles)(ProjectConfig);
