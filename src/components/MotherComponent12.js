@@ -8,7 +8,16 @@ import PeopleIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import {Divider} from "@material-ui/core";
 import ProjectMembersCreate from "./ProjectMembersCreate";
 
-
+const tempUsers = [
+    { userId: 1, name: "John Snow", mail: "dick@company.com" },
+    { userId: 2, name: "Nicky Snow", mail: "dicky@company.com" },
+    { userId: 3, name: "Harold Snow", mail: "dickold@company.com" },
+    { userId: 4, name: "Mike Snow", mail: "dicke@company.com" },
+    { userId: 5, name: "Stephen Snow", mail: "dickhen@company.com" },
+    { userId: 6, name: "Caroline Snow", mail: "dickline@company.com" },
+    { userId: 7, name: "Joshua Snow", mail: "dickua@company.com" },
+    { userId: 8, name: "Mary-Anne Snow", mail: "dick-anne@company.com" },
+];
 
 const styles = {
     root: {
@@ -25,111 +34,78 @@ const styles = {
     }
 };
 
-function addMember(userID) {
-    console.log("add member func");
-    console.log({userID});
-}
-
-// function toggleScramMaster(userID) {
-//
+// function addMember(userId) {
+//     console.log("add member func");
+//     console.log({userId});
 // }
 
-function removeMember(userID) {
-    console.log("remove member func")
-    console.log({userID})
-}
+// // function toggleScramMaster(userId) {
+// //
+// // }
+
+// function removeMember(userId) {
+//     console.log("remove member func")
+//     console.log({userId})
+// }
 
 class MotherComponent12 extends React.Component {
 
     state = {
-        usersList: [],
+        usersList: tempUsers,
+        members: [], // list of dicts { ...user, isScrumMaster: bool }
     };
 
 
-    toggleScramMaster = (userID) => {
-        console.log("toggle sm func")
-        console.log(userID)
-        console.log( this.state.usersList[0].mail )
+    toggleScrumMaster = (userId) => {
+        console.log("toggle ${userId}")
+
+        this.setState({members: this.state.members.map(
+            user => user.userId === userId ? ({
+                ...user,
+                isScrumMaster: !user.isScrumMaster
+            }) : user
+        )})
     }
 
-    constructor(props) {
-        super(props);
-        let array = [
-        {
-            userID: 0,
-            userName: "xdd",
-            mail: "xdd@gmail.com",
-            isScrumMaster: true,
-        },
-        {
-            userID: 1,
-            userName: "XDD",
-            mail: "dupa@gmail.com",
-            isScrumMaster: false,
-        },
-        {
-            userID: 2,
-            userName: "xdd",
-            mail: "dupa@gmail.com",
-            isScrumMaster: true,
-        },
-        {
-            userID: 3,
-            userName: "XDD",
-            mail: "dupa@gmail.com",
-            isScrumMaster: false,
-        },
-        {
-            userID: 4,
-            userName: "xdd",
-            mail: "dupa@gmail.com",
-            isScrumMaster: true,
-        },
-        {
-            userID: 5,
-            userName: "XDD",
-            mail: "xdd@gmail.com",
-            isScrumMaster: false,
-        },
-        {
-            userID: 6,
-            userName: "XDD",
-            mail: "dupa@gmail.com",
-            isScrumMaster: true,
-        },
-        {
-            userID: 7,
-            userName: "XDD",
-            mail: "dupa@gmail.com",
-            isScrumMaster: false,
-        },
-        {
-            userID: 8,
-            userName: "xdd",
-            mail: "dupa@gmail.com",
-            isScrumMaster: true,
-        },
-        {
-            userID: 9,
-            userName: "XDD",
-            mail: "xdd@gmail.com",
-            isScrumMaster: false,
-        },
-        ];
+    removeMember = (userId) => {
+        console.log("remove ${userId}")
 
-        this.state = {usersList: array};
+        this.setState({members: this.state.members.filter(
+            user => userId != user.userId
+        )})
     }
+
+    addMember = (userId) => {
+        console.log("add ", userId)
+
+        const newMember = this.state.usersList.find(u => u.userId === userId)
+        this.setState({members: [newMember].concat(this.state.members)})
+    }
+
+    // constructor(props) {
+    //     super(props)
+    //     console.log("chuj ");
+    //     console.log(this.state.members);
+    //     console.log(this.props);
+    // }
 
     render() {
         const { classes } = this.props;
+        const { members, usersList } = this.state;
+
+        const notMembers = usersList.filter(user => (
+           !members.map(m => m.userId).includes(user.userId)
+        ))
+
         return (
             <div className={classes.root}>
 
                 <ProjectMembersCreate
-                    usersList={this.state.usersList}
-                    addMemberCallback={ (userID) => addMember(userID) }
-                    toggleScramMasterCallback={ (userID) => this.toggleScramMaster(userID) }
-                    removeMemberCallback={ (userID) => removeMember(userID) }
+                    members={members}
+                    notMembers={notMembers}
+                    addMemberCallback={ (userId) => this.addMember(userId) }
+                    toggleScrumMasterCallback={ (userId) => this.toggleScrumMaster(userId) }
+                    removeMemberCallback={ (userId) => this.removeMember(userId) }
                 />
 
             </div>
@@ -137,8 +113,9 @@ class MotherComponent12 extends React.Component {
     }
 }
 
-MotherComponent12.propTypes = {
-    projectID: PropTypes.number,
-};
+// MotherComponent12.propTypes = {
+//     user
+
+// };
 
 export default withStyles(styles)(MotherComponent12);

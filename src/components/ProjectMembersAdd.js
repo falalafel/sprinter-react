@@ -18,19 +18,19 @@ import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import AddIcon from '@material-ui/icons/Add';
 
 
-const tempUsers = [
-    { userId: 1, name: "John Snow", mail: "dick@company.com" },
-    { userId: 2, name: "Nicky Snow", mail: "dicky@company.com" },
-    { userId: 3, name: "Harold Snow", mail: "dickold@company.com" },
-    { userId: 4, name: "Mike Snow", mail: "dicke@company.com" },
-    { userId: 5, name: "Stephen Snow", mail: "dickhen@company.com" },
-    { userId: 6, name: "Caroline Snow", mail: "dickline@company.com" },
-    { userId: 7, name: "Joshua Snow", mail: "dickua@company.com" },
-    { userId: 8, name: "Mary-Anne Snow", mail: "dick-anne@company.com" },
-].map(user => ({
-    ...user,
-    value: user.userId,
-}));
+// const tempUsers = [
+//     { userId: 1, name: "John Snow", mail: "dick@company.com" },
+//     { userId: 2, name: "Nicky Snow", mail: "dicky@company.com" },
+//     { userId: 3, name: "Harold Snow", mail: "dickold@company.com" },
+//     { userId: 4, name: "Mike Snow", mail: "dicke@company.com" },
+//     { userId: 5, name: "Stephen Snow", mail: "dickhen@company.com" },
+//     { userId: 6, name: "Caroline Snow", mail: "dickline@company.com" },
+//     { userId: 7, name: "Joshua Snow", mail: "dickua@company.com" },
+//     { userId: 8, name: "Mary-Anne Snow", mail: "dick-anne@company.com" },
+// ].map(user => ({
+//     ...user,
+//     value: user.userId,
+// }));
 
 const styles = theme => ({
     addUserButton: {
@@ -207,29 +207,32 @@ class ProjectMembersAdd extends React.Component {
         selectedUser: null,
     };
 
-    addUserButtonAction = selectedUserID => {
-        this.props.addMemberCallback( this.state.selectedUser );
+    addUserButtonAction = () => {
+        const { selectedUser } = this.state;
+
+        console.log(selectedUser)
+        this.props.addMemberCallback( selectedUser.userId );
         this.setState({
             selectedUser: null,
         });
     }
 
-    handleChange = selected => {
+    handleChange = selectedUser => {
         this.setState({
-            selectedUser: selected,
+            selectedUser: selectedUser,
         });
-        console.log(selected)
+        console.log("selected: ", selectedUser.userId)
     };
 
     render() {
-        const { classes, theme, addMemberCallback } = this.props;
+        const { classes, users } = this.props;
 
         return (
             <div className={classes.root}>
                 <NoSsr>
                     <Select
                         classes={classes}
-                        options={tempUsers}
+                        options={users}
                         components={components}
                         value={this.state.selectedUser}
                         onChange={this.handleChange}
@@ -242,7 +245,7 @@ class ProjectMembersAdd extends React.Component {
                 </NoSsr>
                 <Button
                     disabled={ !this.state.selectedUser }
-                    onClick={ () => this.addUserButtonAction( this.state.selectedUserID ) }
+                    onClick={ () => this.addUserButtonAction() }
                     color="primary"
                     variant="contained"
                     className={classes.addUserButton}
@@ -259,6 +262,13 @@ ProjectMembersAdd.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     addMemberCallback: PropTypes.func,
+    users: PropTypes.arrayOf(
+        PropTypes.shape({
+            userId: PropTypes.number,
+            userName: PropTypes.string,
+            mail: PropTypes.string,
+        })
+    ).isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(ProjectMembersAdd);

@@ -24,23 +24,23 @@ const styles = {
 
 class ProjectMembersCreate extends React.Component {
 
-    renderProjectMembersList = (usersList, toggleScramMasterCallback, removeMemberCallback) => {
-        let array = [];
-        for(let i = 0; i < usersList.length; i++) {
-            array.push(
-                <ProjectMembersCreateItem
-                    userName={usersList[i].userName}
-                    userID={usersList[i].userID}
-                    mail={usersList[i].mail}
-                    isScrumMaster={usersList[i].isScrumMaster}
-                    toggleScrumMasterCallback={(userID) => toggleScramMasterCallback(userID)}
-                    removeMemberCallback={(userID) => removeMemberCallback(userID)}
-                />
-            );
-            if(i !== usersList.length - 1) {
-                array.push(<Divider light/>)
-            }
-        }
+    renderProjectMembersList = () => {
+
+        const array = this.props.members.map(({
+            name,
+            userId,
+            mail,
+            isScrumMaster
+        }) => (
+            <ProjectMembersCreateItem
+                userName={name}
+                userId={userId}
+                mail={mail}
+                isScrumMaster={isScrumMaster}
+                toggleScrumMasterCallback={(userId) => this.props.toggleScrumMasterCallback(userId)}
+                removeMemberCallback={(userId) => this.props.removeMemberCallback(userId)}
+            />
+        ))
 
         return (
             <List className={this.props.classes.membersList}>
@@ -50,27 +50,20 @@ class ProjectMembersCreate extends React.Component {
     }
 
     render() {
-        const { classes, usersList, addMemberCallback, toggleScramMasterCallback, removeMemberCallback} = this.props;
+        const { classes, members, notMembers, addMemberCallback, toggleScrumMasterCallback, removeMemberCallback} = this.props;
+        console.log(members)
         return (
             <div className={classes.root}>
 
-                <ProjectMembersAdd addMemberCallback={(userID) => addMemberCallback(userID)}/>
+                <ProjectMembersAdd users={notMembers} addMemberCallback={(userId) => addMemberCallback(userId)}/>
 
                 <div className={classes.dziurka}>
                 </div>
 
-                {/*<Divider/>*/}
-                {/*<List className={classes.membersList}>*/}
-                {/*    <ProjectMembersCreateItem userName="mateuszek" userID={123} mail="XDD@QWE" isScrumMaster={ true } toggleScrumMasterCallback={(userID) => toggleScramMaster(userID)}/>*/}
-                {/*    <Divider light/>*/}
-                {/*    <ProjectMembersCreateItem userName="mateuszek" userID={123} mail="XDD@QWE" isScrumMaster={ true } toggleScrumMasterCallback={(userID) => toggleScramMaster(userID)}/>*/}
-                {/*    <Divider light/>*/}
-                {/*</List>*/}
-                {/*<Divider/>*/}
 
                 <Divider/>
-                { this.renderProjectMembersList(usersList, toggleScramMasterCallback, removeMemberCallback) }
-                <Divider/>
+                { this.renderProjectMembersList(members, toggleScrumMasterCallback, removeMemberCallback) }
+                { members.length > 0 ? <Divider/> : null }
 
             </div>
         );
@@ -78,16 +71,23 @@ class ProjectMembersCreate extends React.Component {
 }
 
 ProjectMembersCreate.propTypes = {
-    usersList: PropTypes.arrayOf(
+    members: PropTypes.arrayOf(
         PropTypes.shape({
-            userID: PropTypes.number,
+            userId: PropTypes.number,
             userName: PropTypes.string,
             mail: PropTypes.string,
             isScrumMaster: PropTypes.bool,
         })
     ).isRequired,
+    notMembers: PropTypes.arrayOf(
+        PropTypes.shape({
+            userId: PropTypes.number,
+            userName: PropTypes.string,
+            mail: PropTypes.string,
+        })
+    ).isRequired,
     addMemberCallback: PropTypes.func.isRequired,
-    toggleScramMasterCallback: PropTypes.func.isRequired,
+    toggleScrumMasterCallback: PropTypes.func.isRequired,
     removeMemberCallback: PropTypes.func.isRequired,
 };
 
