@@ -4,9 +4,20 @@ import {withStyles} from '@material-ui/core/styles/index';
 import ProjectMembersCreate from "./ProjectMembersCreate";
 import api from "../api";
 import ProjectConfig from "./ProjectConfig";
+import {Grid} from "@material-ui/core";
 
 const styles = {
-    root: {},
+    root: {
+        marginTop: 40,
+    },
+    projectConfig: {
+        float: 'right',
+        marginRight: '3%',
+    },
+    projectMembers: {
+        float: 'left',
+        marginLeft: '3%',
+    },
 };
 
 class AddProject extends React.Component {
@@ -63,16 +74,24 @@ class AddProject extends React.Component {
 
         return (
             <div className={classes.root}>
-
-                <ProjectMembersCreate
-                    members={members}
-                    notMembers={notMembers}
-                    addMemberCallback={(userId) => this.addMember(userId)}
-                    toggleScrumMasterCallback={(userId) => this.toggleScrumMaster(userId)}
-                    removeMemberCallback={(userId) => this.removeMember(userId)}
-                />
-
-                <ProjectConfig/>
+                <Grid container spacing={24}>
+                    <Grid item xs={6}>
+                        <div className={classes.projectConfig}>
+                            <ProjectConfig/>
+                        </div>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <div className={classes.projectMembers}>
+                            <ProjectMembersCreate
+                                members={members}
+                                notMembers={notMembers}
+                                addMemberCallback={(userId) => this.addMember(userId)}
+                                toggleScrumMasterCallback={(userId) => this.toggleScrumMaster(userId)}
+                                removeMemberCallback={(userId) => this.removeMember(userId)}
+                            />
+                        </div>
+                    </Grid>
+                </Grid>
 
             </div>
         );

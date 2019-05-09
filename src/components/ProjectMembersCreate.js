@@ -9,12 +9,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 const styles = {
     root: {
-        maxWidth: 500,
-        minWidth: 500,
+        width: 500,
         padding: 15,
     },
     membersList: {
-        maxHeight: 400,
+        maxHeight: 500,
         overflow: 'auto',
     },
     divider: {
