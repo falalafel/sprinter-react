@@ -4,7 +4,6 @@ import ProjectMembersCreateItem from "./ProjectMembersCreateItem";
 import ProjectMembersAdd from "./ProjectMembersAdd";
 import PropTypes from "prop-types";
 import List from '@material-ui/core/List/index';
-import PeopleIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import {Divider} from "@material-ui/core";
 
 const styles = {
@@ -17,7 +16,7 @@ const styles = {
         maxHeight: 400,
         overflow: 'auto',
     },
-    dziurka: {
+    divider: {
         marginTop: 35,
     }
 };
@@ -51,17 +50,12 @@ class ProjectMembersCreate extends React.Component {
 
     render() {
         const { classes, members, notMembers, addMemberCallback, toggleScrumMasterCallback, removeMemberCallback} = this.props;
-        console.log(members)
+
         return (
             <div className={classes.root}>
 
                 <ProjectMembersAdd users={notMembers} addMemberCallback={(userId) => addMemberCallback(userId)}/>
-
-                <div className={classes.dziurka}>
-                </div>
-
-
-                <Divider/>
+                <Divider className={classes.divider}/>
                 { this.renderProjectMembersList(members, toggleScrumMasterCallback, removeMemberCallback) }
                 { members.length > 0 ? <Divider/> : null }
 
