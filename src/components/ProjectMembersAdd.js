@@ -202,7 +202,7 @@ const components = {
     SingleValue,
 };
 
-class ProjectMemberAdd extends React.Component {
+class ProjectMembersAdd extends React.Component {
     state = {
         selectedUser: null,
     };
@@ -255,10 +255,10 @@ class ProjectMemberAdd extends React.Component {
     }
 }
 
-ProjectMemberAdd.propTypes = {
+ProjectMembersAdd.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     addMemberCallback: PropTypes.func,
 };
 
-export default withStyles(styles, { withTheme: true })(ProjectMemberAdd);
+export default withStyles(styles, { withTheme: true })(ProjectMembersAdd);

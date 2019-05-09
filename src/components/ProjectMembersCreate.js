@@ -7,8 +7,6 @@ import List from '@material-ui/core/List/index';
 import PeopleIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import {Divider} from "@material-ui/core";
 
-
-
 const styles = {
     root: {
         maxWidth: 500,
@@ -19,77 +17,78 @@ const styles = {
         maxHeight: 400,
         overflow: 'auto',
     },
-    dudududuuupa: {
+    dziurka: {
         marginTop: 35,
     }
 };
 
-function addMemberCallback(userID) {
-    console.log("udauo sie");
-    console.log({userID});
-}
+class ProjectMembersCreate extends React.Component {
 
-function toggleScramMaster(userID) {
-    console.log("toggled SM")
-    console.log({userID})
-}
+    renderProjectMembersList = (usersList, toggleScramMasterCallback, removeMemberCallback) => {
+        let array = [];
+        for(let i = 0; i < usersList.length; i++) {
+            array.push(
+                <ProjectMembersCreateItem
+                    userName={usersList[i].userName}
+                    userID={usersList[i].userID}
+                    mail={usersList[i].mail}
+                    isScrumMaster={usersList[i].isScrumMaster}
+                    toggleScrumMasterCallback={(userID) => toggleScramMasterCallback(userID)}
+                    removeMemberCallback={(userID) => removeMemberCallback(userID)}
+                />
+            );
+            if(i !== usersList.length - 1) {
+                array.push(<Divider light/>)
+            }
+        }
 
-function removeMember(userID) {
-    console.log("removed member")
-    console.log({userID})
-}
-
-class TestComponent extends React.Component {
-
+        return (
+            <List className={this.props.classes.membersList}>
+                {array}
+            </List>
+        );
+    }
 
     render() {
-        const { classes } = this.props;
+        const { classes, usersList, addMemberCallback, toggleScramMasterCallback, removeMemberCallback} = this.props;
         return (
             <div className={classes.root}>
 
                 <ProjectMembersAdd addMemberCallback={(userID) => addMemberCallback(userID)}/>
 
-                <div className={classes.dudududuuupa}>
+                <div className={classes.dziurka}>
                 </div>
 
-                <Divider/>
-                <List className={classes.membersList}>
-                    <ProjectMembersCreateItem userName="mateuszek" userID={123} mail="XDD@QWE" isScrumMaster={ true } toggleScrumMasterCallback={(userID) => toggleScramMaster(userID)}/>
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="kubusz" mail="rak@srak" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="mateuszek" mail="XDD@QWE" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="kubusz" mail="rak@srak" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="mateuszek" mail="XDD@QWE" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="kubusz" mail="rak@srak" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="mateuszek" mail="XDD@QWE" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="kubusz" mail="rak@srak" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="mateuszek" mail="XDD@QWE" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="kubusz" mail="rak@srak" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="mateuszek" mail="XDD@QWE" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="kubusz" mail="rak@srak" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="mateuszek" mail="XDD@QWE" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="kubusz" mail="rak@srak" isScrumMaster={ true } />
-                    <Divider light/>
-                    <ProjectMembersCreateItem userName="kubusz" mail="rak@srak" isScrumMaster={ true } />
-                </List>
-                <Divider/>
+                {/*<Divider/>*/}
+                {/*<List className={classes.membersList}>*/}
+                {/*    <ProjectMembersCreateItem userName="mateuszek" userID={123} mail="XDD@QWE" isScrumMaster={ true } toggleScrumMasterCallback={(userID) => toggleScramMaster(userID)}/>*/}
+                {/*    <Divider light/>*/}
+                {/*    <ProjectMembersCreateItem userName="mateuszek" userID={123} mail="XDD@QWE" isScrumMaster={ true } toggleScrumMasterCallback={(userID) => toggleScramMaster(userID)}/>*/}
+                {/*    <Divider light/>*/}
+                {/*</List>*/}
+                {/*<Divider/>*/}
 
+                <Divider/>
+                { this.renderProjectMembersList(usersList, toggleScramMasterCallback, removeMemberCallback) }
+                <Divider/>
 
             </div>
         );
     }
 }
 
-export default withStyles(styles)(TestComponent);
+ProjectMembersCreate.propTypes = {
+    usersList: PropTypes.arrayOf(
+        PropTypes.shape({
+            userID: PropTypes.number,
+            userName: PropTypes.string,
+            mail: PropTypes.string,
+            isScrumMaster: PropTypes.bool,
+        })
+    ).isRequired,
+    addMemberCallback: PropTypes.func.isRequired,
+    toggleScramMasterCallback: PropTypes.func.isRequired,
+    removeMemberCallback: PropTypes.func.isRequired,
+};
+
+export default withStyles(styles)(ProjectMembersCreate);

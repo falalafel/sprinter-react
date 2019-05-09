@@ -33,7 +33,7 @@ class ProjectMembresCreateItem extends React.Component {
                         
                         <IconButton 
                             aria-label='Toggle scrum master'
-                            onClick={ (userID) => toggleScrumMasterCallback(userID) }
+                            onClick={ () => toggleScrumMasterCallback(userID) }
                             title= { (isScrumMaster ? 'disable' : 'enable') + ' scrum master permissions' }
                         >
                             <PeopleIcon color={ isScrumMaster ? 'inherit' : 'disabled' } />
@@ -41,7 +41,7 @@ class ProjectMembresCreateItem extends React.Component {
 
                         <IconButton
                             aria-label='Remove'
-                            onClick={ () => removeMemberCallback() }
+                            onClick={ () => removeMemberCallback(userID) }
                             title='remove member'
                         >
                             <ClearIcon fontSize='small' />
