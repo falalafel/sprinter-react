@@ -4,10 +4,8 @@ import IconButton from '@material-ui/core/IconButton/index';
 import {withStyles} from '@material-ui/core/styles/index';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
 import PeopleIcon from '@material-ui/icons/People';
 import ClearIcon from '@material-ui/icons/Clear';
-
 
 const styles = {
     root: {
@@ -16,38 +14,33 @@ const styles = {
     }
 };
 
-
 class ProjectMembresCreateItem extends React.Component {
 
     render() {
-        const { classes, userName, userId, mail, isScrumMaster, toggleScrumMasterCallback, removeMemberCallback } = this.props;
-    
+        const {classes, listElem, isScrumMaster, toggleScrumMasterCallback, removeMemberCallback} = this.props;
+
         return (
-            <div className={classes.root} >
-                <ListItem >
-                    <ListItemText
-                        primary={ userName }
-                        secondary={ mail }
-                    />
+            <div className={classes.root}>
+                <ListItem>
+                    {listElem}
                     <ListItemSecondaryAction>
-                        
-                        <IconButton 
+                        <IconButton
                             aria-label='Toggle scrum master'
-                            onClick={ () => toggleScrumMasterCallback(userId) }
-                            title= { (isScrumMaster ? 'disable' : 'enable') + ' scrum master permissions' }
+                            onClick={() => toggleScrumMasterCallback()}
+                            title={(isScrumMaster ? 'disable' : 'enable') + ' scrum master permissions'}
                         >
-                            <PeopleIcon color={ isScrumMaster ? 'inherit' : 'disabled' } />
+                            <PeopleIcon color={isScrumMaster ? 'inherit' : 'disabled'}/>
                         </IconButton>
 
                         <IconButton
                             aria-label='Remove'
-                            onClick={ () => removeMemberCallback(userId) }
+                            onClick={() => removeMemberCallback()}
                             title='remove member'
                         >
-                            <ClearIcon fontSize='small' />
+                            <ClearIcon fontSize='small'/>
                         </IconButton>
 
-                    </ListItemSecondaryAction>   
+                    </ListItemSecondaryAction>
                 </ListItem>
             </div>
         );
@@ -55,9 +48,7 @@ class ProjectMembresCreateItem extends React.Component {
 }
 
 ProjectMembresCreateItem.propTypes = {
-    userName: PropTypes.string,
-    userId: PropTypes.number,
-    mail: PropTypes.string,
+    listElem: PropTypes.object,
     isScrumMaster: PropTypes.bool,
     toggleScrumMasterCallback: PropTypes.func,
     removeMemberCallback: PropTypes.func,

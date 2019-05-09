@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types, react/jsx-handler-names */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
@@ -126,7 +124,7 @@ function Option(props) {
 
 const getOptionLabel = (option) => {
     return option.name.trim() + ' ' + option.mail.trim();
-}
+};
 
 const formatOptionLabel = option => (
     <div className="option" >
@@ -137,9 +135,9 @@ const formatOptionLabel = option => (
 const customFilterOption = (option, rawInput) => {
     const words = rawInput.toUpperCase().split(' ');
 
-    const labelWords = option.label.toUpperCase().split(' ')
-    const mail = labelWords[labelWords.length - 1]
-    const name = labelWords.slice(0, -1).join(' ')
+    const labelWords = option.label.toUpperCase().split(' ');
+    const mail = labelWords[labelWords.length - 1];
+    const name = labelWords.slice(0, -1).join(' ');
 
     return words.reduce(
         (acc, cur) => acc && (name.includes(cur) || mail.includes(cur)),
@@ -194,7 +192,7 @@ class ProjectMembersAdd extends React.Component {
         this.setState({
             selectedUser: null,
         });
-    }
+    };
 
     handleChange = selectedUser => {
         this.setState({

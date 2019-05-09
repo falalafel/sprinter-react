@@ -5,6 +5,7 @@ import ProjectMembersAdd from "./ProjectMembersAdd";
 import PropTypes from "prop-types";
 import List from '@material-ui/core/List/index';
 import {Divider} from "@material-ui/core";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const styles = {
     root: {
@@ -26,40 +27,41 @@ class ProjectMembersCreate extends React.Component {
     renderProjectMembersList = () => {
 
         const array = this.props.members.map(({
-            name,
-            userId,
-            mail,
-            isScrumMaster
-        }) => (
+                                                  name,
+                                                  userId,
+                                                  mail,
+                                                  isScrumMaster
+                                              }) => (
             <div key={userId}>
                 <ProjectMembersCreateItem
-                    userName={name}
-                    userId={userId}
-                    mail={mail}
+                    listElem={<ListItemText
+                        primary={name}
+                        secondary={mail}
+                    />}
                     isScrumMaster={isScrumMaster}
-                    toggleScrumMasterCallback={(userId) => this.props.toggleScrumMasterCallback(userId)}
-                    removeMemberCallback={(userId) => this.props.removeMemberCallback(userId)}
+                    toggleScrumMasterCallback={() => this.props.toggleScrumMasterCallback(userId)}
+                    removeMemberCallback={() => this.props.removeMemberCallback(userId)}
                 />
             </div>
-        ))
+        ));
 
         return (
             <List className={this.props.classes.membersList}>
                 {array}
             </List>
         );
-    }
+    };
 
     render() {
-        const { classes, members, notMembers, addMemberCallback, toggleScrumMasterCallback, removeMemberCallback} = this.props;
+        const {classes, members, notMembers, addMemberCallback, toggleScrumMasterCallback, removeMemberCallback} = this.props;
 
         return (
             <div className={classes.root}>
 
                 <ProjectMembersAdd users={notMembers} addMemberCallback={(userId) => addMemberCallback(userId)}/>
                 <Divider className={classes.divider}/>
-                { this.renderProjectMembersList(members, toggleScrumMasterCallback, removeMemberCallback) }
-                { members.length > 0 ? <Divider/> : null }
+                {this.renderProjectMembersList(members, toggleScrumMasterCallback, removeMemberCallback)}
+                {members.length > 0 ? <Divider/> : null}
 
             </div>
         );
