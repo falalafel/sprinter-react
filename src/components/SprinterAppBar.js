@@ -38,6 +38,10 @@ class SprinterAppBar extends React.Component {
         this.setState({renderDashboard: false, renderAddProject: true})
     };
 
+    handleRedirectToDashboard = () => {
+        this.setState({renderDashboard: true, renderAddProject: false})
+    };
+
     render() {
         const {classes} = this.props;
 
@@ -57,7 +61,7 @@ class SprinterAppBar extends React.Component {
                     </Toolbar>
                 </AppBar>
                 {this.state.renderDashboard ? <Dashboard/> : null}
-                {this.state.renderAddProject ? <AddProject/> : null}
+                {this.state.renderAddProject ? <AddProject redirectToDashboardCallback={() => this.handleRedirectToDashboard()}/> : null}
             </div>
         );
     }

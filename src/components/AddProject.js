@@ -55,6 +55,51 @@ class AddProject extends React.Component {
         startingFactor: 2.5,
     };
 
+    componentDidMount() {
+        this.fetchAndSetUsers()
+    }
+
+    fetchAndSetUsers() {
+        api.fetch(
+            api.endpoints.getUsers().path,
+            (response) => {
+                this.setState({usersList: response})
+            });
+    }
+
+    postProject() {
+
+        const data = {
+            name: this.state.projectName,
+            startDate: this.state.startingDate,
+            sprintDuration: this.state.sprintLength,
+        };
+
+        return fetch('http://localhost:8080/project', {
+            method: 'POST',
+            // mode: 'no-cors',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'json'
+            }
+        })
+        .then(res => { return res;})
+        .catch(err => err);
+
+    }
+
+
+    toggleScrumMaster = (userId) => {
+        this.setState({
+            members: this.state.members.map(
+                user => user.userId === userId ? ({
+                    ...user,
+                    isScrumMaster: !user.isScrumMaster
+                }) : user
+            )
+        })
+    };
+
     validate() {
         const {projectName, startingDate, sprintLength, startingFactor} = this.state;
 
@@ -84,29 +129,6 @@ class AddProject extends React.Component {
         this.setState({startingFactor: Math.max(0.1, Math.min(parseFloat(event.target.value), 10))})
     }
 
-    componentDidMount() {
-        this.fetchAndSetUsers()
-    }
-
-    fetchAndSetUsers() {
-        api.fetch(
-            api.endpoints.getUsers().path,
-            (response) => {
-                this.setState({usersList: response})
-            });
-    }
-
-    toggleScrumMaster = (userId) => {
-        this.setState({
-            members: this.state.members.map(
-                user => user.userId === userId ? ({
-                    ...user,
-                    isScrumMaster: !user.isScrumMaster
-                }) : user
-            )
-        })
-    };
-
     removeMember = (userId) => {
         this.setState({
             members: this.state.members.filter(
@@ -116,12 +138,17 @@ class AddProject extends React.Component {
     };
 
     addMember = (userId) => {
-        const newMember = this.state.usersList.find(u => u.userId === userId);
+        const user = this.state.usersList.find(u => u.userId === userId);
+        const newMember = ({...user, isScrumMaster: false});
         this.setState({members: [newMember].concat(this.state.members)})
     };
 
     handleAddProjectButton = () => {
         console.log("TODO") // TODO: post new project and redirect to it's page
+
+        // console.log(this.postProject());
+
+        this.props.redirectToDashboardCallback();
     }
 
     render() {
@@ -193,6 +220,7 @@ class AddProject extends React.Component {
 
 AddProject.propTypes = {
     classes: PropTypes.object.isRequired,
+    redirectToDashboardCallback: PropTypes.func,
 };
 
 export default withStyles(styles)(AddProject);
