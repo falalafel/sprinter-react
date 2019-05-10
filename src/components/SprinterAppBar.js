@@ -17,9 +17,11 @@ const styles = {
     grow: {
         flexGrow: 1,
     },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
+    core: {
+        marginTop: 65,
+    },
+    appBar: {
+        height: 65,
     },
 };
 
@@ -47,11 +49,8 @@ class SprinterAppBar extends React.Component {
 
         return (
             <div className={classes.root}>
-                <AppBar position="static">
+                <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                            <MenuIcon/>
-                        </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             Sprinter
                         </Typography>
@@ -60,8 +59,10 @@ class SprinterAppBar extends React.Component {
                         <Button color="inherit">Calendar</Button>
                     </Toolbar>
                 </AppBar>
-                {this.state.renderDashboard ? <Dashboard/> : null}
-                {this.state.renderAddProject ? <AddProject redirectToDashboardCallback={() => this.handleRedirectToDashboard()}/> : null}
+                <div className={classes.core}>
+                    {this.state.renderDashboard ? <Dashboard/> : null}
+                    {this.state.renderAddProject ? <AddProject redirectToDashboardCallback={() => this.handleRedirectToDashboard()}/> : null}
+                </div>
             </div>
         );
     }

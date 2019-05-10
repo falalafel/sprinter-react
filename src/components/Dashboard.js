@@ -11,6 +11,7 @@ import styles from "./Dashboard.styles";
 import {Button} from "@material-ui/core";
 import DeclareHours from "./DeclareHours";
 
+
 function declarationListItem(declaration) {
     return {
         id: declaration.userId,
@@ -106,41 +107,42 @@ class Dashboard extends React.Component {
 
         return (
              !this.state.isDeclareHours ?
-                    <div className={classes.root}>
-                <CssBaseline/>
-                <main className={classes.content}>
-                    <div className={classes.appBarSpacer}/>
-                    <Typography variant="h5" gutterBottom component="h2">
-                        Projects Overview
-                    </Typography>
-                    <SimpleSelect
-                        label={'project'}
-                        itemListCallback={this.setActiveProject}
-                        itemList={this.state.projects.map(item => projectListItem(item))}/>
-                    <Typography variant="h5" gutterBottom component="h2">
-                        Sprints Overview
-                    </Typography>
-                    <SimpleSelect
-                        label={'sprint'}
-                        itemListCallback={this.setActiveSprint}
-                        itemList={this.state.sprints.map(item => sprintListItem(item))}/>
-                    <Button variant="contained" color="primary" onClick={this.setDeclareHoursMode}>
-                        Declare Hours
-                    </Button>
-                    <Typography variant="h4" gutterBottom component="h2">
-                        Reported hours
-                    </Typography>
-                    <div className={classes.tableContainer}>
-                        <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                <div className={classes.root}>
+                    <CssBaseline/>
+                    <div className={classes.content}>
+                        <div className={classes.appBarSpacer}/>
+                        <Typography variant="h5" gutterBottom component="h2">
+                            Projects Overview
+                        </Typography>
+                        <SimpleSelect
+                            label={'project'}
+                            itemListCallback={this.setActiveProject}
+                            itemList={this.state.projects.map(item => projectListItem(item))}/>
+                        <Typography variant="h5" gutterBottom component="h2">
+                            Sprints Overview
+                        </Typography>
+                        <SimpleSelect
+                            label={'sprint'}
+                            itemListCallback={this.setActiveSprint}
+                            itemList={this.state.sprints.map(item => sprintListItem(item))}/>
+                        <Button variant="contained" color="primary" onClick={this.setDeclareHoursMode}>
+                            Declare Hours
+                        </Button>
+                        <Typography variant="h4" gutterBottom component="h2">
+                            Reported hours
+                        </Typography>
+                        <div className={classes.tableContainer}>
+                            <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                        </div>
+                        <Typography variant="h4" gutterBottom component="h2">
+                            Factor chart
+                        </Typography>
+                        <Typography component="div" className={classes.chartContainer}>
+                            <SimpleLineChart/>
+                        </Typography>
                     </div>
-                    <Typography variant="h4" gutterBottom component="h2">
-                        Factor chart
-                    </Typography>
-                    <Typography component="div" className={classes.chartContainer}>
-                        <SimpleLineChart/>
-                    </Typography>
-                </main>
-            </div> : <DeclareHours sprintId={this.state.activeSprintId}
+                </div>
+            : <DeclareHours sprintId={this.state.activeSprintId}
                                    projectName={this.state.activeProjectId}
                                    closeDeclareHours={this.closeDeclareHoursMode}
                                    declareCallback={this.declareCallback}/>
