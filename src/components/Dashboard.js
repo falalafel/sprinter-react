@@ -8,13 +8,17 @@ import SimpleTable from './SimpleTable';
 import SimpleSelect from "./SimpleSelect";
 import api from "../api";
 import styles from "./Dashboard.styles";
+import {Button} from "@material-ui/core";
+import DeclareHours from "./DeclareHours";
 
 function declarationListItem(declaration) {
-    return {id: declaration.userId,
+    return {
+        id: declaration.userId,
         name: declaration.userId,
         calories: declaration.hoursAvailable,
         fat: declaration.workNeeded,
-        protein: declaration.comment};
+        protein: declaration.comment
+    };
 }
 
 function projectListItem(project) {
@@ -34,11 +38,12 @@ class Dashboard extends React.Component {
         projects: [],
         sprints: [],
         declarations: [],
+        isDeclareHours: false,
     };
 
     fetchAndSetProjects() {
         api.fetch(
-            api.endpoints.getProjects().path,
+            api.endpoints.getProjects(),
             (response) => {
                 this.setState({projects: response})
             });
@@ -46,7 +51,7 @@ class Dashboard extends React.Component {
 
     fetchAndSetSprint() {
         api.fetch(
-            api.endpoints.getSprints(this.state.activeProjectId).path,
+            api.endpoints.getSprints(this.state.activeProjectId),
             (response) => {
                 this.setState({sprints: response})
             });
@@ -54,11 +59,19 @@ class Dashboard extends React.Component {
 
     fetchAndSetDeclarations() {
         api.fetch(
-            api.endpoints.getDeclarations(this.state.activeProjectId, this.state.activeSprintId).path,
+            api.endpoints.getDeclarations(this.state.activeProjectId, this.state.activeSprintId),
             (response) => {
                 this.setState({declarations: response})
             });
     }
+
+    declareCallback = (data) => {
+        api.fetch(
+            api.endpoints.declareHours(this.state.activeProjectId, this.state.activeSprintId, 100, data),
+            () => {
+                this.closeDeclareHoursMode()
+            })
+    };
 
     setActiveProject = (projectId) => {
         this.setState({activeProjectId: projectId})
@@ -68,6 +81,14 @@ class Dashboard extends React.Component {
         this.setState({activeSprintId: sprintId})
     };
 
+    setDeclareHoursMode = () => {
+        this.setState({isDeclareHours: true})
+    };
+
+    closeDeclareHoursMode = () => {
+        this.setState({isDeclareHours: false})
+    };
+
     componentDidMount() {
         this.fetchAndSetProjects()
     }
@@ -75,7 +96,7 @@ class Dashboard extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.activeProjectId !== prevState.activeProjectId) {
             this.fetchAndSetSprint()
-        } else if(this.state.activeSprintId !== prevState.activeSprintId) {
+        } else if (this.state.activeSprintId !== prevState.activeSprintId) {
             this.fetchAndSetDeclarations()
         }
     }
@@ -84,7 +105,8 @@ class Dashboard extends React.Component {
         const {classes} = this.props;
 
         return (
-            <div className={classes.root}>
+             !this.state.isDeclareHours ?
+                    <div className={classes.root}>
                 <CssBaseline/>
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer}/>
@@ -102,6 +124,9 @@ class Dashboard extends React.Component {
                         label={'sprint'}
                         itemListCallback={this.setActiveSprint}
                         itemList={this.state.sprints.map(item => sprintListItem(item))}/>
+                    <Button variant="contained" color="primary" onClick={this.setDeclareHoursMode}>
+                        Declare Hours
+                    </Button>
                     <Typography variant="h4" gutterBottom component="h2">
                         Reported hours
                     </Typography>
@@ -115,7 +140,10 @@ class Dashboard extends React.Component {
                         <SimpleLineChart/>
                     </Typography>
                 </main>
-            </div>
+            </div> : <DeclareHours sprintId={this.state.activeSprintId}
+                                   projectName={this.state.activeProjectId}
+                                   closeDeclareHours={this.closeDeclareHoursMode}
+                                   declareCallback={this.declareCallback}/>
         );
     }
 }
