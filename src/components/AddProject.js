@@ -61,7 +61,7 @@ class AddProject extends React.Component {
 
     fetchAndSetUsers() {
         api.fetch(
-            api.endpoints.getUsers().path,
+            api.endpoints.getUsers(),
             (response) => {
                 this.setState({usersList: response})
             });
