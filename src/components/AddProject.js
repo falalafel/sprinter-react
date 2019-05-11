@@ -28,7 +28,10 @@ const styles = (theme) => ({
         marginTop: theme.spacing.unit * 3,
         width: 400,
         height: 50,
-    }
+    },
+    close: {
+        padding: theme.spacing.unit / 2,
+    },
 });
 
 function getCurrentDate() {
@@ -37,8 +40,7 @@ function getCurrentDate() {
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
 
-    const result = yyyy + '-' + mm + '-' + dd;
-    return result
+    return yyyy + '-' + mm + '-' + dd
 }
 
 class AddProject extends React.Component {
@@ -47,7 +49,6 @@ class AddProject extends React.Component {
         // users list component
         usersList: [],
         members: [],
-
         // project configuration component
         projectName: '',
         startingDate: getCurrentDate(),
@@ -128,7 +129,7 @@ class AddProject extends React.Component {
 
         api.fetch(
             api.endpoints.createProject(data),
-            (response) => {
+            () => {
                 this.props.redirectToDashboardCallback();
             });
     };
@@ -194,7 +195,6 @@ class AddProject extends React.Component {
                         </div>
                     </Grid>
                 </Grid>
-
             </div>
         );
     }

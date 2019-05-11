@@ -11,6 +11,8 @@ const styles = theme => ({
     main: {
         width: 'auto',
         display: 'block', // Fix IE 11 issue.
+        marginTop: '5%',
+        marginBottom: '5%',
         marginLeft: theme.spacing.unit * 3,
         marginRight: theme.spacing.unit * 3,
         [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
@@ -32,6 +34,9 @@ const styles = theme => ({
     textField: {
         width: '100%',
     },
+    button: {
+        marginTop: theme.spacing.unit * 4,
+    }
 });
 
 class DeclareHours extends React.Component {
@@ -42,12 +47,15 @@ class DeclareHours extends React.Component {
         comment: "",
     };
 
+    componentDidMount() {
+        this.props.buttonDisableCallback()
+    }
+
     render() {
         const {classes, projectName, sprintId, closeDeclareHours, declareCallback} = this.props;
 
         return (
             <main className={classes.main}>
-                <Button variant="contained" color="primary" onClick={closeDeclareHours}>Close</Button>
                 <CssBaseline/>
                 <Paper className={classes.paper}>
                     <form className={classes.container} noValidate>
@@ -96,6 +104,8 @@ class DeclareHours extends React.Component {
                                 workNeeded: this.state.workNeeded,
                                 comment: this.state.comment})}>Declare Hours</Button>
                 </Paper>
+                <Button variant="contained" color="primary" className={classes.button}
+                        onClick={closeDeclareHours}>Close</Button>
             </main>
         );
     }
@@ -108,6 +118,7 @@ DeclareHours.propTypes = {
     sprintId: PropTypes.number,
     closeDeclareHours: PropTypes.func,
     declareCallback: PropTypes.func.isRequired,
+    buttonDisableCallback: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(DeclareHours);

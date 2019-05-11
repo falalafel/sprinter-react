@@ -11,7 +11,6 @@ import styles from "./Dashboard.styles";
 import {Button} from "@material-ui/core";
 import DeclareHours from "./DeclareHours";
 
-
 function declarationListItem(declaration) {
     return {
         id: declaration.userId,
@@ -33,13 +32,13 @@ function sprintListItem(sprint) {
 
 class Dashboard extends React.Component {
     state = {
-        open: true,
         activeProjectId: null,
         activeSprintId: null,
         projects: [],
         sprints: [],
         declarations: [],
         isDeclareHours: false,
+        validDeclareButton: false
     };
 
     fetchAndSetProjects() {
@@ -87,20 +86,28 @@ class Dashboard extends React.Component {
     };
 
     closeDeclareHoursMode = () => {
-        this.setState({isDeclareHours: false})
+        this.setState({isDeclareHours: false});
+        this.setState({activeSprintId: null});
+        this.setState({activeProjectId: null});
     };
 
     componentDidMount() {
         this.fetchAndSetProjects()
+
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.activeProjectId !== prevState.activeProjectId) {
+        if (this.state.activeProjectId !== prevState.activeProjectId && this.state.activeProjectId !== null) {
             this.fetchAndSetSprint()
-        } else if (this.state.activeSprintId !== prevState.activeSprintId) {
-            this.fetchAndSetDeclarations()
+        } else if (this.state.activeSprintId !== prevState.activeSprintId && this.state.activeSprintId !== null) {
+            this.fetchAndSetDeclarations();
+            this.setState({validDeclareButton: true})
         }
     }
+
+    disableDeclareButton = () => {
+        this.setState({validDeclareButton: false});
+    };
 
     render() {
         const {classes} = this.props;
@@ -125,7 +132,8 @@ class Dashboard extends React.Component {
                             label={'sprint'}
                             itemListCallback={this.setActiveSprint}
                             itemList={this.state.sprints.map(item => sprintListItem(item))}/>
-                        <Button variant="contained" color="primary" onClick={this.setDeclareHoursMode}>
+                        <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
+                                onClick={this.setDeclareHoursMode}>
                             Declare Hours
                         </Button>
                         <Typography variant="h4" gutterBottom component="h2">
@@ -145,7 +153,8 @@ class Dashboard extends React.Component {
                 : <DeclareHours sprintId={this.state.activeSprintId}
                                 projectName={this.state.activeProjectId}
                                 closeDeclareHours={this.closeDeclareHoursMode}
-                                declareCallback={this.declareCallback}/>
+                                declareCallback={this.declareCallback}
+                                buttonDisableCallback={this.disableDeclareButton}/>
         );
     }
 }

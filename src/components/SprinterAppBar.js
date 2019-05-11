@@ -7,6 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Dashboard from "./Dashboard";
 import AddProject from "./AddProject";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = {
     root: {
@@ -26,6 +29,7 @@ const styles = {
 class SprinterAppBar extends React.Component {
 
     state = {
+        open: false,
         renderDashboard: true,
         renderAddProject: false,
     };
@@ -39,7 +43,16 @@ class SprinterAppBar extends React.Component {
     };
 
     handleRedirectToDashboard = () => {
+        this.setState({ open: true });
         this.setState({renderDashboard: true, renderAddProject: false})
+    };
+
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ open: false });
     };
 
     render() {
@@ -60,8 +73,32 @@ class SprinterAppBar extends React.Component {
                 <div className={classes.core}>
                     {this.state.renderDashboard ? <Dashboard/> : null}
                     {this.state.renderAddProject ?
-                        <AddProject redirectToDashboardCallback={() => this.handleRedirectToDashboard()}/> : null}
+                        <AddProject redirectToDashboardCallback={this.handleRedirectToDashboard}/> : null}
                 </div>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.open}
+                    autoHideDuration={5000}
+                    onClose={this.handleClose}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Project has been created</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className={classes.close}
+                            onClick={this.handleClose}
+                        >
+                            <CloseIcon/>
+                        </IconButton>,
+                    ]}
+                />
             </div>
         );
     }
