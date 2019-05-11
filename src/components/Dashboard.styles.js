@@ -1,8 +1,8 @@
-
 const drawerWidth = 240;
 
 const styles = theme => ({
     root: {
+        marginTop: 60,
         display: 'flex',
     },
     toolbar: {
@@ -64,8 +64,6 @@ const styles = theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
-        height: '100vh',
-        overflow: 'auto',
     },
     chartContainer: {
         marginLeft: -22,

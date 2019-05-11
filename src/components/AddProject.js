@@ -9,20 +9,20 @@ import Button from "@material-ui/core/Button";
 
 const styles = (theme) => ({
     root: {
-        marginTop: 40,
+        marginTop: 60,
     },
     title: {
         float: 'center',
         textAlign: 'center',
-        padding: 20
+        padding: 40
     },
     projectConfig: {
         float: 'right',
-        marginRight: '3%',
+        marginRight: '4%',
     },
     projectMembers: {
         float: 'left',
-        marginLeft: '3%',
+        marginLeft: '4%',
     },
     addProjectButton: {
         marginTop: theme.spacing.unit * 3,
@@ -150,7 +150,7 @@ class AddProject extends React.Component {
 
         return (
             <div className={classes.root}>
-                <Grid container spacing={24} justify='center'>
+                <Grid container spacing={0} justify='center'>
                     <Grid item xs={12}>
                         <div className={classes.title}>
                             <Typography variant="h3">
