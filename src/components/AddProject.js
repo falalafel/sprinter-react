@@ -67,28 +67,6 @@ class AddProject extends React.Component {
             });
     }
 
-    postProject() {
-
-        const data = {
-            name: this.state.projectName,
-            startDate: this.state.startingDate,
-            sprintDuration: this.state.sprintLength,
-        };
-
-        return fetch('http://localhost:8080/project', {
-            method: 'POST',
-            // mode: 'no-cors',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'json'
-            }
-        })
-        .then(res => { return res;})
-        .catch(err => err);
-
-    }
-
-
     toggleScrumMaster = (userId) => {
         this.setState({
             members: this.state.members.map(
@@ -103,31 +81,29 @@ class AddProject extends React.Component {
     validate() {
         const {projectName, startingDate, sprintLength, startingFactor} = this.state;
 
-        const valid = (
+        return (
             (projectName.trim() !== '') &&
             (startingDate.trim() !== '') &&
             (Number.isInteger(sprintLength)) &&
             (!isNaN(startingFactor))
-        )
-
-        return valid;
+        );
     }
 
     handleProjectNameChange = (event) => {
         this.setState({projectName: event.target.value.trim()});
-    }
+    };
 
     handleStartingDateChange = (event) => {
         this.setState({startingDate: event.target.value})
-    }
+    };
 
     handleSprintLengthChange = (event) => {
         this.setState({sprintLength: Math.max(1, Math.min(parseInt(event.target.value), 366))})
-    }
+    };
 
     handleStartingFactorChange = (event) => {
         this.setState({startingFactor: Math.max(0.1, Math.min(parseFloat(event.target.value), 10))})
-    }
+    };
 
     removeMember = (userId) => {
         this.setState({
@@ -144,12 +120,18 @@ class AddProject extends React.Component {
     };
 
     handleAddProjectButton = () => {
-        console.log("TODO") // TODO: post new project and redirect to it's page
+        const data = {
+            name: this.state.projectName,
+            startDate: this.state.startingDate,
+            sprintDuration: this.state.sprintLength,
+        };
 
-        // console.log(this.postProject());
-
-        this.props.redirectToDashboardCallback();
-    }
+        api.fetch(
+            api.endpoints.createProject(data),
+            (response) => {
+                this.props.redirectToDashboardCallback();
+            });
+    };
 
     render() {
 
@@ -169,8 +151,8 @@ class AddProject extends React.Component {
         return (
             <div className={classes.root}>
                 <Grid container spacing={24} justify='center'>
-                    <Grid item xs={12} >
-                        <div className={classes.title} >
+                    <Grid item xs={12}>
+                        <div className={classes.title}>
                             <Typography variant="h3">
                                 Add new project
                             </Typography>
@@ -198,7 +180,7 @@ class AddProject extends React.Component {
                                 add project
                             </Button>
                         </div>
-                        
+
                     </Grid>
                     <Grid item xs={6}>
                         <div className={classes.projectMembers}>

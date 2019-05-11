@@ -7,7 +7,7 @@ export default {
     fetch(opt.path, {
       method: opt.method,
       body: opt.body,
-      headers: opt.headers
+      headers: opt.headers,
     })
       .then(res => res.json())
       .then(response => {
@@ -16,7 +16,7 @@ export default {
   },
   endpoints: {
     getProjects: () => ({
-      path: url("project"),
+      path: url(`project`),
       method: "GET"
     }),
     getSprints: projectId => ({
@@ -35,6 +35,16 @@ export default {
         `project/${projectId}/sprint/${sprintId}/declaration/${userId}`
       ),
       method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }),
+    createProject: (data) => ({
+      path: url(
+          `project`
+      ),
+      method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json"
