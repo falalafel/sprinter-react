@@ -10,6 +10,7 @@ import api from "../api";
 import styles from "./Dashboard.styles";
 import {Button} from "@material-ui/core";
 import DeclareHours from "./DeclareHours";
+import CloseSprint from "./CloseSprint";
 
 function declarationListItem(declaration) {
     return {
@@ -38,7 +39,9 @@ class Dashboard extends React.Component {
         sprints: [],
         declarations: [],
         isDeclareHours: false,
-        validDeclareButton: false
+        validDeclareButton: false,
+        isCloseSprint: false,
+        validCloseSprintButton: false
     };
 
     fetchAndSetProjects() {
@@ -73,6 +76,25 @@ class Dashboard extends React.Component {
             })
     };
 
+    closeSprintCallback = (data) => {
+        api.fetch(
+            api.endpoints.closeSprint(this.state.activeProjectId, this.state.activeSprintId, data),
+            () => {
+                this.closeCloseSprintMode()
+            })
+    }
+
+    setCloseSprintMode = () => {
+        this.setState({isCloseSprint: true})
+    };
+
+    closeCloseSprintMode = () => {
+        this.setState({isCloseSprint: false});
+        this.setState({activeSprintId: null});
+        this.setState({activeProjectId: null});
+    };
+
+
     setActiveProject = (projectId) => {
         this.setState({activeProjectId: projectId})
     };
@@ -102,6 +124,7 @@ class Dashboard extends React.Component {
         } else if (this.state.activeSprintId !== prevState.activeSprintId && this.state.activeSprintId !== null) {
             this.fetchAndSetDeclarations();
             this.setState({validDeclareButton: true})
+            this.setState({validCloseSprintButton: true})
         }
     }
 
@@ -109,47 +132,61 @@ class Dashboard extends React.Component {
         this.setState({validDeclareButton: false});
     };
 
+    disableCloseSprintButton = () => {
+        this.setState({validCloseSprintButton: false});
+    };
+
     render() {
         const {classes} = this.props;
 
         return (
             !this.state.isDeclareHours ?
-                <div className={classes.root}>
-                    <CssBaseline/>
-                    <div className={classes.content}>
-                        <div className={classes.appBarSpacer}/>
-                        <Typography variant="h5" gutterBottom component="h2">
-                            Projects Overview
-                        </Typography>
-                        <SimpleSelect
-                            label={'project'}
-                            itemListCallback={this.setActiveProject}
-                            itemList={this.state.projects.map(item => projectListItem(item))}/>
-                        <Typography variant="h5" gutterBottom component="h2">
-                            Sprints Overview
-                        </Typography>
-                        <SimpleSelect
-                            label={'sprint'}
-                            itemListCallback={this.setActiveSprint}
-                            itemList={this.state.sprints.map(item => sprintListItem(item))}/>
-                        <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
-                                onClick={this.setDeclareHoursMode}>
-                            Declare Hours
-                        </Button>
-                        <Typography variant="h4" gutterBottom component="h2">
-                            Reported hours
-                        </Typography>
-                        <div className={classes.tableContainer}>
-                            <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                !this.state.isCloseSprint ?
+                    <div className={classes.root}>
+                        <CssBaseline/>
+                        <div className={classes.content}>
+                            <div className={classes.appBarSpacer}/>
+                            <Typography variant="h5" gutterBottom component="h2">
+                                Projects Overview
+                            </Typography>
+                            <SimpleSelect
+                                label={'project'}
+                                itemListCallback={this.setActiveProject}
+                                itemList={this.state.projects.map(item => projectListItem(item))}/>
+                            <Typography variant="h5" gutterBottom component="h2">
+                                Sprints Overview
+                            </Typography>
+                            <SimpleSelect
+                                label={'sprint'}
+                                itemListCallback={this.setActiveSprint}
+                                itemList={this.state.sprints.map(item => sprintListItem(item))}/>
+                            <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
+                                    onClick={this.setDeclareHoursMode}>
+                                Declare Hours
+                            </Button>
+                            <Button variant="contained" color="primary" disabled={!this.state.validCloseSprintButton}
+                                    onClick={this.setCloseSprintMode}>
+                                Close Sprint
+                            </Button>
+                            <Typography variant="h4" gutterBottom component="h2">
+                                Reported hours
+                            </Typography>
+                            <div className={classes.tableContainer}>
+                                <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                            </div>
+                            <Typography variant="h4" gutterBottom component="h2">
+                                Factor chart
+                            </Typography>
+                            <Typography component="div" className={classes.chartContainer}>
+                                <SimpleLineChart/>
+                            </Typography>
                         </div>
-                        <Typography variant="h4" gutterBottom component="h2">
-                            Factor chart
-                        </Typography>
-                        <Typography component="div" className={classes.chartContainer}>
-                            <SimpleLineChart/>
-                        </Typography>
                     </div>
-                </div>
+                    : <CloseSprint  sprintId={this.state.activeSprintId}
+                                    projectName={this.state.activeProjectId}
+                                    closeCloseSprint={this.closeCloseSprintMode}
+                                    closeSprintCallback={this.closeSprintCallback}
+                                    buttonDisableCallback={this.disableCloseSprintButton}/>
                 : <DeclareHours sprintId={this.state.activeSprintId}
                                 projectName={this.state.activeProjectId}
                                 closeDeclareHours={this.closeDeclareHoursMode}
