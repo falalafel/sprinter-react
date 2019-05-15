@@ -77,12 +77,12 @@ class Dashboard extends React.Component {
     };
 
     closeSprintCallback = (data) => {
-        api.fetch(
+        api.fetchNoContent(
             api.endpoints.closeSprint(this.state.activeProjectId, this.state.activeSprintId, data),
             () => {
                 this.closeCloseSprintMode()
             })
-    }
+    };
 
     setCloseSprintMode = () => {
         this.setState({isCloseSprint: true})
@@ -123,16 +123,18 @@ class Dashboard extends React.Component {
             this.fetchAndSetSprint()
         } else if (this.state.activeSprintId !== prevState.activeSprintId && this.state.activeSprintId !== null) {
             this.fetchAndSetDeclarations();
-            this.setState({validDeclareButton: true})
+            this.setState({validDeclareButton: true});
             this.setState({validCloseSprintButton: true})
         }
     }
 
     disableDeclareButton = () => {
         this.setState({validDeclareButton: false});
+        this.setState({validCloseSprintButton: false});
     };
 
     disableCloseSprintButton = () => {
+        this.setState({validDeclareButton: false});
         this.setState({validCloseSprintButton: false});
     };
 
@@ -161,11 +163,13 @@ class Dashboard extends React.Component {
                                 itemListCallback={this.setActiveSprint}
                                 itemList={this.state.sprints.map(item => sprintListItem(item))}/>
                             <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
-                                    onClick={this.setDeclareHoursMode}>
+                                    onClick={this.setDeclareHoursMode}
+                                    className={classes.button}>
                                 Declare Hours
                             </Button>
                             <Button variant="contained" color="primary" disabled={!this.state.validCloseSprintButton}
-                                    onClick={this.setCloseSprintMode}>
+                                    onClick={this.setCloseSprintMode}
+                                    className={classes.button}>
                                 Close Sprint
                             </Button>
                             <Typography variant="h4" gutterBottom component="h2">

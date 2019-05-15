@@ -74,6 +74,9 @@ const styles = theme => ({
     h5: {
         marginBottom: theme.spacing.unit * 2,
     },
+    button: {
+        margin: theme.spacing.unit * 2,
+    },
 });
 
 export default styles
