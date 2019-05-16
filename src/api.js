@@ -59,6 +59,16 @@ export default {
                 "Content-Type": "application/json"
             }
         }),
+        closeProject: (projectId, data) => ({
+            path: url(
+                `project/${projectId}`
+            ),
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }),
         closeSprint: (projectId, sprintId, data) => ({
             path: url(
                 `project/${projectId}/sprint/${sprintId}`
