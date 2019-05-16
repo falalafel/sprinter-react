@@ -43,7 +43,6 @@ const styles = theme => ({
 class CloseProject extends React.Component {
 
     state = {
-        projectName: "",
     };
 
     componentDidMount() {
@@ -51,7 +50,7 @@ class CloseProject extends React.Component {
     }
 
     render() {
-        const {classes, projectId, closeCloseProject, closeProjectCallback} = this.props;
+        const {classes, projectId, projectName, closeCloseProject, closeProjectCallback} = this.props;
 
         return (
             <main className={classes.main}>
@@ -61,17 +60,14 @@ class CloseProject extends React.Component {
                         <Typography variant="h3">
                             Close Project
                         </Typography>
-                        <Typography variant="h5">
-                            {projectId}
-                        </Typography>
-                        {/*<TextField
+                        <TextField
                             id="project-name"
                             label="Project Name"
                             className={classes.textField}
-                            value={projectId}
+                            value={projectName}
                             margin="normal"
                             type="text"
-                        />*/}
+                        />
                         <TextField
                             id="project-id"
                             label="Project Id"
@@ -96,6 +92,7 @@ class CloseProject extends React.Component {
 CloseProject.propTypes = {
     classes: PropTypes.object.isRequired,
     projectId: PropTypes.number,
+    projectName: PropTypes.string,
     closeCloseProject: PropTypes.func,
     closeProjectCallback: PropTypes.func.isRequired,
     buttonDisableCallback: PropTypes.func.isRequired,
