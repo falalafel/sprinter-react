@@ -50,7 +50,7 @@ class CloseProject extends React.Component {
     }
 
     render() {
-        const {classes, projectId, projectName, closeCloseProject, closeProjectCallback} = this.props;
+        const {classes, projectId, project, closeCloseProject, closeProjectCallback} = this.props;
 
         return (
             <main className={classes.main}>
@@ -64,7 +64,7 @@ class CloseProject extends React.Component {
                             id="project-name"
                             label="Project Name"
                             className={classes.textField}
-                            value={projectName}
+                            value={project.name}
                             margin="normal"
                             type="text"
                         />
@@ -73,6 +73,14 @@ class CloseProject extends React.Component {
                             label="Project Id"
                             className={classes.textField}
                             value={projectId}
+                            margin="normal"
+                            type="text"
+                        />
+                        <TextField
+                            id="start-time"
+                            label="Start time"
+                            className={classes.textField}
+                            value={project.startDate}
                             margin="normal"
                             type="text"
                         />
@@ -92,7 +100,7 @@ class CloseProject extends React.Component {
 CloseProject.propTypes = {
     classes: PropTypes.object.isRequired,
     projectId: PropTypes.number,
-    projectName: PropTypes.string,
+    project: PropTypes.object,
     closeCloseProject: PropTypes.func,
     closeProjectCallback: PropTypes.func.isRequired,
     buttonDisableCallback: PropTypes.func.isRequired,

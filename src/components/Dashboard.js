@@ -233,7 +233,7 @@ class Dashboard extends React.Component {
                                     declareCallback={this.declareCallback}
                                     buttonDisableCallback={this.disableDeclareButton}/>
                 : <CloseProject projectId={this.state.activeProjectId}
-                                projectName={this.state.projects.filter(item => item.projectId === this.state.activeProjectId)[0].name}
+                                project={this.state.projects.filter(item => item.projectId === this.state.activeProjectId)[0]}
                                  closeCloseProject={this.closeCloseProjectMode}
                                  closeProjectCallback={this.closeProjectCallback}
                                  buttonDisableCallback={this.disableCloseProjectButton}/>
