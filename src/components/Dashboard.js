@@ -232,7 +232,7 @@ class Dashboard extends React.Component {
                                     closeDeclareHours={this.closeDeclareHoursMode}
                                     declareCallback={this.declareCallback}
                                     buttonDisableCallback={this.disableDeclareButton}/>
-                : <CloseProject projectName={this.state.activeProjectId}
+                : <CloseProject projectId={this.state.activeProjectId}
                                  closeCloseProject={this.closeCloseProjectMode}
                                  closeProjectCallback={this.closeProjectCallback}
                                  buttonDisableCallback={this.disableCloseProjectButton}/>
