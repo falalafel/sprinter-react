@@ -11,6 +11,7 @@ import styles from "./Dashboard.styles";
 import {Button} from "@material-ui/core";
 import DeclareHours from "./DeclareHours";
 import CloseSprint from "./CloseSprint";
+import ProjectManagement from "./ProjectManagement"
 
 function declarationListItem(declaration) {
     return {
@@ -41,7 +42,9 @@ class Dashboard extends React.Component {
         isDeclareHours: false,
         validDeclareButton: false,
         isCloseSprint: false,
-        validCloseSprintButton: false
+        validCloseSprintButton: false,
+        isProjectManagement: false,
+        validProjectManagementButton: false
     };
 
     fetchAndSetProjects() {
@@ -84,6 +87,14 @@ class Dashboard extends React.Component {
             })
     };
 
+    managementCallback = (data) => {
+        api.fetch(
+            api.endpoints.updateProject(this.state.activeProjectId, data),
+            () => {
+                this.closeProjectManagementMode()
+            })
+    };
+
     setCloseSprintMode = () => {
         this.setState({isCloseSprint: true})
     };
@@ -113,14 +124,22 @@ class Dashboard extends React.Component {
         this.setState({activeProjectId: null});
     };
 
+    setProjectManagementMode = () => {
+        this.setState({isProjectManagement: true})
+    };
+
+    closeProjectManagementMode = () => {
+        this.setState({isProjectManagement: false})
+    };
+
     componentDidMount() {
         this.fetchAndSetProjects()
-
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.activeProjectId !== prevState.activeProjectId && this.state.activeProjectId !== null) {
-            this.fetchAndSetSprint()
+            this.fetchAndSetSprint();
+            this.setState({validProjectManagementButton: true})
         } else if (this.state.activeSprintId !== prevState.activeSprintId && this.state.activeSprintId !== null) {
             this.fetchAndSetDeclarations();
             this.setState({validDeclareButton: true});
@@ -138,54 +157,69 @@ class Dashboard extends React.Component {
         this.setState({validCloseSprintButton: false});
     };
 
+    disableProjectManagementButton = () => {
+        this.setState({validProjectManagementButton: false}); // are you sure about the funcs above?
+    }
+
     render() {
         const {classes} = this.props;
 
         return (
             !this.state.isDeclareHours ?
                 !this.state.isCloseSprint ?
-                    <div className={classes.root}>
-                        <CssBaseline/>
-                        <div className={classes.content}>
-                            <div className={classes.appBarSpacer}/>
-                            <Typography variant="h5" gutterBottom component="h2">
-                                Projects Overview
-                            </Typography>
-                            <SimpleSelect
-                                label={'project'}
-                                itemListCallback={this.setActiveProject}
-                                itemList={this.state.projects.map(item => projectListItem(item))}/>
-                            <Typography variant="h5" gutterBottom component="h2">
-                                Sprints Overview
-                            </Typography>
-                            <SimpleSelect
-                                label={'sprint'}
-                                itemListCallback={this.setActiveSprint}
-                                itemList={this.state.sprints.map(item => sprintListItem(item))}/>
-                            <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
-                                    onClick={this.setDeclareHoursMode}
-                                    className={classes.button}>
-                                Declare Hours
-                            </Button>
-                            <Button variant="contained" color="primary" disabled={!this.state.validCloseSprintButton}
-                                    onClick={this.setCloseSprintMode}
-                                    className={classes.button}>
-                                Close Sprint
-                            </Button>
-                            <Typography variant="h4" gutterBottom component="h2">
-                                Reported hours
-                            </Typography>
-                            <div className={classes.tableContainer}>
-                                <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                    !this.state.isProjectManagement ?
+                        <div className={classes.root}>
+                            <CssBaseline/>
+                            <div className={classes.content}>
+                                <div className={classes.appBarSpacer}/>
+                                <Typography variant="h5" gutterBottom component="h2">
+                                    Projects Overview
+                                </Typography>
+                                <SimpleSelect
+                                    label={'project'}
+                                    itemListCallback={this.setActiveProject}
+                                    itemList={this.state.projects.map(item => projectListItem(item))}/>
+                                <Typography variant="h5" gutterBottom component="h2">
+                                    Sprints Overview
+                                </Typography>
+                                <SimpleSelect
+                                    label={'sprint'}
+                                    itemListCallback={this.setActiveSprint}
+                                    itemList={this.state.sprints.map(item => sprintListItem(item))}/>
+                                <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
+                                        onClick={this.setDeclareHoursMode}
+                                        className={classes.button}>
+                                    Declare Hours
+                                </Button>
+                                <Button variant="contained" color="primary" disabled={!this.state.validCloseSprintButton}
+                                        onClick={this.setCloseSprintMode}
+                                        className={classes.button}>
+                                    Close Sprint
+                                </Button>
+                                <Button variant="contained" color="primary" disabled={!this.state.validProjectManagementButton}
+                                        onClick={this.setProjectManagementMode}
+                                        className={classes.button}>
+                                    Manage Project
+                                </Button>
+                                <Typography variant="h4" gutterBottom component="h2">
+                                    Reported hours
+                                </Typography>
+                                <div className={classes.tableContainer}>
+                                    <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                                </div>
+                                <Typography variant="h4" gutterBottom component="h2">
+                                    Factor chart
+                                </Typography>
+                                <Typography component="div" className={classes.chartContainer}>
+                                    <SimpleLineChart/>
+                                </Typography>
                             </div>
-                            <Typography variant="h4" gutterBottom component="h2">
-                                Factor chart
-                            </Typography>
-                            <Typography component="div" className={classes.chartContainer}>
-                                <SimpleLineChart/>
-                            </Typography>
                         </div>
-                    </div>
+                        : <ProjectManagement    projectName={this.state.activeProjectId}
+                                                projectId={this.state.activeProjectId}
+                                                // closeProjectManagement={this.closeProjectManagementMode}
+                                                managementCallback={this.closeProjectManagementMode}
+                                                buttonDisableCallback={this.disableProjectManagementButton} />
                     : <CloseSprint  sprintId={this.state.activeSprintId}
                                     projectName={this.state.activeProjectId}
                                     closeCloseSprint={this.closeCloseSprintMode}

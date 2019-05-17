@@ -32,6 +32,7 @@ class ProjectConfig extends React.Component {
                         className={classes.textField}
                         margin="normal"
                         error={projectName === ''}
+                        value={projectName}
                         onChange={projectNameChangeCallback}
                     />
                     <br/>

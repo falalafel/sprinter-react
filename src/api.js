@@ -68,6 +68,16 @@ export default {
             headers: {
                 "Content-Type": "application/json"
             }
+        }),
+        updateProject: (projectId, data) => ({
+            path: url(
+                `project/${projectId}`
+            ),
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
         })
     }
 };
