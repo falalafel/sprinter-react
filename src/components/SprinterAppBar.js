@@ -34,17 +34,12 @@ class SprinterAppBar extends React.Component {
         renderAddProject: false,
     };
 
-    handleRenderDashboard = () => {
-        this.setState({renderDashboard: true, renderAddProject: false})
+    handleAddProject = () => {
+        this.props.history.push('/new-project/')
     };
 
-    handleRenderAddProject = () => {
-        this.setState({renderDashboard: false, renderAddProject: true})
-    };
-
-    handleRedirectToDashboard = () => {
-        this.setState({ open: true });
-        this.setState({renderDashboard: true, renderAddProject: false})
+    handleOverview = () => {
+        this.props.history.push('/overview/')
     };
 
     handleClose = (event, reason) => {
@@ -65,40 +60,11 @@ class SprinterAppBar extends React.Component {
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             Sprinter
                         </Typography>
-                        <Button color="inherit" onClick={this.handleRenderDashboard}>Overview</Button>
-                        <Button color="inherit" onClick={this.handleRenderAddProject}>New Project</Button>
+                        <Button color="inherit" onClick={this.handleOverview}>Overview</Button>
+                        <Button color="inherit" onClick={this.handleAddProject}>New Project</Button>
                         <Button color="inherit">Calendar</Button>
                     </Toolbar>
                 </AppBar>
-                <div className={classes.core}>
-                    {this.state.renderDashboard ? <Dashboard/> : null}
-                    {this.state.renderAddProject ?
-                        <AddProject redirectToDashboardCallback={this.handleRedirectToDashboard}/> : null}
-                </div>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    open={this.state.open}
-                    autoHideDuration={5000}
-                    onClose={this.handleClose}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">Project has been created</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className={classes.close}
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon/>
-                        </IconButton>,
-                    ]}
-                />
             </div>
         );
     }
