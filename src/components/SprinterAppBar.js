@@ -6,7 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-const styles = {
+const styles = theme => ({
     root: {
         flexGrow: 1,
     },
@@ -19,7 +19,8 @@ const styles = {
     appBar: {
         height: 65,
     },
-};
+    appBarSpacer: theme.mixins.toolbar,
+});
 
 class SprinterAppBar extends React.Component {
 
@@ -51,6 +52,7 @@ class SprinterAppBar extends React.Component {
                         <Button color="inherit">Calendar</Button>
                     </Toolbar>
                 </AppBar>
+                <div className={classes.appBarSpacer}/>
             </div>
         );
     }

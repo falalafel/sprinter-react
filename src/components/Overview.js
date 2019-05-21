@@ -7,7 +7,7 @@ import SimpleTable from './SimpleTable';
 import SimpleSelect from "./SimpleSelect";
 import api from "../api";
 import styles from "./Dashboard.styles";
-import {Button} from "@material-ui/core";
+import {Button, Divider} from "@material-ui/core";
 import {Link} from 'react-router-dom';
 import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
@@ -15,11 +15,11 @@ import SprintSelect from "./SprintSelect";
 
 function declarationListItem(declaration) {
     return {
-        id: declaration.userId,
-        name: declaration.userId,
-        calories: declaration.hoursAvailable,
-        fat: declaration.workNeeded,
-        protein: declaration.comment
+        userId: declaration.userId,
+        userName: "testowa nazwa uzytkownika xd",
+        hoursAvailable: declaration.hoursAvailable,
+        workNeeded: declaration.workNeeded,
+        comment: declaration.comment
     };
 }
 
@@ -155,10 +155,9 @@ class Overview extends React.Component {
         const {classes} = this.props;
 
         return (
-            <div className={classes.content}>
-                <div className={classes.appBarSpacer}/>
-
-                    <div className={classes.selection} >
+            <div className={classes.root} >
+                <div className={classes.content}>
+                    <div className={classes.selectionContainer} >
                         <div className={classes.projectSelection}>
                         <Typography variant="h6" component="h2">
                             Project
@@ -192,42 +191,54 @@ class Overview extends React.Component {
                         </div>
                     </div>
 
+                    <div className={classes.buttonsContainer} >
+                        <Button variant="contained" color="primary"
+                                disabled={!this.declareHoursButtonEnabled()}
+                                onClick={this.setDeclareHoursMode}
+                                className={classes.button}>
+                            Declare Hours
+                        </Button>
+                        <Button variant="contained" color="primary"
+                                disabled={!this.closeSprintButtonEnabled()}
+                                onClick={this.setCloseSprintMode}
+                                className={classes.button}>
+                            Close Sprint
+                        </Button>
+                        <Button variant="contained" color="primary"
+                                disabled={!this.editProjectButtonEnabled()}
+                                onClick={this.setCloseProjectMode}
+                                className={classes.button}>
+                            Edit Project
+                        </Button>
+                        <Button variant="contained" color="primary"
+                                disabled={!this.newSprintButtonEnabled()}
+                                onClick={this.setCloseProjectMode}
+                                className={classes.button}>
+                            New Sprint
+                        </Button>
+                    </div>
 
+                    <div className={classes.tableContainer}>
+                        <Typography variant="h4" gutterBottom component="h2">
+                            Declarations table
+                        </Typography>
+                        <Divider />
+                        <div className={classes.table}>
+                            <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                        </div>
+                        <Divider />
+                    </div>
 
-                <Button variant="contained" color="primary" disabled={!this.declareHoursButtonEnabled()}
-                        onClick={this.setDeclareHoursMode}
-                        className={classes.button}>
-                    Declare Hours
-                </Button>
-                <Button variant="contained" color="primary" disabled={!this.closeSprintButtonEnabled()}
-                        onClick={this.setCloseSprintMode}
-                        className={classes.button}>
-                    Close Sprint
-                </Button>
-                <Button variant="contained" color="primary" disabled={!this.editProjectButtonEnabled()}
-                        onClick={this.setCloseProjectMode}
-                        className={classes.button}>
-                    Edit Project
-                </Button>
-                <Button variant="contained" color="primary" disabled={!this.newSprintButtonEnabled()}
-                        onClick={this.setCloseProjectMode}
-                        className={classes.button}>
-                    New Sprint
-                </Button>
-                <Typography variant="h4" gutterBottom component="h2">
-                    Reported hours
-                </Typography>
-                <div className={classes.tableContainer}>
-                    <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                    <div className={classes.chartContainer} >
+                        <Typography variant="h4" gutterBottom component="h2">
+                            Factor chart
+                        </Typography>
+                        <div component="div" className={classes.chart}>
+                            <SimpleLineChart/>
+                        </div>
+                    </div>
                 </div>
-                <Typography variant="h4" gutterBottom component="h2">
-                    Factor chart
-                </Typography>
-                <Typography component="div" className={classes.chartContainer}>
-                    <SimpleLineChart/>
-                </Typography>
             </div>
-
         );
     }
 }

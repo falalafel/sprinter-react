@@ -9,9 +9,7 @@ import Button from "@material-ui/core/Button";
 import { resolve } from 'dns';
 
 const styles = (theme) => ({
-    root: {
-        marginTop: 60,
-    },
+    root: {},
     title: {
         float: 'center',
         textAlign: 'center',

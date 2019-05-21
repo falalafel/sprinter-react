@@ -26,21 +26,21 @@ function SimpleTable(props) {
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>UserId</TableCell>
-                        <TableCell align="right">Reported available hours</TableCell>
-                        <TableCell align="right">Left work</TableCell>
-                        <TableCell align="right">Comment</TableCell>
+                        <TableCell align="left">Name</TableCell>
+                        <TableCell align="left">UserId</TableCell>
+                        <TableCell align="left">Available hours</TableCell>
+                        <TableCell align="left">Work needed</TableCell>
+                        <TableCell align="left">Comment</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map(n => (
-                        <TableRow key={n.id}>
-                            <TableCell component="th" scope="row">
-                                {n.name}
-                            </TableCell>
-                            <TableCell align="right">{n.calories}</TableCell>
-                            <TableCell align="right">{n.fat}</TableCell>
-                            <TableCell align="right">{n.protein}</TableCell>
+                    {data.map(declaration => (
+                        <TableRow key={declaration.userId}>
+                            <TableCell align="left" component="th" scope="row">{declaration.userName}</TableCell>
+                            <TableCell align="left">{declaration.userId}</TableCell>
+                            <TableCell align="left">{declaration.hoursAvailable}</TableCell>
+                            <TableCell align="left">{declaration.workNeeded}</TableCell>
+                            <TableCell align="left">{declaration.comment}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
