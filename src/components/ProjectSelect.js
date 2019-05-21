@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
-import { emphasize } from '@material-ui/core/styles/colorManipulator';
+import {emphasize} from '@material-ui/core/styles/colorManipulator';
 import {Button, ListItemText} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
+import PeopleIcon from '@material-ui/icons/People';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import ClearIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import IconButton from "@material-ui/core/IconButton";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+
 
 const styles = theme => ({
     root: {
@@ -38,11 +44,6 @@ const styles = theme => ({
     },
     option: {
         fontSize: 14,
-        backgroundColor: "pink"
-    },
-    closedOption: {
-        fontSize: 14,
-        backgroundColor: "gray"
     },
     noOptionsMessage: {
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -63,6 +64,11 @@ const styles = theme => ({
         right: 0,
     },
 
+
+    dupa: {
+        background: "green"
+    }
+
 });
 
 function NoOptionsMessage(props) {
@@ -77,7 +83,7 @@ function NoOptionsMessage(props) {
     );
 }
 
-function inputComponent({ inputRef, ...props }) {
+function inputComponent({inputRef, ...props}) {
     return <div style={{height: 50}} ref={inputRef} {...props} />;
 }
 
@@ -105,7 +111,7 @@ function Option(props) {
             buttonRef={props.innerRef}
             selected={props.isFocused}
             component="div"
-            className={props.selectProps.classes.closedOption}
+            className={props.selectProps.classes.option}
             style={{
                 background: props.isSelected ? 'primary' : 'secondary',
             }}
@@ -124,9 +130,19 @@ const getOptionLabel = (option) => {
 
 const formatOptionLabel = option => (
     <div>
-        // TODO reformat
         {option.name}
-        {option.id < 5 ? "option" : "closedOption"}
+        <ListItemSecondaryAction>
+            {option.id < 6 ?
+                <IconButton disabled>
+                    <PeopleIcon color='action' fontSize='small'/>
+                </IconButton>
+                : "" }
+        {option.id < 5 ?
+            <IconButton disabled>
+                <NotInterestedIcon color='action' fontSize='small'/>
+            </IconButton>
+            : "" }
+        </ListItemSecondaryAction>
     </div>
 );
 
@@ -159,8 +175,9 @@ function Placeholder(props) {
 
 function SingleValue(props) {
     return (
-        //TODO
-        <div>{props.children}</div>
+        <div>
+            {props.data.name}
+        </div>
     );
 }
 
@@ -172,9 +189,20 @@ function Menu(props) {
     );
 }
 
-function sortProjects(projects) {
-    // TODO
-    return projects
+function projectComparator(project1, project2) {
+    if (project1.isOpen === project2.isOpen)
+        if(project1.startDate < project2.startDate)
+            return 1;
+        else
+            return -1;
+    else if (project1.isOpen && !project2.isOpen)
+        return -1;
+    else
+        return 1;
+}
+
+function sortProjects(projectList) {
+    return projectList.sort(projectComparator)
 }
 
 const components = {
@@ -189,29 +217,26 @@ const components = {
 class ProjectSelect extends React.Component {
 
     handleChange = selectedProject => {
-        if(selectedProject === null)
-            this.props.projectChangeCallback(null)
+        if (selectedProject === null)
+            this.props.projectChangeCallback(null);
         else
             this.props.projectChangeCallback(selectedProject.id);
     };
 
     findProject = (selectedProjectId) => {
-        return this.props.projects.find(project => project.id === selectedProjectId)
+        const selectedProject = this.props.projects.find(project => project.id === selectedProjectId);
+        return selectedProject === undefined ? null : selectedProject;
     };
 
     render() {
-        const { classes, projects, selectedProjectId } = this.props;
-        console.log("dupa ", this.props.selectedProjectId, selectedProjectId);
-
-        const selectedOne = this.findProject(selectedProjectId);
-        console.log(selectedOne);
+        const {classes, projects, selectedProjectId} = this.props;
 
         return (
             <div className={classes.root}>
                 <NoSsr>
                     <Select
                         classes={classes}
-                        options={sortProjects(projects)}
+                        options={sortProjects(projects.slice())}
                         components={components}
                         value={this.findProject(selectedProjectId)}
                         onChange={this.handleChange}
@@ -242,4 +267,4 @@ ProjectSelect.propTypes = {
     selectedProjectId: PropTypes.number,
 };
 
-export default withStyles(styles, { withTheme: true })(ProjectSelect);
+export default withStyles(styles, {withTheme: true})(ProjectSelect);
