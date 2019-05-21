@@ -122,13 +122,13 @@ const formatOptionLabel = option => (
     <div>
         <Tooltip disableFocusListener disableTouchListener placement="right" title={`Sprint ${option.id}`}>
             <Typography>
-                {option.startDate} &#8209; {option.startDate}   {/* TODO enddate */}
+                {option.startDate} &#8209; {option.startDate} {/* TODO enddate */}
             </Typography>
         </Tooltip>
         {option.isOpen === false ?
             <ListItemSecondaryAction>
                 <Tooltip disableFocusListener disableTouchListener placement="left" title="Sprint closed"
-                        style={{float: "right", paddingRight: 10}}>
+                         style={{float: "right", paddingRight: 10}}>
                     <NotInterestedIcon color='disabled' fontSize='small'/>
                 </Tooltip>
             </ListItemSecondaryAction>
@@ -171,7 +171,7 @@ function SingleValue(props) {
         <div>
             <Tooltip disableFocusListener disableTouchListener placement="right" title={`Sprint ${props.data.id}`}>
                 <Typography>
-                    {props.data.startDate} &#8209; {props.data.startDate}   {/* TODO enddate */}
+                    {props.data.startDate} &#8209; {props.data.startDate} {/* TODO enddate */}
                 </Typography>
             </Tooltip>
         </div>

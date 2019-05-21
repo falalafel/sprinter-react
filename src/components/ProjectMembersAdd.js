@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
-import { emphasize } from '@material-ui/core/styles/colorManipulator';
+import {emphasize} from '@material-ui/core/styles/colorManipulator';
 import {Button, ListItemText} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 
@@ -81,7 +81,7 @@ function NoOptionsMessage(props) {
     );
 }
 
-function inputComponent({ inputRef, ...props }) {
+function inputComponent({inputRef, ...props}) {
     return <div style={{height: 50}} ref={inputRef} {...props} />;
 }
 
@@ -127,8 +127,8 @@ const getOptionLabel = (option) => {
 };
 
 const formatOptionLabel = option => (
-    <div className="option" >
-        <ListItemText primary={option.name} secondary={option.mail} />
+    <div className="option">
+        <ListItemText primary={option.name} secondary={option.mail}/>
     </div>
 );
 
@@ -187,8 +187,8 @@ class ProjectMembersAdd extends React.Component {
     };
 
     addUserButtonAction = () => {
-        const { selectedUser } = this.state;
-        this.props.addMemberCallback( selectedUser.userId );
+        const {selectedUser} = this.state;
+        this.props.addMemberCallback(selectedUser.userId);
         this.setState({
             selectedUser: null,
         });
@@ -201,7 +201,7 @@ class ProjectMembersAdd extends React.Component {
     };
 
     render() {
-        const { classes, users } = this.props;
+        const {classes, users} = this.props;
 
         return (
             <div className={classes.root}>
@@ -220,13 +220,13 @@ class ProjectMembersAdd extends React.Component {
                     />
                 </NoSsr>
                 <Button
-                    disabled={ !this.state.selectedUser }
-                    onClick={ () => this.addUserButtonAction() }
+                    disabled={!this.state.selectedUser}
+                    onClick={() => this.addUserButtonAction()}
                     color="primary"
                     variant="contained"
                     className={classes.addUserButton}
                 >
-                    <AddIcon className={classes.leftIcon} />
+                    <AddIcon className={classes.leftIcon}/>
                     Add user
                 </Button>
             </div>
@@ -247,4 +247,4 @@ ProjectMembersAdd.propTypes = {
     ).isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ProjectMembersAdd);
+export default withStyles(styles, {withTheme: true})(ProjectMembersAdd);

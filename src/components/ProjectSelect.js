@@ -189,7 +189,7 @@ function getSortedProjects(projects) {
         if (a.isOpen === false && b.isOpen === true)
             return -1;
 
-        return a.name < b.name ? 1 : (a.name === b.name ? 0 : -1) 
+        return a.name < b.name ? 1 : (a.name === b.name ? 0 : -1)
     }).reverse();
 }
 

@@ -8,35 +8,35 @@ import Paper from "@material-ui/core/Paper";
 import {Typography} from "@material-ui/core";
 
 const styles = theme => ({
-  main: {
-      width: 'auto',
-      display: 'block', // Fix IE 11 issue.
-      marginTop: '5%',
-      marginBottom: '5%',
-      marginLeft: theme.spacing.unit * 3,
-      marginRight: theme.spacing.unit * 3,
-      [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-          width: 400,
-          marginLeft: 'auto',
-          marginRight: 'auto',
-      },
-  },
-  paper: {
-      marginTop: theme.spacing.unit * 8,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-  },
-  container: {
-      marginTop: theme.spacing.unit,
-  },
-  textField: {
-      width: '100%',
-  },
-  button: {
-      marginTop: theme.spacing.unit * 4,
-  }
+    main: {
+        width: 'auto',
+        display: 'block', // Fix IE 11 issue.
+        marginTop: '5%',
+        marginBottom: '5%',
+        marginLeft: theme.spacing.unit * 3,
+        marginRight: theme.spacing.unit * 3,
+        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+            width: 400,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
+    },
+    paper: {
+        marginTop: theme.spacing.unit * 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+    },
+    container: {
+        marginTop: theme.spacing.unit,
+    },
+    textField: {
+        width: '100%',
+    },
+    button: {
+        marginTop: theme.spacing.unit * 4,
+    }
 });
 
 class CloseSprint extends React.Component {
@@ -102,7 +102,7 @@ class CloseSprint extends React.Component {
 }
 
 CloseSprint.propTypes = {
-  classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(CloseSprint);

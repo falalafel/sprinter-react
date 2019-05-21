@@ -21,14 +21,6 @@ function declarationListItem(declaration) {
     };
 }
 
-function projectListItem(project) {
-    return {id: project.projectId, label: project.name}
-}
-
-function sprintListItem(sprint) {
-    return {id: sprint.sprintId, label: sprint.sprintId}
-}
-
 class Overview extends React.Component {
 
     state = {
@@ -132,7 +124,7 @@ class Overview extends React.Component {
         // TODO: check scrum master permissions
         const {projects, projectId} = this.state;
         const activeProject = projects.find(p => p.projectId === projectId) || null
-        
+
         return activeProject && activeProject.closingStatus === false
     }
 
@@ -145,7 +137,7 @@ class Overview extends React.Component {
         // TODO: check scrum master permissions
         const {projects, projectId} = this.state;
         const activeProject = projects.find(p => p.projectId === projectId) || null
-        
+
         return activeProject
     }
 
@@ -154,23 +146,23 @@ class Overview extends React.Component {
         const {projectId, sprintId} = this.state;
 
         return (
-            <div className={classes.root} >
+            <div className={classes.root}>
                 <div className={classes.content}>
-                    <div className={classes.selectionContainer} >
+                    <div className={classes.selectionContainer}>
                         <div className={classes.projectSelection}>
-                        <Typography variant="h6" component="h2">
-                            Project
-                        </Typography>
-                        <ProjectSelect
-                            projects={this.state.projects.map(p => ({
-                                id: p.projectId,
-                                name: p.name,
-                                isOpen: !p.closingStatus,
-                                startDate: p.startDate,
-                            }))}
-                            projectChangeCallback = {this.handleProjectChange}
-                            selectedProjectId = {this.state.projectId}
-                        />
+                            <Typography variant="h6" component="h2">
+                                Project
+                            </Typography>
+                            <ProjectSelect
+                                projects={this.state.projects.map(p => ({
+                                    id: p.projectId,
+                                    name: p.name,
+                                    isOpen: !p.closingStatus,
+                                    startDate: p.startDate,
+                                }))}
+                                projectChangeCallback={this.handleProjectChange}
+                                selectedProjectId={this.state.projectId}
+                            />
                         </div>
 
                         <div className={classes.sprintSelection}>
@@ -183,14 +175,14 @@ class Overview extends React.Component {
                                     isOpen: !s.closingStatus,
                                     startDate: s.startDate,
                                 }))}
-                                sprintChangeCallback = {this.handleSprintChange}
-                                selectedSprintId = {this.state.sprintId}
-                                isDisabled = {this.state.projectId === undefined}
+                                sprintChangeCallback={this.handleSprintChange}
+                                selectedSprintId={this.state.sprintId}
+                                isDisabled={this.state.projectId === undefined}
                             />
                         </div>
                     </div>
 
-                    <div className={classes.buttonsContainer} >
+                    <div className={classes.buttonsContainer}>
                         <Button variant="contained" color="primary"
                                 disabled={!this.declareHoursButtonEnabled()}
                                 onClick={() => this.props.history.push(`/declare-hours/project=${projectId}/sprint=${sprintId}`)}
@@ -221,14 +213,14 @@ class Overview extends React.Component {
                         <Typography variant="h4" gutterBottom component="h2">
                             Declarations table
                         </Typography>
-                        <Divider />
+                        <Divider/>
                         <div className={classes.table}>
                             <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
                         </div>
-                        <Divider />
+                        <Divider/>
                     </div>
 
-                    <div className={classes.chartContainer} >
+                    <div className={classes.chartContainer}>
                         <Typography variant="h4" gutterBottom component="h2">
                             Factor chart
                         </Typography>
