@@ -153,7 +153,7 @@ class Overview extends React.Component {
                 <div className={classes.appBarSpacer}/>
 
                 <Typography variant="h5" gutterBottom component="h2">
-                    Projects Overview kurwa
+                    Projects Overview
                 </Typography>
                 <ProjectSelect
                     projects={this.state.projects.map(p => ({
