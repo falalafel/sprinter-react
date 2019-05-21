@@ -9,11 +9,8 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import {emphasize} from '@material-ui/core/styles/colorManipulator';
 import {Button, ListItemText, Tooltip} from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
 import PeopleIcon from '@material-ui/icons/People';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
-import ClearIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 
@@ -132,33 +129,30 @@ const formatOptionLabel = option => (
     <div>
         {option.name}
         <ListItemSecondaryAction>
-            {option.id < 6 && option.id !== 3 ?
-                <Tooltip disableFocusListener disableTouchListener title="Scrum master privileges"
-                         style={{float: "right", padding: 10}}>
-                    <PeopleIcon color='disabled' fontSize='small'/>
-                </Tooltip>
-                : ""}
-
-            {option.id < 5 ?
+            {!option.isOpen ?
                 <Tooltip disableFocusListener disableTouchListener title="Project is closed"
                          style={{float: "right", padding: 10}}>
                     <NotInterestedIcon color='disabled' fontSize='small'/>
                 </Tooltip>
-                : ""}
+                : ""
+            }
+            {option.id > 6 && option.id !== 3 ? //TODO if im scrum master
+                <Tooltip disableFocusListener disableTouchListener title="Scrum master privileges"
+                         style={{float: "right", padding: 10}}>
+                    <PeopleIcon color='disabled' fontSize='small'/>
+                </Tooltip>
+                : ""
+            }
         </ListItemSecondaryAction>
     </div>
 );
 
 const customFilterOption = (option, rawInput) => {
-    //TODO
-    const words = rawInput.toUpperCase().split(' ');
+    const inputWords = rawInput.toUpperCase().split(/ +|-|_/);
+    const labelWords = option.label.toUpperCase().split(/ +|-|_/);
 
-    const labelWords = option.label.toUpperCase().split(' ');
-    const mail = labelWords[labelWords.length - 1];
-    const name = labelWords.slice(0, -1).join(' ');
-
-    return words.reduce(
-        (acc, cur) => acc && (name.includes(cur) || mail.includes(cur)),
+    return inputWords.reduce(
+        (acc, cur) => acc && labelWords.some(labelWord => labelWord.startsWith(cur)),
         true,
     );
 };
