@@ -4,11 +4,9 @@ import {withStyles} from '@material-ui/core/styles/index';
 import Typography from '@material-ui/core/Typography/index';
 import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
-import SimpleSelect from "./SimpleSelect";
 import api from "../api";
-import styles from "./Dashboard.styles";
+import styles from "./Overview.styles";
 import {Button, Divider} from "@material-ui/core";
-import {Link} from 'react-router-dom';
 import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
 
@@ -153,6 +151,7 @@ class Overview extends React.Component {
 
     render() {
         const {classes} = this.props;
+        const {projectId, sprintId} = this.state;
 
         return (
             <div className={classes.root} >
@@ -194,25 +193,25 @@ class Overview extends React.Component {
                     <div className={classes.buttonsContainer} >
                         <Button variant="contained" color="primary"
                                 disabled={!this.declareHoursButtonEnabled()}
-                                onClick={this.setDeclareHoursMode}
+                                onClick={() => this.props.history.push(`/declare-hours/project=${projectId}/sprint=${sprintId}`)}
                                 className={classes.button}>
                             Declare Hours
                         </Button>
                         <Button variant="contained" color="primary"
                                 disabled={!this.closeSprintButtonEnabled()}
-                                onClick={this.setCloseSprintMode}
+                                onClick={() => this.props.history.push(`/close-sprint/project=${projectId}/sprint=${sprintId}`)}
                                 className={classes.button}>
                             Close Sprint
                         </Button>
                         <Button variant="contained" color="primary"
                                 disabled={!this.editProjectButtonEnabled()}
-                                onClick={this.setCloseProjectMode}
+                                onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
                                 className={classes.button}>
-                            Edit Project
+                            Manage Project
                         </Button>
                         <Button variant="contained" color="primary"
                                 disabled={!this.newSprintButtonEnabled()}
-                                onClick={this.setCloseProjectMode}
+                                onClick={() => this.props.history.push(`/new-sprint/project=${projectId}`)}
                                 className={classes.button}>
                             New Sprint
                         </Button>
