@@ -9,6 +9,7 @@ import api from "../api";
 import styles from "./Dashboard.styles";
 import {Button} from "@material-ui/core";
 import {Link} from 'react-router-dom';
+import ProjectSelect from "./ProjectSelect";
 
 
 function declarationListItem(declaration) {
@@ -41,7 +42,7 @@ class Overview extends React.Component {
 
     handleProjectChange = (projectId) => {
         if (projectId !== this.state.projectId) {
-            if (projectId === "") {
+            if (projectId === null) {
                 this.props.history.push('/overview')
             } else {
                 this.props.history.push(`/overview?project=${projectId}`)
@@ -51,7 +52,7 @@ class Overview extends React.Component {
 
     handleSprintChange = (sprintId) => {
         if (sprintId !== this.state.sprintId) {
-            if (sprintId === "") {
+            if (sprintId === null) {
                 this.props.history.push(`/overview?project=${this.state.projectId}`)
             } else {
                 this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${sprintId}`)
@@ -93,8 +94,8 @@ class Overview extends React.Component {
     getUrlParams(location) {
         const searchParams = new URLSearchParams(location.search);
         return {
-            projectId: searchParams.get('project') || undefined,
-            sprintId: searchParams.get('sprint') || undefined,
+            projectId: parseInt(searchParams.get('project')) || undefined,
+            sprintId: parseInt(searchParams.get('sprint')) || undefined,
         };
     }
 
@@ -125,26 +126,36 @@ class Overview extends React.Component {
 
     render() {
         const {classes} = this.props;
-
+        console.log("overview ", this.state.projectId)
         return (
             <div className={classes.content}>
                 <div className={classes.appBarSpacer}/>
+
+                <Typography variant="h5" gutterBottom component="h2">
+                    Projects Overview kurwa
+                </Typography>
+                <ProjectSelect
+                    projects={this.state.projects.map(p => ({
+                        id: p.projectId,
+                        name: p.name,
+                        isOpen: p.closingStatus,
+                        startDate: p.startDate,
+                    }))}
+                    projectChangeCallback = {this.handleProjectChange}
+                    selectedProjectId = {this.state.projectId}
+                />
+
                 <Typography variant="h5" gutterBottom component="h2">
                     Projects Overview
                 </Typography>
-                <SimpleSelect
-                    label={'project'}
-                    itemListCallback={this.handleProjectChange}
-                    itemList={this.state.projects.map(item => projectListItem(item))}
-                    disabled={false} />
-                <Typography variant="h5" gutterBottom component="h2">
-                    Sprints Overview
-                </Typography>
-                <SimpleSelect
-                    label={'sprint'}
-                    itemListCallback={this.handleSprintChange}
-                    itemList={this.state.sprints.map(item => sprintListItem(item))}
-                    disabled={this.state.projectId === undefined} />
+                {/*<ProjectSelect*/}
+                {/*    projects={this.state.sprints.map(s => ({*/}
+                {/*        id: s.sprintId,*/}
+                {/*        name: "duudududududupa",*/}
+                {/*    }))}*/}
+                {/*    projectChangeCallback = {this.handleSprintChange}*/}
+                {/*/>*/}
+
                 <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
                         onClick={this.setDeclareHoursMode}
                         className={classes.button}>

@@ -12,17 +12,9 @@ import {Button, ListItemText} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
-    addUserButton: {
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
-        fontSize: 12,
-    },
-    leftIcon: {
-        marginRight: theme.spacing.unit / 3,
-        fontSize: 16,
-    },
     root: {
         flexGrow: 1,
+        maxWidth: 500,
     },
     input: {
         display: 'flex',
@@ -46,7 +38,11 @@ const styles = theme => ({
     },
     option: {
         fontSize: 14,
-
+        backgroundColor: "pink"
+    },
+    closedOption: {
+        fontSize: 14,
+        backgroundColor: "gray"
     },
     noOptionsMessage: {
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -109,7 +105,7 @@ function Option(props) {
             buttonRef={props.innerRef}
             selected={props.isFocused}
             component="div"
-            className={props.selectProps.classes.option}
+            className={props.selectProps.classes.closedOption}
             style={{
                 background: props.isSelected ? 'primary' : 'secondary',
             }}
@@ -123,16 +119,19 @@ function Option(props) {
 }
 
 const getOptionLabel = (option) => {
-    return option.name.trim() + ' ' + option.mail.trim();
+    return option.name.trim();
 };
 
 const formatOptionLabel = option => (
-    <div className="option" >
-        <ListItemText primary={option.name} secondary={option.mail} />
+    <div>
+        // TODO reformat
+        {option.name}
+        {option.id < 5 ? "option" : "closedOption"}
     </div>
 );
 
 const customFilterOption = (option, rawInput) => {
+    //TODO
     const words = rawInput.toUpperCase().split(' ');
 
     const labelWords = option.label.toUpperCase().split(' ');
@@ -160,6 +159,7 @@ function Placeholder(props) {
 
 function SingleValue(props) {
     return (
+        //TODO
         <div>{props.children}</div>
     );
 }
@@ -172,6 +172,11 @@ function Menu(props) {
     );
 }
 
+function sortProjects(projects) {
+    // TODO
+    return projects
+}
+
 const components = {
     Control,
     Menu,
@@ -181,70 +186,60 @@ const components = {
     SingleValue,
 };
 
-class ProjectMembersAdd extends React.Component {
-    state = {
-        selectedUser: null,
+class ProjectSelect extends React.Component {
+
+    handleChange = selectedProject => {
+        if(selectedProject === null)
+            this.props.projectChangeCallback(null)
+        else
+            this.props.projectChangeCallback(selectedProject.id);
     };
 
-    addUserButtonAction = () => {
-        const { selectedUser } = this.state;
-        this.props.addMemberCallback( selectedUser.userId );
-        this.setState({
-            selectedUser: null,
-        });
-    };
-
-    handleChange = selectedUser => {
-        this.setState({
-            selectedUser: selectedUser,
-        });
+    findProject = (selectedProjectId) => {
+        return this.props.projects.find(project => project.id === selectedProjectId)
     };
 
     render() {
-        const { classes, users } = this.props;
+        const { classes, projects, selectedProjectId } = this.props;
+        console.log("dupa ", this.props.selectedProjectId, selectedProjectId);
+
+        const selectedOne = this.findProject(selectedProjectId);
+        console.log(selectedOne);
 
         return (
             <div className={classes.root}>
                 <NoSsr>
                     <Select
                         classes={classes}
-                        options={users}
+                        options={sortProjects(projects)}
                         components={components}
-                        value={this.state.selectedUser}
+                        value={this.findProject(selectedProjectId)}
                         onChange={this.handleChange}
-                        placeholder="Add new project member"
+                        placeholder="Start typing project name..."
                         isClearable
                         formatOptionLabel={formatOptionLabel}
                         getOptionLabel={getOptionLabel}
                         filterOption={customFilterOption}
                     />
                 </NoSsr>
-                <Button
-                    disabled={ !this.state.selectedUser }
-                    onClick={ () => this.addUserButtonAction() }
-                    color="primary"
-                    variant="contained"
-                    className={classes.addUserButton}
-                >
-                    <AddIcon className={classes.leftIcon} />
-                    Add user
-                </Button>
             </div>
         );
     }
 }
 
-ProjectMembersAdd.propTypes = {
+ProjectSelect.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
-    addMemberCallback: PropTypes.func,
-    users: PropTypes.arrayOf(
+    projects: PropTypes.arrayOf(
         PropTypes.shape({
-            userId: PropTypes.number,
-            userName: PropTypes.string,
-            mail: PropTypes.string,
+            id: PropTypes.number,
+            name: PropTypes.string,
+            isOpen: PropTypes.bool,
+            startDate: PropTypes.date,
         })
     ).isRequired,
+    projectChangeCallback: PropTypes.func,
+    selectedProjectId: PropTypes.number,
 };
 
-export default withStyles(styles, { withTheme: true })(ProjectMembersAdd);
+export default withStyles(styles, { withTheme: true })(ProjectSelect);
