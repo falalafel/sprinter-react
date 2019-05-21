@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
-import { emphasize } from '@material-ui/core/styles/colorManipulator';
-import {Button, ListItemText} from "@material-ui/core";
+import {emphasize} from '@material-ui/core/styles/colorManipulator';
+import {Button, ListItemText, Tooltip} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Tooltip from 'recharts/lib/component/Tooltip';
+import PeopleIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 const styles = theme => ({
     root: {
@@ -76,7 +76,7 @@ function NoOptionsMessage(props) {
     );
 }
 
-function inputComponent({ inputRef, ...props }) {
+function inputComponent({inputRef, ...props}) {
     return <div style={{height: 50}} ref={inputRef} {...props} />;
 }
 
@@ -125,11 +125,10 @@ const formatOptionLabel = option => (
     <div>
         <b>Sprint {option.id}: </b> {option.startDate}
         <ListItemSecondaryAction>
-            {option.closingStatus === true ?
-                <Tooltip disableFocusListener disableTouchListener title="Sprint is closed" style={{ float: "right", padding: 10 }}>
-                    <NotInterestedIcon color='disabled' fontSize='small'/>
-                </Tooltip>
-                : "" }
+            <Tooltip disableFocusListener disableTouchListener title="Sprint is closed"
+                     style={{float: "left", padding: 10}}>
+                <NotInterestedIcon color='disabled' fontSize='small'/>
+            </Tooltip>
         </ListItemSecondaryAction>
     </div>
 );
@@ -206,7 +205,7 @@ const components = {
 class SprintSelect extends React.Component {
 
     handleChange = selectedSprint => {
-        if(selectedSprint === null)
+        if (selectedSprint === null)
             this.props.sprintChangeCallback(null)
         else
             this.props.sprintChangeCallback(selectedSprint.id);
@@ -218,7 +217,7 @@ class SprintSelect extends React.Component {
     };
 
     render() {
-        const { classes, sprints, selectedSprintId } = this.props;
+        const {classes, sprints, selectedSprintId} = this.props;
         const sortedSprints = getSortedSprints(sprints)
         const selectedSprint = this.findSprint(selectedSprintId);
 
@@ -257,4 +256,4 @@ SprintSelect.propTypes = {
     selectedSprintId: PropTypes.number,
 };
 
-export default withStyles(styles, { withTheme: true })(SprintSelect);
+export default withStyles(styles, {withTheme: true})(SprintSelect);

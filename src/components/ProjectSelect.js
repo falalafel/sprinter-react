@@ -133,16 +133,18 @@ const formatOptionLabel = option => (
         {option.name}
         <ListItemSecondaryAction>
             {option.id < 6 && option.id !== 3 ?
-                <Tooltip disableFocusListener disableTouchListener title="Scrum master privileges" style={{ float: "right", padding: 10 }}>
+                <Tooltip disableFocusListener disableTouchListener title="Scrum master privileges"
+                         style={{float: "right", padding: 10}}>
                     <PeopleIcon color='disabled' fontSize='small'/>
                 </Tooltip>
-                : "" }
+                : ""}
 
             {option.id < 5 ?
-                <Tooltip disableFocusListener disableTouchListener title="Project is closed"  style={{ float: "right",  padding: 10  }}>
+                <Tooltip disableFocusListener disableTouchListener title="Project is closed"
+                         style={{float: "right", padding: 10}}>
                     <NotInterestedIcon color='disabled' fontSize='small'/>
                 </Tooltip>
-                : "" }
+                : ""}
         </ListItemSecondaryAction>
     </div>
 );
@@ -192,7 +194,7 @@ function Menu(props) {
 
 function projectComparator(project1, project2) {
     if (project1.isOpen === project2.isOpen)
-        if(project1.startDate < project2.startDate)
+        if (project1.startDate < project2.startDate)
             return 1;
         else
             return -1;
