@@ -186,20 +186,35 @@ function Menu(props) {
     );
 }
 
-const projectComparator = (project1, project2) => {
-    if (project1.isOpen === project2.isOpen)
-        if (project1.startDate < project2.startDate)
+function getSortedSprints(sprints) {
+    return sprints.slice().sort((a, b) => {
+
+        if (a.isOpen === true && b.isOpen === false)
             return 1;
-        else
+
+        if (a.isOpen === false && b.isOpen === true)
             return -1;
-    else if (project1.isOpen && !project2.isOpen)
-        return -1;
-    else
-        return 1;
+
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+
+        if (dateA === dateB)
+            return a.id - b.id;
+
+        return dateA - dateB;
+    }).reverse();
 }
 
-function sortProjects(projectList) {
-    return projectList.sort(projectComparator)
+function getSortedProjects(projects) {
+    return projects.slice().sort((a, b) => {
+        if (a.isOpen === true && b.isOpen === false)
+            return 1;
+
+        if (a.isOpen === false && b.isOpen === true)
+            return -1;
+
+        return a.name < b.name ? 1 : (a.name === b.name ? 0 : -1) 
+    }).reverse();
 }
 
 const components = {
@@ -233,7 +248,7 @@ class ProjectSelect extends React.Component {
                 <NoSsr>
                     <Select
                         classes={classes}
-                        options={sortProjects(projects.slice())}
+                        options={getSortedProjects(projects)}
                         components={components}
                         value={this.findProject(selectedProjectId)}
                         onChange={this.handleChange}

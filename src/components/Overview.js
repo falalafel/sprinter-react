@@ -122,6 +122,35 @@ class Overview extends React.Component {
         }
     }
 
+    declareHoursButtonEnabled() {
+        const {projects, sprints, projectId, sprintId} = this.state;
+        const activeProject = projects.find(p => p.projectId === projectId) || null
+        const activeSprint = sprints.find(s => s.sprintId === sprintId) || null
+
+        return activeProject && activeProject.closingStatus === false && activeSprint && activeSprint.closingStatus === false
+    }
+
+    newSprintButtonEnabled() {
+        // TODO: check scrum master permissions
+        const {projects, projectId} = this.state;
+        const activeProject = projects.find(p => p.projectId === projectId) || null
+        
+        return activeProject && activeProject.closingStatus === false
+    }
+
+    closeSprintButtonEnabled() {
+        // TODO: check scrum master permissions
+        return this.declareHoursButtonEnabled()
+    }
+
+    editProjectButtonEnabled() {
+        // TODO: check scrum master permissions
+        const {projects, projectId} = this.state;
+        const activeProject = projects.find(p => p.projectId === projectId) || null
+        
+        return activeProject
+    }
+
     render() {
         const {classes} = this.props;
 
@@ -153,7 +182,7 @@ class Overview extends React.Component {
                             <SprintSelect
                                 sprints={this.state.sprints.map(s => ({
                                     id: s.sprintId,
-                                    isOpen: s.closingStatus,
+                                    isOpen: !s.closingStatus,
                                     startDate: s.startDate,
                                 }))}
                                 sprintChangeCallback = {this.handleSprintChange}
@@ -165,20 +194,25 @@ class Overview extends React.Component {
 
 
 
-                <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
+                <Button variant="contained" color="primary" disabled={!this.declareHoursButtonEnabled()}
                         onClick={this.setDeclareHoursMode}
                         className={classes.button}>
                     Declare Hours
                 </Button>
-                <Button variant="contained" color="primary" disabled={!this.state.validCloseSprintButton}
+                <Button variant="contained" color="primary" disabled={!this.closeSprintButtonEnabled()}
                         onClick={this.setCloseSprintMode}
                         className={classes.button}>
                     Close Sprint
                 </Button>
-                <Button variant="contained" color="primary" disabled={!this.state.validCloseProjectButton}
+                <Button variant="contained" color="primary" disabled={!this.editProjectButtonEnabled()}
                         onClick={this.setCloseProjectMode}
                         className={classes.button}>
-                    Close Project
+                    Edit Project
+                </Button>
+                <Button variant="contained" color="primary" disabled={!this.newSprintButtonEnabled()}
+                        onClick={this.setCloseProjectMode}
+                        className={classes.button}>
+                    New Sprint
                 </Button>
                 <Typography variant="h4" gutterBottom component="h2">
                     Reported hours
