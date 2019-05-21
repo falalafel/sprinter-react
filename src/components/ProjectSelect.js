@@ -17,7 +17,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        maxWidth: 500,
+        width: 500,
     },
     input: {
         display: 'flex',
