@@ -10,6 +10,7 @@ import styles from "./Dashboard.styles";
 import {Button} from "@material-ui/core";
 import {Link} from 'react-router-dom';
 import ProjectSelect from "./ProjectSelect";
+import SprintSelect from "./SprintSelect";
 
 
 function declarationListItem(declaration) {
@@ -122,11 +123,31 @@ class Overview extends React.Component {
             this.setState({sprintId: sprintId})
             this.fetchAndSetDeclarations(projectId, sprintId)
         }
+
+        // const {projectId, sprintId} = this.getUrlParams(window.location);
+        // console.log("jestem w did update", projectId, sprintId)
+        // let projectChanged = false
+        // let sprintChanged = false
+        // if (prevState.projectId !== projectId) {
+        //     projectChanged = true
+        //     this.fetchAndSetSprints(projectId)
+        // }
+
+        // if (prevState.projectId !== projectId || prevState.sprintId !== sprintId) {
+        //     sprintChanged = true
+        //     this.fetchAndSetDeclarations(projectId, sprintId)
+        // }
+
+        // if (projectChanged)
+        // this.setState({
+        //     projectId: projectId
+        // })
+        // this.setState({sprintId: sprintId})
     }
 
     render() {
         const {classes} = this.props;
-        console.log("overview ", this.state.projectId)
+        console.log("overview ", this.state.projectId, this.state.sprintId)
         return (
             <div className={classes.content}>
                 <div className={classes.appBarSpacer}/>
@@ -143,6 +164,16 @@ class Overview extends React.Component {
                     }))}
                     projectChangeCallback = {this.handleProjectChange}
                     selectedProjectId = {this.state.projectId}
+                />
+
+                <SprintSelect
+                    sprints={this.state.sprints.map(s => ({
+                        id: s.sprintId,
+                        closingStatus: s.closingStatus,
+                        startDate: s.startDate,
+                    }))}
+                    sprintChangeCallback = {this.handleSprintChange}
+                    selectedSprintId = {this.state.sprintId}
                 />
 
                 <Typography variant="h5" gutterBottom component="h2">
