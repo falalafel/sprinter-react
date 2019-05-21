@@ -34,7 +34,7 @@ class SimpleSelect extends React.Component {
     };
 
     render() {
-        const {classes, label, itemList} = this.props;
+        const {classes, label, itemList, disabled} = this.props;
         return (
             <form className={classes.root} autoComplete="off">
                 <FormControl variant="filled" className={classes.formControl}>
@@ -43,6 +43,7 @@ class SimpleSelect extends React.Component {
                         value={this.state.item}
                         onChange={this.handleChange}
                         input={<FilledInput name="item" id="filled-item-simple"/>}
+                        disabled={disabled}
                     >
 
                         <MenuItem value="">
@@ -64,6 +65,7 @@ SimpleSelect.propTypes = {
     itemList: PropTypes.array,
     itemListCallback: PropTypes.func,
     label: PropTypes.string,
+    disabled: PropTypes.bool,
 };
 
 export default withStyles(styles)(SimpleSelect);

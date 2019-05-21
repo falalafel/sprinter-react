@@ -1,8 +1,6 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles/index';
-import CssBaseline from '@material-ui/core/CssBaseline/index';
 import Typography from '@material-ui/core/Typography/index';
 import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
@@ -10,10 +8,7 @@ import SimpleSelect from "./SimpleSelect";
 import api from "../api";
 import styles from "./Dashboard.styles";
 import {Button} from "@material-ui/core";
-import DeclareHours from "./DeclareHours";
-import CloseSprint from "./CloseSprint";
-import CloseProject from "./CloseProject";
-import {withRouter, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
 function declarationListItem(declaration) {
@@ -40,30 +35,26 @@ class Overview extends React.Component {
         projects: [],
         sprints: [],
         declarations: [],
+        projectId: undefined,
+        sprintId: undefined,
     };
 
     handleProjectChange = (projectId) => {
-        if (projectId !== this.props.match.params.projectId) {
-
+        if (projectId !== this.state.projectId) {
             if (projectId === "") {
-                this.props.history.push('/overview/')
+                this.props.history.push('/overview')
             } else {
-                this.props.history.push(`/overview/${projectId}/`)
+                this.props.history.push(`/overview?project=${projectId}`)
             }
         }
     };
 
     handleSprintChange = (sprintId) => {
-        const {projectId} = this.props.match.params
-        console.log("tru:",this.props.match.params)
-        console.log("lololll")
-        console.log(projectId, this.props.match.params)
-        if (sprintId !== this.props.match.params.sprintId) {
-
+        if (sprintId !== this.state.sprintId) {
             if (sprintId === "") {
-                this.props.history.push(`/overview/${projectId}/`)
+                this.props.history.push(`/overview?project=${this.state.projectId}`)
             } else {
-                this.props.history.push(`/overview/${projectId}/${sprintId}/`)
+                this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${sprintId}`)
             }
         }
     };
@@ -77,56 +68,60 @@ class Overview extends React.Component {
     }
 
     fetchAndSetSprints(projectId) {
-
         if (projectId !== undefined)
             api.fetch(
                 api.endpoints.getSprints(projectId),
                 (response) => {
                     this.setState({sprints: response})
                 });
-
-        else this.setState({sprints: []})
+        else
+            this.setState({sprints: []})
     }
 
     fetchAndSetDeclarations(projectId, sprintId) {
-
         if (projectId !== undefined && sprintId !== undefined)
             api.fetch(
                 api.endpoints.getDeclarations(projectId, sprintId),
                 (response) => {
                     this.setState({declarations: response})
                 });
-
-        else this.setState({declarations: []})
-    }
-
-    componentDidMount() {
-        const {projectId, sprintId} = this.props.match.params
-
-        this.fetchAndSetProjects()
-        
-        if (projectId !== undefined)
-            this.fetchAndSetSprints(projectId)
-        else 
-            this.setState({sprints: []})
-
-        if (sprintId !== undefined) 
-            this.fetchAndSetDeclarations(projectId, sprintId)
-        else 
+        else
             this.setState({declarations: []})
     }
 
-    componentDidUpdate(prevProps) {
-        const { projectId, sprintId } = this.props.match.params
 
-        if (prevProps.match.params.projectId !== projectId)
+    getUrlParams(location) {
+        const searchParams = new URLSearchParams(location.search);
+        return {
+            projectId: searchParams.get('project') || undefined,
+            sprintId: searchParams.get('sprint') || undefined,
+        };
+    }
+
+    componentDidMount() {
+        const {projectId, sprintId} = this.getUrlParams(window.location);
+        console.log("jestem w did MOUNT", projectId, sprintId)
+
+        this.fetchAndSetProjects();
+        this.fetchAndSetSprints(projectId);
+        this.fetchAndSetDeclarations(projectId, sprintId);
+
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {projectId, sprintId} = this.getUrlParams(window.location);
+        console.log("jestem w did update", projectId, sprintId)
+
+        if (prevState.projectId !== projectId) {
+            this.setState({projectId: projectId})
             this.fetchAndSetSprints(projectId)
+        }
 
-        if (prevProps.match.params.projectId !== projectId ||
-                prevProps.match.params.sprintId !== sprintId)
+        if (prevState.projectId !== projectId || prevState.sprintId !== sprintId) {
+            this.setState({sprintId: sprintId})
             this.fetchAndSetDeclarations(projectId, sprintId)
-      }
-
+        }
+    }
 
     render() {
         const {classes} = this.props;
@@ -134,21 +129,22 @@ class Overview extends React.Component {
         return (
             <div className={classes.content}>
                 <div className={classes.appBarSpacer}/>
-                <Link to='/overview/'>clean</Link>
                 <Typography variant="h5" gutterBottom component="h2">
                     Projects Overview
                 </Typography>
                 <SimpleSelect
                     label={'project'}
                     itemListCallback={this.handleProjectChange}
-                    itemList={this.state.projects.map(item => projectListItem(item))}/>
+                    itemList={this.state.projects.map(item => projectListItem(item))}
+                    disabled={false} />
                 <Typography variant="h5" gutterBottom component="h2">
                     Sprints Overview
                 </Typography>
                 <SimpleSelect
                     label={'sprint'}
                     itemListCallback={this.handleSprintChange}
-                    itemList={this.state.sprints.map(item => sprintListItem(item))}/>
+                    itemList={this.state.sprints.map(item => sprintListItem(item))}
+                    disabled={this.state.projectId === undefined} />
                 <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
                         onClick={this.setDeclareHoursMode}
                         className={classes.button}>
@@ -177,7 +173,7 @@ class Overview extends React.Component {
                     <SimpleLineChart/>
                 </Typography>
             </div>
-            
+
         );
     }
 }

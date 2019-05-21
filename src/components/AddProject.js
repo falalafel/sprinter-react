@@ -135,7 +135,7 @@ class AddProject extends React.Component {
             // after the project is added, adds membership for all declared users
             (newProjectId) => {
 
-                Promise.all(this.state.members.map(member => {
+                Promise.all(this.state.members.map((member) => {
 
                     api.fetchNoContent(api.endpoints.setProjectMembership(
                         newProjectId,
@@ -148,7 +148,7 @@ class AddProject extends React.Component {
                 })).then(
 
                     // when all members are added successfully, redirects to overview for the project
-                    (result) => this.props.history.push(`/overview/${newProjectId}/`)
+                    (result) => this.props.history.push(`/overview?project=${newProjectId}`)
                 )
             }
         );
