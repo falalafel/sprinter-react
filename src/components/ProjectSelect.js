@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import {emphasize} from '@material-ui/core/styles/colorManipulator';
-import {Button, ListItemText} from "@material-ui/core";
+import {Button, ListItemText, Tooltip} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import PeopleIcon from '@material-ui/icons/People';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
@@ -132,16 +132,17 @@ const formatOptionLabel = option => (
     <div>
         {option.name}
         <ListItemSecondaryAction>
-            {option.id < 6 ?
-                <IconButton disabled>
-                    <PeopleIcon color='action' fontSize='small'/>
-                </IconButton>
+            {option.id < 6 && option.id !== 3 ?
+                <Tooltip disableFocusListener disableTouchListener title="Scrum master privileges" style={{ float: "right", padding: 10 }}>
+                    <PeopleIcon color='disabled' fontSize='small'/>
+                </Tooltip>
                 : "" }
-        {option.id < 5 ?
-            <IconButton disabled>
-                <NotInterestedIcon color='action' fontSize='small'/>
-            </IconButton>
-            : "" }
+
+            {option.id < 5 ?
+                <Tooltip disableFocusListener disableTouchListener title="Project is closed"  style={{ float: "right",  padding: 10  }}>
+                    <NotInterestedIcon color='disabled' fontSize='small'/>
+                </Tooltip>
+                : "" }
         </ListItemSecondaryAction>
     </div>
 );
