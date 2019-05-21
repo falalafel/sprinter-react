@@ -18,7 +18,7 @@ import PeopleIcon from "@material-ui/core/SvgIcon/SvgIcon";
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        maxWidth: 500,
+        width: 500,
     },
     input: {
         display: 'flex',
@@ -124,7 +124,7 @@ const getOptionLabel = (option) => {
 const formatOptionLabel = option => (
     <div>
         <b>Sprint {option.id}: </b> {option.startDate}
-        {option.closingStatus === true ?
+        {option.isOpen === false ?
             <ListItemSecondaryAction>
                 <Tooltip disableFocusListener disableTouchListener title="Sprint is closed"
                         style={{float: "left", padding: 10}}>
@@ -181,10 +181,10 @@ function Menu(props) {
 function getSortedSprints(sprints) {
     return sprints.slice().sort((a, b) => {
 
-        if (a.closingStatus === false && b.closingStatus === true)
+        if (a.isOpen === true && b.isOpen === false)
             return 1;
 
-        if (a.closingStatus === true && b.closingStatus === false)
+        if (a.isOpen === false && b.isOpen === true)
             return -1;
 
         const dateA = new Date(a.startDate);
@@ -221,7 +221,7 @@ class SprintSelect extends React.Component {
     };
 
     render() {
-        const {classes, sprints, selectedSprintId} = this.props;
+        const {classes, sprints, selectedSprintId, isDisabled} = this.props;
         const sortedSprints = getSortedSprints(sprints)
         const selectedSprint = this.findSprint(selectedSprintId);
 
@@ -234,11 +234,12 @@ class SprintSelect extends React.Component {
                         components={components}
                         value={selectedSprint}
                         onChange={this.handleChange}
-                        placeholder="Start typing sprint starting date..."
+                        placeholder={isDisabled ? "Project not selected" : "Start typing sprint starting date..."}
                         isClearable
                         formatOptionLabel={formatOptionLabel}
                         getOptionLabel={getOptionLabel}
                         filterOption={customFilterOption}
+                        isDisabled={isDisabled}
                     />
                 </NoSsr>
             </div>
@@ -253,11 +254,12 @@ SprintSelect.propTypes = {
         PropTypes.shape({
             id: PropTypes.number,
             startDate: PropTypes.date,
-            closingStatus: PropTypes.bool,
+            isOpen: PropTypes.bool,
         })
     ).isRequired,
     sprintChangeCallback: PropTypes.func,
     selectedSprintId: PropTypes.number,
+    isDisabled: PropTypes.bool
 };
 
 export default withStyles(styles, {withTheme: true})(SprintSelect);
