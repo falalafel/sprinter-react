@@ -8,12 +8,9 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import {emphasize} from '@material-ui/core/styles/colorManipulator';
-import {Button, ListItemText, Tooltip} from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
+import {Tooltip} from "@material-ui/core";
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
-import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import PeopleIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 const styles = theme => ({
     root: {
@@ -123,15 +120,15 @@ const getOptionLabel = (option) => {
 
 const formatOptionLabel = option => (
     <div>
-        <Tooltip disableFocusListener disableTouchListener title="Sprint is closed"
-                 style={{float: "right", padding: 10}}>
-            <NotInterestedIcon color='disabled' fontSize='small'/>
+        <Tooltip disableFocusListener disableTouchListener placement="right" title={`Sprint ${option.id}`}>
+            <Typography>
+                {option.startDate} &#8209; {option.startDate}   {/* TODO enddate */}
+            </Typography>
         </Tooltip>
-        {option.startDate} &#8209; {option.startDate}   {/* TODO enddate */}
         {option.isOpen === false ?
             <ListItemSecondaryAction>
-                <Tooltip disableFocusListener disableTouchListener title="Sprint is closed"
-                        style={{float: "right", padding: 10}}>
+                <Tooltip disableFocusListener disableTouchListener placement="left" title="Sprint closed"
+                        style={{float: "right", paddingRight: 10}}>
                     <NotInterestedIcon color='disabled' fontSize='small'/>
                 </Tooltip>
             </ListItemSecondaryAction>
@@ -171,7 +168,14 @@ function Placeholder(props) {
 function SingleValue(props) {
     // TODO enddate
     return (
-        <div>{props.data.startDate} &#8209; {props.data.startDate}</div>
+        <div>
+            <Tooltip disableFocusListener disableTouchListener placement="right" title={`Sprint ${props.data.id}`}>
+                <Typography>
+                    {props.data.startDate} &#8209; {props.data.startDate}   {/* TODO enddate */}
+                </Typography>
+            </Tooltip>
+        </div>
+        // <div>{props.data.startDate} &#8209; {props.data.startDate}</div>
     );
 }
 

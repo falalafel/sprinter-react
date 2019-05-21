@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import {emphasize} from '@material-ui/core/styles/colorManipulator';
-import {Button, ListItemText, Tooltip} from "@material-ui/core";
+import {Tooltip} from "@material-ui/core";
 import PeopleIcon from '@material-ui/icons/People';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -60,11 +60,6 @@ const styles = theme => ({
         left: 0,
         right: 0,
     },
-
-
-    dupa: {
-        background: "green"
-    }
 
 });
 
@@ -130,15 +125,15 @@ const formatOptionLabel = option => (
         {option.name}
         <ListItemSecondaryAction>
             {!option.isOpen ?
-                <Tooltip disableFocusListener disableTouchListener title="Project is closed"
-                         style={{float: "right", padding: 10}}>
+                <Tooltip disableFocusListener disableTouchListener placement="left" title="Project closed"
+                         style={{float: "right", paddingRight: 10}}>
                     <NotInterestedIcon color='disabled' fontSize='small'/>
                 </Tooltip>
                 : ""
             }
             {option.id > 6 && option.id !== 3 ? //TODO if im scrum master
-                <Tooltip disableFocusListener disableTouchListener title="Scrum master privileges"
-                         style={{float: "right", padding: 10}}>
+                <Tooltip disableFocusListener disableTouchListener placement="left" title="Scrum master permissions"
+                         style={{float: "right", paddingRight: 10}}>
                     <PeopleIcon color='disabled' fontSize='small'/>
                 </Tooltip>
                 : ""
@@ -184,25 +179,6 @@ function Menu(props) {
             {props.children}
         </Paper>
     );
-}
-
-function getSortedSprints(sprints) {
-    return sprints.slice().sort((a, b) => {
-
-        if (a.isOpen === true && b.isOpen === false)
-            return 1;
-
-        if (a.isOpen === false && b.isOpen === true)
-            return -1;
-
-        const dateA = new Date(a.startDate);
-        const dateB = new Date(b.startDate);
-
-        if (dateA === dateB)
-            return a.id - b.id;
-
-        return dateA - dateB;
-    }).reverse();
 }
 
 function getSortedProjects(projects) {
