@@ -118,33 +118,37 @@ function Option(props) {
 }
 
 const getOptionLabel = (option) => {
-    return option.startDate;
+    return option.startDate.toString();
 };
 
 const formatOptionLabel = option => (
     <div>
         <b>Sprint {option.id}: </b> {option.startDate}
-        <ListItemSecondaryAction>
-            <Tooltip disableFocusListener disableTouchListener title="Sprint is closed"
-                     style={{float: "left", padding: 10}}>
-                <NotInterestedIcon color='disabled' fontSize='small'/>
-            </Tooltip>
-        </ListItemSecondaryAction>
+        {option.closingStatus === true ?
+            <ListItemSecondaryAction>
+                <Tooltip disableFocusListener disableTouchListener title="Sprint is closed"
+                        style={{float: "left", padding: 10}}>
+                    <NotInterestedIcon color='disabled' fontSize='small'/>
+                </Tooltip>
+            </ListItemSecondaryAction>
+            : ""}
     </div>
 );
 
 const customFilterOption = (option, rawInput) => {
 
-    return true;
+    const inputDate = rawInput.replace(/-|\/|:|\./g, ' '); // replaces possible date separators with single whitespace
+    const words = inputDate.toUpperCase().split(' ').map(w => w.trim().replace(/^0/, '')); // trims trailing zeros
+    const wholeWords = words.slice(0, words.length - 1);
+    const lastWord = words.slice(-1);
+    const date = new Date(option.label);
+    const dateItems = date.toLocaleDateString("en-US").split('/');
 
-    const words = rawInput.toUpperCase().split(' ');
-
-    const labelWords = option.label.toUpperCase().split(' ');
-
-    return words.reduce(
-        (acc, cur) => acc && (option.startDate.startsWith(cur)),// TODO: endDate || option.endDate.startsWith(cur)),
-        true,
-    );
+    // checks if every word from user input matches with some parts of the date
+    return wholeWords.reduce(
+        (acc, cur) => acc && (dateItems.some(i => i === cur)),
+        true
+    ) && dateItems.some(i => i.startsWith(lastWord));
 };
 
 
