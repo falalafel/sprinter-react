@@ -41,26 +41,6 @@ class Overview extends React.Component {
         sprintId: undefined,
     };
 
-    handleProjectChange = (projectId) => {
-        if (projectId !== this.state.projectId) {
-            if (projectId === null) {
-                this.props.history.push('/overview')
-            } else {
-                this.props.history.push(`/overview?project=${projectId}`)
-            }
-        }
-    };
-
-    handleSprintChange = (sprintId) => {
-        if (sprintId !== this.state.sprintId) {
-            if (sprintId === null) {
-                this.props.history.push(`/overview?project=${this.state.projectId}`)
-            } else {
-                this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${sprintId}`)
-            }
-        }
-    };
-
     fetchAndSetProjects() {
         api.fetch(
             api.endpoints.getProjects(),
@@ -91,7 +71,6 @@ class Overview extends React.Component {
             this.setState({declarations: []})
     }
 
-
     getUrlParams(location) {
         const searchParams = new URLSearchParams(location.search);
         return {
@@ -100,9 +79,28 @@ class Overview extends React.Component {
         };
     }
 
+    handleProjectChange = (projectId) => {
+        if (projectId !== this.state.projectId) {
+            if (projectId === null) {
+                this.props.history.push('/overview')
+            } else {
+                this.props.history.push(`/overview?project=${projectId}`)
+            }
+        }
+    };
+
+    handleSprintChange = (sprintId) => {
+        if (sprintId !== this.state.sprintId) {
+            if (sprintId === null) {
+                this.props.history.push(`/overview?project=${this.state.projectId}`)
+            } else {
+                this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${sprintId}`)
+            }
+        }
+    };
+
     componentDidMount() {
         const {projectId, sprintId} = this.getUrlParams(window.location);
-        console.log("jestem w did MOUNT", projectId, sprintId)
 
         this.fetchAndSetProjects();
         this.fetchAndSetSprints(projectId);
@@ -112,7 +110,6 @@ class Overview extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const {projectId, sprintId} = this.getUrlParams(window.location);
-        console.log("jestem w did update", projectId, sprintId)
 
         if (prevState.projectId !== projectId) {
             this.setState({projectId: projectId})
@@ -123,69 +120,50 @@ class Overview extends React.Component {
             this.setState({sprintId: sprintId})
             this.fetchAndSetDeclarations(projectId, sprintId)
         }
-
-        // const {projectId, sprintId} = this.getUrlParams(window.location);
-        // console.log("jestem w did update", projectId, sprintId)
-        // let projectChanged = false
-        // let sprintChanged = false
-        // if (prevState.projectId !== projectId) {
-        //     projectChanged = true
-        //     this.fetchAndSetSprints(projectId)
-        // }
-
-        // if (prevState.projectId !== projectId || prevState.sprintId !== sprintId) {
-        //     sprintChanged = true
-        //     this.fetchAndSetDeclarations(projectId, sprintId)
-        // }
-
-        // if (projectChanged)
-        // this.setState({
-        //     projectId: projectId
-        // })
-        // this.setState({sprintId: sprintId})
     }
 
     render() {
         const {classes} = this.props;
-        console.log("overview ", this.state.projectId, this.state.sprintId)
+
         return (
             <div className={classes.content}>
                 <div className={classes.appBarSpacer}/>
 
-                <Typography variant="h5" gutterBottom component="h2">
-                    Projects Overview
-                </Typography>
-                <ProjectSelect
-                    projects={this.state.projects.map(p => ({
-                        id: p.projectId,
-                        name: p.name,
-                        isOpen: p.closingStatus,
-                        startDate: p.startDate,
-                    }))}
-                    projectChangeCallback = {this.handleProjectChange}
-                    selectedProjectId = {this.state.projectId}
-                />
+                    <div className={classes.selection} >
+                        <div className={classes.projectSelection}>
+                        <Typography variant="h6" component="h2">
+                            Project
+                        </Typography>
+                        <ProjectSelect
+                            projects={this.state.projects.map(p => ({
+                                id: p.projectId,
+                                name: p.name,
+                                isOpen: !p.closingStatus,
+                                startDate: p.startDate,
+                            }))}
+                            projectChangeCallback = {this.handleProjectChange}
+                            selectedProjectId = {this.state.projectId}
+                        />
+                        </div>
 
-                <SprintSelect
-                    sprints={this.state.sprints.map(s => ({
-                        id: s.sprintId,
-                        closingStatus: s.closingStatus,
-                        startDate: s.startDate,
-                    }))}
-                    sprintChangeCallback = {this.handleSprintChange}
-                    selectedSprintId = {this.state.sprintId}
-                />
+                        <div className={classes.sprintSelection}>
+                            <Typography variant="h6" component="h2">
+                                Sprint
+                            </Typography>
+                            <SprintSelect
+                                sprints={this.state.sprints.map(s => ({
+                                    id: s.sprintId,
+                                    isOpen: s.closingStatus,
+                                    startDate: s.startDate,
+                                }))}
+                                sprintChangeCallback = {this.handleSprintChange}
+                                selectedSprintId = {this.state.sprintId}
+                                isDisabled = {this.state.projectId === undefined}
+                            />
+                        </div>
+                    </div>
 
-                <Typography variant="h5" gutterBottom component="h2">
-                    Projects Overview
-                </Typography>
-                {/*<ProjectSelect*/}
-                {/*    projects={this.state.sprints.map(s => ({*/}
-                {/*        id: s.sprintId,*/}
-                {/*        name: "duudududududupa",*/}
-                {/*    }))}*/}
-                {/*    projectChangeCallback = {this.handleSprintChange}*/}
-                {/*/>*/}
+
 
                 <Button variant="contained" color="primary" disabled={!this.state.validDeclareButton}
                         onClick={this.setDeclareHoursMode}

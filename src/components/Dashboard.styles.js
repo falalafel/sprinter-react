@@ -77,6 +77,16 @@ const styles = theme => ({
     button: {
         margin: theme.spacing.unit * 2,
     },
+    selection: {
+
+    },
+    projectSelection: {
+        float: "left",
+    },
+    sprintSelection: {
+        float: "left",
+        marginLeft: 50,
+    }
 });
 
 export default styles

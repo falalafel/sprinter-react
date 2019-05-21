@@ -18,7 +18,7 @@ import PeopleIcon from "@material-ui/core/SvgIcon/SvgIcon";
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        width: 500,
+        width: 350,
     },
     input: {
         display: 'flex',
@@ -123,11 +123,15 @@ const getOptionLabel = (option) => {
 
 const formatOptionLabel = option => (
     <div>
-        <b>Sprint {option.id}: </b> {option.startDate}
+        <Tooltip disableFocusListener disableTouchListener title="Sprint is closed"
+                 style={{float: "right", padding: 10}}>
+            <NotInterestedIcon color='disabled' fontSize='small'/>
+        </Tooltip>
+        {option.startDate} &#8209; {option.startDate}   {/* TODO enddate */}
         {option.isOpen === false ?
             <ListItemSecondaryAction>
                 <Tooltip disableFocusListener disableTouchListener title="Sprint is closed"
-                        style={{float: "left", padding: 10}}>
+                        style={{float: "right", padding: 10}}>
                     <NotInterestedIcon color='disabled' fontSize='small'/>
                 </Tooltip>
             </ListItemSecondaryAction>
@@ -165,8 +169,9 @@ function Placeholder(props) {
 }
 
 function SingleValue(props) {
+    // TODO enddate
     return (
-        <div><b>Sprint {props.data.id}: </b> {props.data.startDate}</div>
+        <div>{props.data.startDate} &#8209; {props.data.startDate}</div>
     );
 }
 

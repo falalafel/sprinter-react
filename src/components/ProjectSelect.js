@@ -186,7 +186,7 @@ function Menu(props) {
     );
 }
 
-function projectComparator(project1, project2) {
+const projectComparator = (project1, project2) => {
     if (project1.isOpen === project2.isOpen)
         if (project1.startDate < project2.startDate)
             return 1;
