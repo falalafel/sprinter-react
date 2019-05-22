@@ -124,6 +124,7 @@ class AddProject extends React.Component {
             name: this.state.projectName,
             startDate: this.state.startingDate,
             sprintDuration: this.state.sprintLength,
+            startingFactor: this.state.startingFactor,
         };
 
         // first, adds new project
