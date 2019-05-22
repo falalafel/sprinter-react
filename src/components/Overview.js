@@ -11,6 +11,9 @@ import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
 import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
+import IconButton from '@material-ui/core/IconButton/index';
 
 
 function declarationListItem(declaration) {
@@ -63,18 +66,6 @@ class Overview extends React.Component {
             this.setState({declarations: []})
     }
 
-    updateAfterSprintClose() {
-        const {projectId, sprintId} = this.getUrlParams(window.location);
-
-        this.fetchAndSetSprints(projectId);
-    }
-
-    updateAfterHoursDeclaration() {
-        const {projectId, sprintId} = this.getUrlParams(window.location);
-
-        this.fetchAndSetDeclarations(projectId, sprintId);
-    }
-
     getUrlParams(location) {
         const searchParams = new URLSearchParams(location.search);
         return {
@@ -114,7 +105,6 @@ class Overview extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const {projectId, sprintId} = this.getUrlParams(window.location);
-        const pendingUpdate = this.state.pendindUpdate;
 
         if (prevState.projectId !== projectId) {
             this.setState({projectId: projectId})
@@ -169,11 +159,17 @@ class Overview extends React.Component {
         return (
             <div className={classes.root}>
                 <div className={classes.content}>
-                    <div className={classes.selectionContainer}>
+                    <div>
                         <div className={classes.projectSelection}>
-                            <Typography variant="h6" component="h2">
+                            <Typography variant="h6" component="h2" className={classes.typography}>
                                 Project
                             </Typography>
+                            <IconButton variant="contained" color="primary"
+                                    disabled={!this.editProjectButtonEnabled()}
+                                    onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
+                                    className={classes.button}>
+                                <EditIcon/>
+                            </IconButton>
                             <ProjectSelect
                                 projects={this.state.projects.map(p => ({
                                     id: p.projectId,
@@ -187,9 +183,22 @@ class Overview extends React.Component {
                         </div>
 
                         <div className={classes.sprintSelection}>
-                            <Typography variant="h6" component="h2">
+                            <Typography variant="h6" component="h2" className={classes.typography}>
                                 Sprint
                             </Typography>
+                            <IconButton variant="contained" color="primary"
+                                    disabled={!this.newSprintButtonEnabled()}
+                                    onClick={() => this.props.history.push(`/new-sprint/project=${projectId}`)}
+                                    className={classes.button}>
+                                <AddIcon/>
+                            </IconButton>
+                            <CloseSprintDialog
+                                className={classes.dialog}
+                                disabled={!this.closeSprintButtonEnabled()}
+                                project={this.getActiveProject()}
+                                sprint={this.getActiveSprint()}
+                                parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
+                            />
                             <SprintSelect
                                 sprints={this.state.sprints.map(s => ({
                                     id: s.sprintId,
@@ -203,56 +212,23 @@ class Overview extends React.Component {
                         </div>
                     </div>
 
-                    <div className={classes.buttonsContainer}>
-                        {/*<Button variant="contained" color="primary"*/}
-                        {/*        disabled={!this.declareHoursButtonEnabled()}*/}
-                        {/*        onClick={() => this.props.history.push(`/declare-hours/project=${projectId}/sprint=${sprintId}`)}*/}
-                        {/*        className={classes.button}>*/}
-                        {/*    Declare Hours*/}
-                        {/*</Button>*/}
+                    <div className={classes.tableContainer}>
+                        <Typography variant="h4" gutterBottom component="h2" className={classes.typography}>
+                            Declarations table
+                        </Typography>
                         <DeclareHoursDialog
                             className={classes.dialog}
                             disabled={!this.declareHoursButtonEnabled()}
                             project={this.getActiveProject()}
                             sprint={this.getActiveSprint()}
-                            parentUpdateCallback={this.updateAfterHoursDeclaration.bind(this)}
+                            parentUpdateCallback={() => this.fetchAndSetDeclarations(projectId, sprintId)}
                         />
-                        {/* <Button variant="contained" color="primary"
-                                disabled={!this.closeSprintButtonEnabled()}
-                                onClick={() => this.props.history.push(`/close-sprint/project=${projectId}/sprint=${sprintId}`)}
-                                className={classes.button}>
-                            Close Sprint
-                        </Button> */}
-                        <CloseSprintDialog
-                            className={classes.dialog}
-                            disabled={!this.closeSprintButtonEnabled()}
-                            project={this.getActiveProject()}
-                            sprint={this.getActiveSprint()}
-                            parentUpdateCallback={this.updateAfterSprintClose.bind(this)}
-                        />
-                        <Button variant="contained" color="primary"
-                                disabled={!this.editProjectButtonEnabled()}
-                                onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
-                                className={classes.button}>
-                            Manage Project
-                        </Button>
-                        <Button variant="contained" color="primary"
-                                disabled={!this.newSprintButtonEnabled()}
-                                onClick={() => this.props.history.push(`/new-sprint/project=${projectId}`)}
-                                className={classes.button}>
-                            New Sprint
-                        </Button>
-                    </div>
-
-                    <div className={classes.tableContainer}>
-                        <Typography variant="h4" gutterBottom component="h2">
-                            Declarations table
-                        </Typography>
-                        <Divider/>
                         <div className={classes.table}>
+                            <Divider/>
                             <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                            <Divider/>
                         </div>
-                        <Divider/>
+
                     </div>
 
                     <div className={classes.chartContainer}>

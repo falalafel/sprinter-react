@@ -9,6 +9,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import api from "../api";
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton/index';
+
 
 const styles = theme => ({
     textField: {
@@ -79,10 +82,10 @@ class CloseSprintDialog extends React.Component {
         return (
 
             <div>
-                <Button variant="contained" color="primary" onClick={this.handleClickOpen}
-                        disabled={this.props.disabled}>
-                    Close sprint
-                </Button>
+                <IconButton variant="contained" color="primary" onClick={this.handleClickOpen}
+                            disabled={this.props.disabled}>
+                    <CloseIcon/>
+                </IconButton>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}

@@ -7,8 +7,6 @@ const styles = theme => ({
         padding: theme.spacing.unit * 3,
     },
 
-    selectionContainer: {
-    },
     projectSelection: {
         float: "left",
     },
@@ -17,23 +15,30 @@ const styles = theme => ({
         marginLeft: 50,
     },
 
-    buttonsContainer: {
-        paddingTop: 20,
-        clear: 'left',
+    typography: {
+        float: 'left',
+        paddingRight: 15,
     },
+    // buttonsContainer: {
+    //     paddingTop: 20,
+    //     clear: "left",
+    // },
     button: {
-        margin: theme.spacing.unit * 2,
+        // margin: theme.spacing.unit * 2,
+        float: "left",
     },
     dialog: {
-        margin: theme.spacing.unit * 2,
+        float: "left",
     },
 
     tableContainer: {
-        marginTop: 60,
+        paddingTop: 60,
+        clear: "left",
     },
     table: {
         maxHeight: 320,
-        overflow: 'auto'
+        overflow: 'auto',
+        clear: "left",
     },
 
     chartContainer: {
