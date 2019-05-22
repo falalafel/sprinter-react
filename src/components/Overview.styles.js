@@ -15,6 +15,10 @@ const styles = theme => ({
     },
     sprintSelection: {
         float: "left",
+        marginRight: 50,
+    },
+    statistics: {
+        float: "left",
     },
     typography: {
         float: 'left',

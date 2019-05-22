@@ -13,6 +13,7 @@ import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
+import SprintStatistics from "./SprintStatistics";
 
 
 function declarationListItem(declaration) {
@@ -233,6 +234,8 @@ class Overview extends React.Component {
                             </div>
                         </div>
                     </div>
+
+                    <SprintStatistics className={classes.statistics} sprint={this.getActiveSprint()} />
 
                     <div className={classes.tableContainer}>
                         <Typography variant="h4" gutterBottom component="h2" className={classes.typography}>
