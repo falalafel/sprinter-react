@@ -9,6 +9,7 @@ import styles from "./Overview.styles";
 import {Button, Divider} from "@material-ui/core";
 import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
+import CloseSprintDialog from "./CloseSprintDialog";
 
 
 function declarationListItem(declaration) {
@@ -100,8 +101,9 @@ class Overview extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const {projectId, sprintId} = this.getUrlParams(window.location);
+        const pendingUpdate = this.state.pendindUpdate;
 
-        if (prevState.projectId !== projectId) {
+        if (prevState.projectId !== projectId || (prevState.sprintId !== undefined && sprintId === undefined)) {
             this.setState({projectId: projectId})
             this.fetchAndSetSprints(projectId)
         }
@@ -112,18 +114,24 @@ class Overview extends React.Component {
         }
     }
 
+    getActiveProject() {
+        return this.state.projects.find(p => p.projectId === this.state.projectId) || null
+    }
+
+    getActiveSprint() {
+        return this.state.sprints.find(s => s.sprintId === this.state.sprintId) || null
+    }
+
     declareHoursButtonEnabled() {
-        const {projects, sprints, projectId, sprintId} = this.state;
-        const activeProject = projects.find(p => p.projectId === projectId) || null
-        const activeSprint = sprints.find(s => s.sprintId === sprintId) || null
+        const activeProject = this.getActiveProject()
+        const activeSprint = this.getActiveSprint()
 
         return activeProject && activeProject.closingStatus === false && activeSprint && activeSprint.closingStatus === false
     }
 
     newSprintButtonEnabled() {
         // TODO: check scrum master permissions
-        const {projects, projectId} = this.state;
-        const activeProject = projects.find(p => p.projectId === projectId) || null
+        const activeProject = this.getActiveProject()
 
         return activeProject && activeProject.closingStatus === false
     }
@@ -189,12 +197,19 @@ class Overview extends React.Component {
                                 className={classes.button}>
                             Declare Hours
                         </Button>
-                        <Button variant="contained" color="primary"
+                        {/* <Button variant="contained" color="primary"
                                 disabled={!this.closeSprintButtonEnabled()}
                                 onClick={() => this.props.history.push(`/close-sprint/project=${projectId}/sprint=${sprintId}`)}
                                 className={classes.button}>
                             Close Sprint
-                        </Button>
+                        </Button> */}
+                        <CloseSprintDialog
+                            className={classes.dialog}
+                            disabled={!this.closeSprintButtonEnabled()}
+                            project={this.getActiveProject()}
+                            sprint={this.getActiveSprint()}
+                            browserHistory={this.props.history}
+                        />
                         <Button variant="contained" color="primary"
                                 disabled={!this.editProjectButtonEnabled()}
                                 onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
