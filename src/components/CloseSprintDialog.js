@@ -11,29 +11,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import api from "../api";
 
 const styles = theme => ({
-    main: {
-        width: 'auto',
-        display: 'block', // Fix IE 11 issue.
-        marginTop: '5%',
-        marginBottom: '5%',
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
-        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-            width: 400,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
-    },
-    paper: {
-        marginTop: theme.spacing.unit * 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-    },
-    container: {
-        marginTop: theme.spacing.unit,
-    },
     textField: {
         width: '100%',
     },
@@ -46,40 +23,28 @@ class CloseSprintDialog extends React.Component {
 
     state = {
         open: false,
-        estimated: null,
-        burned: null,
-        endPlanned: null
+        estimated: "",
+        burned: "",
+        endPlanned: ""
     };
-    
+
     handleClickOpen = () => {
-        this.setState({ open: true });
+        this.setState({open: true});
     };
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({open: false});
     };
 
-    setBurned = event => {
+    setNonNegativeValue = name => event => {
         const value = event.target.value || null;
-        const properValue = value ? Math.max(value, 0) : null;
-        this.setState({burned: properValue});
-    }
-
-    setEstimated = event => {
-        const value = event.target.value || null;
-        const properValue = value ? Math.max(value, 0) : null;
-        this.setState({estimated: properValue});
-    }
-
-    setEndPlanned = event => {
-        const value = event.target.value;
-        const properValue = value ? Math.max(value, 0) : null;
-        this.setState({endPlanned: properValue});
-    }
+        const properValue = value !== null ? Math.max(value, 0) : "";
+        this.setState({[name]: properValue});
+    };
 
     isValid = () => {
         const {burned, estimated, endPlanned} = this.state;
-        return burned !== null && estimated !== null && endPlanned !== null;
+        return burned !== "" && estimated !== "" && endPlanned !== "";
     }
 
     closeSprint = () => {
@@ -112,17 +77,18 @@ class CloseSprintDialog extends React.Component {
         const projectName = project ? project.name : null;
 
         return (
-            
+
             <div>
-                <Button variant="contained" color="primary" onClick={this.handleClickOpen} disabled={this.props.disabled}>
+                <Button variant="contained" color="primary" onClick={this.handleClickOpen}
+                        disabled={this.props.disabled}>
                     Close sprint
                 </Button>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
-                    aria-labelledby="form-dialog-title"
+                    aria-labelledby="close-sprint-form"
                 >
-                    <DialogTitle id="form-dialog-title">{projectName}</DialogTitle>
+                    <DialogTitle id="close-sprint-form">{projectName}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Closing sprint {sprintId}
@@ -132,7 +98,7 @@ class CloseSprintDialog extends React.Component {
                             label="Originally estimated work hours"
                             className={classes.textField}
                             value={this.state.estimated}
-                            onChange={this.setEstimated}
+                            onChange={this.setNonNegativeValue("estimated")}
                             margin="normal"
                             type="number"
                         />
@@ -141,7 +107,7 @@ class CloseSprintDialog extends React.Component {
                             label="End planned hours"
                             className={classes.textField}
                             value={this.state.endPlanned}
-                            onChange={this.setEndPlanned}
+                            onChange={this.setNonNegativeValue("endPlanned")}
                             margin="normal"
                             type="number"
                         />
@@ -150,7 +116,7 @@ class CloseSprintDialog extends React.Component {
                             label="Burned hours"
                             className={classes.textField}
                             value={this.state.burned}
-                            onChange={this.setBurned}
+                            onChange={this.setNonNegativeValue("burned")}
                             margin="normal"
                             type="number"
                         />
@@ -172,9 +138,8 @@ class CloseSprintDialog extends React.Component {
 
 CloseSprintDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    project: PropTypes.object.isRequired,
-    sprint: PropTypes.object.isRequired,
-    browserHistory: PropTypes.object.isRequired,
+    project: PropTypes.object,
+    sprint: PropTypes.object,
     parentUpdateCallback: PropTypes.func
 };
 
