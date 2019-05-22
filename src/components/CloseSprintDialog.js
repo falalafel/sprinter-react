@@ -101,8 +101,8 @@ class CloseSprintDialog extends React.Component {
                 data
             ),
             () => {
-                this.props.browserHistory.push(`/overview?project=${projectId}`);
                 this.handleClose();
+                this.props.parentUpdateCallback();
             });
     }
 
@@ -175,6 +175,7 @@ CloseSprintDialog.propTypes = {
     project: PropTypes.object.isRequired,
     sprint: PropTypes.object.isRequired,
     browserHistory: PropTypes.object.isRequired,
+    parentUpdateCallback: PropTypes.func
 };
 
 export default withStyles(styles)(CloseSprintDialog);

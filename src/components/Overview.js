@@ -62,6 +62,13 @@ class Overview extends React.Component {
             this.setState({declarations: []})
     }
 
+    updateAfterSprintClose() {
+        const {projectId, sprintId} = this.getUrlParams(window.location);
+
+        this.fetchAndSetSprints(projectId);
+        this.fetchAndSetDeclarations(projectId, sprintId);
+    }
+
     getUrlParams(location) {
         const searchParams = new URLSearchParams(location.search);
         return {
@@ -103,7 +110,7 @@ class Overview extends React.Component {
         const {projectId, sprintId} = this.getUrlParams(window.location);
         const pendingUpdate = this.state.pendindUpdate;
 
-        if (prevState.projectId !== projectId || (prevState.sprintId !== undefined && sprintId === undefined)) {
+        if (prevState.projectId !== projectId) {
             this.setState({projectId: projectId})
             this.fetchAndSetSprints(projectId)
         }
@@ -209,6 +216,7 @@ class Overview extends React.Component {
                             project={this.getActiveProject()}
                             sprint={this.getActiveSprint()}
                             browserHistory={this.props.history}
+                            parentUpdateCallback={this.updateAfterSprintClose.bind(this)}
                         />
                         <Button variant="contained" color="primary"
                                 disabled={!this.editProjectButtonEnabled()}
