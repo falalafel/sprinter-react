@@ -9,10 +9,10 @@ const styles = theme => ({
 
     projectSelection: {
         float: "left",
+        marginRight: 50,
     },
     sprintSelection: {
         float: "left",
-        marginLeft: 50,
     },
 
     typography: {
@@ -24,7 +24,6 @@ const styles = theme => ({
     //     clear: "left",
     // },
     button: {
-        // margin: theme.spacing.unit * 2,
         float: "left",
     },
     dialog: {
