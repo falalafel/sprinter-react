@@ -24,6 +24,9 @@ const styles = theme => ({
     button: {
         margin: theme.spacing.unit * 2,
     },
+    dialog: {
+        margin: theme.spacing.unit * 2,
+    },
 
     tableContainer: {
         marginTop: 60,
