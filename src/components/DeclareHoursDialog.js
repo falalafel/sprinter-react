@@ -9,8 +9,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import api from "../api";
-import CloseIcon from '@material-ui/icons/Close';
-
 
 const styles = theme => ({
     textField: {
@@ -19,22 +17,15 @@ const styles = theme => ({
     button: {
         marginTop: theme.spacing.unit * 4,
     },
-    mainButton: {
-        float: "left",
-    },
-    buttonIcon: {
-        float: "left",
-        paddingRight: 10
-    },
 });
 
-class CloseSprintDialog extends React.Component {
+class DeclareHoursDialog extends React.Component {
 
     state = {
         open: false,
-        estimated: "",
-        burned: "",
-        endPlanned: ""
+        availableHours: "",
+        hoursLeft: "",
+        comment: ""
     };
 
     handleClickOpen = () => {
@@ -51,34 +42,38 @@ class CloseSprintDialog extends React.Component {
         this.setState({[name]: properValue});
     };
 
-    isValid = () => {
-        const {burned, estimated, endPlanned} = this.state;
-        return burned !== "" && estimated !== "" && endPlanned !== "";
-    }
+    setComment = event => {
+        this.setState({comment: event.target.value});
+    };
 
-    closeSprint = () => {
+    isValid = () => {
+        const {availableHours, hoursLeft} = this.state;
+        return availableHours !== "" && hoursLeft !== "";
+    };
+
+    submitDeclaration = () => {
         const projectId = this.props.project.projectId;
         const sprintId = this.props.sprint.sprintId;
-        const {burned, estimated, endPlanned} = this.state;
+        const {availableHours, hoursLeft, comment} = this.state;
 
         const data = {
-            closingStatus: true,
-            originalEstimatedHours: estimated,
-            endPlannedHours: endPlanned,
-            burnedHours: burned
+            hoursAvailable: availableHours,
+            workNeeded: hoursLeft,
+            comment: comment
         };
 
         api.fetchNoContent(
-            api.endpoints.closeSprint(
+            api.endpoints.declareHours(
                 projectId,
                 sprintId,
+                1, //TODO add proper userID
                 data
             ),
             () => {
                 this.handleClose();
                 this.props.parentUpdateCallback();
             });
-    }
+    };
 
     render() {
         const {classes, sprint, project} = this.props;
@@ -90,56 +85,53 @@ class CloseSprintDialog extends React.Component {
             <div>
                 <Button variant="contained" color="primary"
                         onClick={this.handleClickOpen}
-                        className={classes.mainButton}
-                        size='small'
                         disabled={this.props.disabled}>
-                    <CloseIcon className={classes.buttonIcon} fontSize='small' />
-                    Close
+                    Add declaration
                 </Button>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
-                    aria-labelledby="close-sprint-form"
+                    aria-labelledby="declare-hours-form"
                 >
-                    <DialogTitle id="close-sprint-form">{projectName}</DialogTitle>
+                    <DialogTitle id="declare-hours-form">{projectName}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Closing sprint {sprintId}
+                            Declaration for sprint {sprintId}
                         </DialogContentText>
                         <TextField
-                            id="estimated-hours"
-                            label="Originally estimated work hours"
+                            id="available-hours"
+                            label="Available hours"
                             className={classes.textField}
-                            value={this.state.estimated}
-                            onChange={this.setNonNegativeValue("estimated")}
+                            value={this.state.availableHours}
+                            onChange={this.setNonNegativeValue("availableHours")}
                             margin="normal"
                             type="number"
                         />
                         <TextField
-                            id="end-planned-hours"
-                            label="End planned hours"
+                            id="hours-left"
+                            label="Hours needed to finish last sprints tasks"
                             className={classes.textField}
-                            value={this.state.endPlanned}
-                            onChange={this.setNonNegativeValue("endPlanned")}
+                            value={this.state.hoursLeft}
+                            onChange={this.setNonNegativeValue("hoursLeft")}
                             margin="normal"
                             type="number"
                         />
                         <TextField
-                            id="burned-hours"
-                            label="Burned hours"
+                            id="comment"
+                            label="Comment"
                             className={classes.textField}
-                            value={this.state.burned}
-                            onChange={this.setNonNegativeValue("burned")}
+                            value={this.state.comment}
+                            onChange={this.setComment}
                             margin="normal"
-                            type="number"
+                            type="text"
                         />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={this.closeSprint} color="primary" disabled={!this.isValid()}>
-                            Close sprint
+                        <Button onClick={this.submitDeclaration} color="primary" disabled={!this.isValid()}>
+                            Submit
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -149,11 +141,11 @@ class CloseSprintDialog extends React.Component {
 
 }
 
-CloseSprintDialog.propTypes = {
+DeclareHoursDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     project: PropTypes.object,
     sprint: PropTypes.object,
     parentUpdateCallback: PropTypes.func
 };
 
-export default withStyles(styles)(CloseSprintDialog);
+export default withStyles(styles)(DeclareHoursDialog);

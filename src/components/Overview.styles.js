@@ -6,34 +6,46 @@ const styles = theme => ({
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
     },
-
-    selectionContainer: {
+    selectSectionContainer: {
+        float: "left",
     },
     projectSelection: {
         float: "left",
+        marginRight: 50,
     },
     sprintSelection: {
         float: "left",
-        marginLeft: 50,
     },
-
+    typography: {
+        float: 'left',
+        paddingRight: 15,
+    },
     buttonsContainer: {
         paddingTop: 20,
-        clear: 'left',
+        clear: "left",
     },
     button: {
-        margin: theme.spacing.unit * 2,
+        float: "left",
+        paddingRight: 10,
+        marginRight: 15
+    },
+    buttonIcon: {
+        float: "left",
+        paddingRight: 10
     },
     dialog: {
-        margin: theme.spacing.unit * 2,
+        float: "left",
+        paddingRight: 10
     },
 
     tableContainer: {
-        marginTop: 60,
+        paddingTop: 60,
+        clear: "left",
     },
     table: {
         maxHeight: 320,
-        overflow: 'auto'
+        overflow: 'auto',
+        clear: "left",
     },
 
     chartContainer: {
