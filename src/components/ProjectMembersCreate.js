@@ -25,12 +25,7 @@ class ProjectMembersCreate extends React.Component {
 
     renderProjectMembersList = () => {
 
-        const array = this.props.members.map(({
-                                                  name,
-                                                  userId,
-                                                  mail,
-                                                  isScrumMaster
-                                              }) => (
+        const array = this.props.members.map(({name, userId, mail, isScrumMaster}) => (
             <div key={userId}>
                 <ProjectMembersCreateItem
                     listElem={<ListItemText

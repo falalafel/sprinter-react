@@ -69,16 +69,25 @@ export default {
                 "Content-Type": "application/json"
             }
         }),
-        createSprint: (projectId, data) => ({
+
+        setProjectMembership: (projectId, userId, data) => ({
             path: url(
-                `project/${projectId}/create_sprint`
+                `project/${projectId}/membership/${userId}/`
             ),
-            method: "POST",
+            method: "PUT",
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json"
             }
         }),
+
+        createSprint: (projectId, data) => ({
+            path: url(
+                `project/${projectId}/create_sprint`
+            ),
+            method: "POST",
+        }),
+
         closeSprint: (projectId, sprintId, data) => ({
             path: url(
                 `project/${projectId}/sprint/${sprintId}`

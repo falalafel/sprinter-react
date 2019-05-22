@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles/index';
+import {withStyles} from '@material-ui/core/styles/index';
 import Table from '@material-ui/core/Table/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
@@ -19,28 +19,28 @@ const styles = {
 };
 
 function SimpleTable(props) {
-    const { classes, data } = props;
+    const {classes, data} = props;
 
     return (
         <Paper className={classes.root}>
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>UserId</TableCell>
-                        <TableCell align="right">Reported available hours</TableCell>
-                        <TableCell align="right">Left work</TableCell>
-                        <TableCell align="right">Comment</TableCell>
+                        <TableCell align="left">Name</TableCell>
+                        <TableCell align="left">UserId</TableCell>
+                        <TableCell align="left">Available hours</TableCell>
+                        <TableCell align="left">Work needed</TableCell>
+                        <TableCell align="left">Comment</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map(n => (
-                        <TableRow key={n.id}>
-                            <TableCell component="th" scope="row">
-                                {n.name}
-                            </TableCell>
-                            <TableCell align="right">{n.calories}</TableCell>
-                            <TableCell align="right">{n.fat}</TableCell>
-                            <TableCell align="right">{n.protein}</TableCell>
+                    {data.map(declaration => (
+                        <TableRow key={declaration.userId}>
+                            <TableCell align="left" component="th" scope="row">{declaration.userName}</TableCell>
+                            <TableCell align="left">{declaration.userId}</TableCell>
+                            <TableCell align="left">{declaration.hoursAvailable}</TableCell>
+                            <TableCell align="left">{declaration.workNeeded}</TableCell>
+                            <TableCell align="left">{declaration.comment}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
