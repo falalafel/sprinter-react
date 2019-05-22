@@ -14,7 +14,6 @@ class App extends React.Component {
                 <Route exact strict path='/overview' component={Overview}/>
                 <Route exact strict path='/new-project' component={AddProject}/>
                 <Route exact strict path='/declare-hours/project=:projectId/sprint=:sprintId' component={DeclareHours}/>
-                <Route exact strict path='/close-sprint/project=:projectId/sprint=:sprintId' component={CloseSprint}/>
                 <Route exact strict path='/manage-project/projectId=:projectid'/>  {/*TODO: component={ManageProject}/>*/}
             </div>
         );
