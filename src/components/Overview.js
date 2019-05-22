@@ -211,6 +211,7 @@ class Overview extends React.Component {
                                         id: s.sprintId,
                                         isOpen: !s.closingStatus,
                                         startDate: s.startDate,
+                                        endDate: s.endDate
                                     }))}
                                     sprintChangeCallback={this.handleSprintChange}
                                     selectedSprintId={this.state.sprintId}
