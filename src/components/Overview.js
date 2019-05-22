@@ -10,6 +10,7 @@ import {Button, Divider} from "@material-ui/core";
 import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
 import CloseSprintDialog from "./CloseSprintDialog";
+import DeclareHoursDialog from "./DeclareHoursDialog";
 
 
 function declarationListItem(declaration) {
@@ -66,6 +67,11 @@ class Overview extends React.Component {
         const {projectId, sprintId} = this.getUrlParams(window.location);
 
         this.fetchAndSetSprints(projectId);
+    }
+
+    updateAfterHoursDeclaration() {
+        const {projectId, sprintId} = this.getUrlParams(window.location);
+
         this.fetchAndSetDeclarations(projectId, sprintId);
     }
 
@@ -198,12 +204,19 @@ class Overview extends React.Component {
                     </div>
 
                     <div className={classes.buttonsContainer}>
-                        <Button variant="contained" color="primary"
-                                disabled={!this.declareHoursButtonEnabled()}
-                                onClick={() => this.props.history.push(`/declare-hours/project=${projectId}/sprint=${sprintId}`)}
-                                className={classes.button}>
-                            Declare Hours
-                        </Button>
+                        {/*<Button variant="contained" color="primary"*/}
+                        {/*        disabled={!this.declareHoursButtonEnabled()}*/}
+                        {/*        onClick={() => this.props.history.push(`/declare-hours/project=${projectId}/sprint=${sprintId}`)}*/}
+                        {/*        className={classes.button}>*/}
+                        {/*    Declare Hours*/}
+                        {/*</Button>*/}
+                        <DeclareHoursDialog
+                            className={classes.dialog}
+                            disabled={!this.declareHoursButtonEnabled()}
+                            project={this.getActiveProject()}
+                            sprint={this.getActiveSprint()}
+                            parentUpdateCallback={this.updateAfterHoursDeclaration.bind(this)}
+                        />
                         {/* <Button variant="contained" color="primary"
                                 disabled={!this.closeSprintButtonEnabled()}
                                 onClick={() => this.props.history.push(`/close-sprint/project=${projectId}/sprint=${sprintId}`)}
@@ -215,7 +228,6 @@ class Overview extends React.Component {
                             disabled={!this.closeSprintButtonEnabled()}
                             project={this.getActiveProject()}
                             sprint={this.getActiveSprint()}
-                            browserHistory={this.props.history}
                             parentUpdateCallback={this.updateAfterSprintClose.bind(this)}
                         />
                         <Button variant="contained" color="primary"
