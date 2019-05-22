@@ -13,7 +13,6 @@ import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
-import IconButton from '@material-ui/core/IconButton/index';
 
 
 function declarationListItem(declaration) {
@@ -160,55 +159,77 @@ class Overview extends React.Component {
             <div className={classes.root}>
                 <div className={classes.content}>
                     <div>
-                        <div className={classes.projectSelection}>
-                            <Typography variant="h6" component="h2" className={classes.typography}>
-                                Project
-                            </Typography>
-                            <IconButton variant="contained" color="primary"
-                                    disabled={!this.editProjectButtonEnabled()}
-                                    onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
-                                    className={classes.button}>
-                                <EditIcon/>
-                            </IconButton>
-                            <ProjectSelect
-                                projects={this.state.projects.map(p => ({
-                                    id: p.projectId,
-                                    name: p.name,
-                                    isOpen: !p.closingStatus,
-                                    startDate: p.startDate,
-                                }))}
-                                projectChangeCallback={this.handleProjectChange}
-                                selectedProjectId={this.state.projectId}
-                            />
+                        <div className={classes.selectSectionContainer}>
+                            <div className={classes.projectSelection}>
+
+                                <Typography variant="h6" component="h2" className={classes.typography}>
+                                    Project
+                                </Typography>
+                                
+                                <ProjectSelect
+                                    projects={this.state.projects.map(p => ({
+                                        id: p.projectId,
+                                        name: p.name,
+                                        isOpen: !p.closingStatus,
+                                        startDate: p.startDate,
+                                    }))}
+                                    projectChangeCallback={this.handleProjectChange}
+                                    selectedProjectId={this.state.projectId}
+                                />
+                            </div>
+                            <div className={classes.buttonsContainer}>
+                                {//this.newSprintButtonEnabled() &&
+                                    <Button variant="contained" color="primary"
+                                            onClick={this.handleClickOpen}
+                                            className={classes.button}
+                                            size='small'
+                                            disabled={!this.newSprintButtonEnabled()}>
+                                        <AddIcon className={classes.buttonIcon} fontSize='small' />
+                                        New sprint
+                                    </Button>
+                                }
+                                {//this.editProjectButtonEnabled() &&
+                                    <Button variant="contained" color="primary"
+                                            onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
+                                            className={classes.button}
+                                            size='small'
+                                            disabled={!this.editProjectButtonEnabled()}>
+                                        <EditIcon className={classes.buttonIcon} fontSize='small' />
+                                        Configure
+                                    </Button>
+                                }
+                            </div>
                         </div>
 
-                        <div className={classes.sprintSelection}>
-                            <Typography variant="h6" component="h2" className={classes.typography}>
-                                Sprint
-                            </Typography>
-                            <IconButton variant="contained" color="primary"
-                                    disabled={!this.newSprintButtonEnabled()}
-                                    onClick={() => this.props.history.push(`/new-sprint/project=${projectId}`)}
-                                    className={classes.button}>
-                                <AddIcon/>
-                            </IconButton>
-                            <CloseSprintDialog
-                                className={classes.dialog}
-                                disabled={!this.closeSprintButtonEnabled()}
-                                project={this.getActiveProject()}
-                                sprint={this.getActiveSprint()}
-                                parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
-                            />
-                            <SprintSelect
-                                sprints={this.state.sprints.map(s => ({
-                                    id: s.sprintId,
-                                    isOpen: !s.closingStatus,
-                                    startDate: s.startDate,
-                                }))}
-                                sprintChangeCallback={this.handleSprintChange}
-                                selectedSprintId={this.state.sprintId}
-                                isDisabled={this.state.projectId === undefined}
-                            />
+                        <div className={classes.selectSectionContainer}>
+                            <div className={classes.sprintSelection}>
+                                <Typography variant="h6" component="h2" className={classes.typography}>
+                                    Sprint
+                                </Typography>
+                                <SprintSelect
+                                    sprints={this.state.sprints.map(s => ({
+                                        id: s.sprintId,
+                                        isOpen: !s.closingStatus,
+                                        startDate: s.startDate,
+                                    }))}
+                                    sprintChangeCallback={this.handleSprintChange}
+                                    selectedSprintId={this.state.sprintId}
+                                    isDisabled={this.state.projectId === undefined}
+                                />
+                            </div>
+
+                            <div className={classes.buttonsContainer}>
+                                
+                                {//this.closeSprintButtonEnabled() &&
+                                    <CloseSprintDialog
+                                        className={classes.dialog}
+                                        project={this.getActiveProject()}
+                                        sprint={this.getActiveSprint()}
+                                        parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
+                                        disabled={!this.closeSprintButtonEnabled()}
+                                    />
+                                }
+                            </div>
                         </div>
                     </div>
 

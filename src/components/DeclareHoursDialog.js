@@ -16,7 +16,7 @@ const styles = theme => ({
     },
     button: {
         marginTop: theme.spacing.unit * 4,
-    }
+    },
 });
 
 class DeclareHoursDialog extends React.Component {
@@ -83,9 +83,10 @@ class DeclareHoursDialog extends React.Component {
         return (
 
             <div>
-                <Button variant="contained" color="primary" onClick={this.handleClickOpen}
+                <Button variant="contained" color="primary"
+                        onClick={this.handleClickOpen}
                         disabled={this.props.disabled}>
-                    Declare Hours
+                    Add declaration
                 </Button>
                 <Dialog
                     open={this.state.open}
@@ -95,7 +96,7 @@ class DeclareHoursDialog extends React.Component {
                     <DialogTitle id="declare-hours-form">{projectName}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Sprint {sprintId}
+                            Declaration for sprint {sprintId}
                         </DialogContentText>
                         <TextField
                             id="available-hours"

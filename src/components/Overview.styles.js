@@ -6,7 +6,9 @@ const styles = theme => ({
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
     },
-
+    selectSectionContainer: {
+        float: "left",
+    },
     projectSelection: {
         float: "left",
         marginRight: 50,
@@ -14,20 +16,26 @@ const styles = theme => ({
     sprintSelection: {
         float: "left",
     },
-
     typography: {
         float: 'left',
         paddingRight: 15,
     },
-    // buttonsContainer: {
-    //     paddingTop: 20,
-    //     clear: "left",
-    // },
+    buttonsContainer: {
+        paddingTop: 20,
+        clear: "left",
+    },
     button: {
         float: "left",
+        paddingRight: 10,
+        marginRight: 15
+    },
+    buttonIcon: {
+        float: "left",
+        paddingRight: 10
     },
     dialog: {
         float: "left",
+        paddingRight: 10
     },
 
     tableContainer: {

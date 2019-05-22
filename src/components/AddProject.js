@@ -131,20 +131,21 @@ class AddProject extends React.Component {
         api.fetch(
             api.endpoints.createProject(data),
 
-            // after the project is added, adds membership for all declared users
             (newProjectId) => {
+                // after the project is added, adds membership for all declared users
+                const membershipRequests = this.state.members.map((member) => {
 
-                Promise.all(this.state.members.map((member) => {
-
-                    api.fetchNoContent(api.endpoints.setProjectMembership(
-                        newProjectId,
-                        member.userId,
-                        {isScrumMaster: member.isScrumMaster}
+                    return api.fetchNoContent(
+                        api.endpoints.setProjectMembership(
+                            newProjectId,
+                            member.userId,
+                            {isScrumMaster: member.isScrumMaster}
                         ),
-                        () => {
-                            return new Promise(() => resolve())
-                        })
-                })).then(
+                        () => new Promise(() => resolve())
+                    )
+                });
+
+                Promise.all(membershipRequests).then(
                     // when all members are added successfully, redirects to overview for the project
                     (result) => this.props.history.push(`/overview?project=${newProjectId}`)
                 )
