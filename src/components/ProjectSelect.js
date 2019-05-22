@@ -8,21 +8,16 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import {emphasize} from '@material-ui/core/styles/colorManipulator';
-import {Button, ListItemText} from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
+import {Tooltip} from "@material-ui/core";
+import PeopleIcon from '@material-ui/icons/People';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+
 
 const styles = theme => ({
-    addUserButton: {
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
-        fontSize: 12,
-    },
-    leftIcon: {
-        marginRight: theme.spacing.unit / 3,
-        fontSize: 16,
-    },
     root: {
         flexGrow: 1,
+        width: 500,
     },
     input: {
         display: 'flex',
@@ -46,7 +41,6 @@ const styles = theme => ({
     },
     option: {
         fontSize: 14,
-
     },
     noOptionsMessage: {
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -123,24 +117,37 @@ function Option(props) {
 }
 
 const getOptionLabel = (option) => {
-    return option.name.trim() + ' ' + option.mail.trim();
+    return option.name.trim();
 };
 
 const formatOptionLabel = option => (
-    <div className="option">
-        <ListItemText primary={option.name} secondary={option.mail}/>
+    <div>
+        {option.name}
+        <ListItemSecondaryAction>
+            {!option.isOpen ?
+                <Tooltip disableFocusListener disableTouchListener placement="left" title="Project closed"
+                         style={{float: "right", paddingRight: 10}}>
+                    <NotInterestedIcon color='disabled' fontSize='small'/>
+                </Tooltip>
+                : ""
+            }
+            {option.id > 6 && option.id !== 3 ? //TODO if im scrum master
+                <Tooltip disableFocusListener disableTouchListener placement="left" title="Scrum master permissions"
+                         style={{float: "right", paddingRight: 10}}>
+                    <PeopleIcon color='disabled' fontSize='small'/>
+                </Tooltip>
+                : ""
+            }
+        </ListItemSecondaryAction>
     </div>
 );
 
 const customFilterOption = (option, rawInput) => {
-    const words = rawInput.toUpperCase().split(' ');
+    const inputWords = rawInput.toUpperCase().split(/ +|-|_/);
+    const labelWords = option.label.toUpperCase().split(/ +|-|_/);
 
-    const labelWords = option.label.toUpperCase().split(' ');
-    const mail = labelWords[labelWords.length - 1];
-    const name = labelWords.slice(0, -1).join(' ');
-
-    return words.reduce(
-        (acc, cur) => acc && (name.includes(cur) || mail.includes(cur)),
+    return inputWords.reduce(
+        (acc, cur) => acc && labelWords.some(labelWord => labelWord.startsWith(cur)),
         true,
     );
 };
@@ -160,7 +167,9 @@ function Placeholder(props) {
 
 function SingleValue(props) {
     return (
-        <div>{props.children}</div>
+        <div>
+            {props.data.name}
+        </div>
     );
 }
 
@@ -172,6 +181,18 @@ function Menu(props) {
     );
 }
 
+function getSortedProjects(projects) {
+    return projects.slice().sort((a, b) => {
+        if (a.isOpen === true && b.isOpen === false)
+            return 1;
+
+        if (a.isOpen === false && b.isOpen === true)
+            return -1;
+
+        return a.name < b.name ? 1 : (a.name === b.name ? 0 : -1)
+    }).reverse();
+}
+
 const components = {
     Control,
     Menu,
@@ -181,70 +202,57 @@ const components = {
     SingleValue,
 };
 
-class ProjectMembersAdd extends React.Component {
-    state = {
-        selectedUser: null,
+class ProjectSelect extends React.Component {
+
+    handleChange = selectedProject => {
+        if (selectedProject === null)
+            this.props.projectChangeCallback(null);
+        else
+            this.props.projectChangeCallback(selectedProject.id);
     };
 
-    addUserButtonAction = () => {
-        const {selectedUser} = this.state;
-        this.props.addMemberCallback(selectedUser.userId);
-        this.setState({
-            selectedUser: null,
-        });
-    };
-
-    handleChange = selectedUser => {
-        this.setState({
-            selectedUser: selectedUser,
-        });
+    findProject = (selectedProjectId) => {
+        const selectedProject = this.props.projects.find(project => project.id === selectedProjectId);
+        return selectedProject === undefined ? null : selectedProject;
     };
 
     render() {
-        const {classes, users} = this.props;
+        const {classes, projects, selectedProjectId} = this.props;
 
         return (
             <div className={classes.root}>
                 <NoSsr>
                     <Select
                         classes={classes}
-                        options={users}
+                        options={getSortedProjects(projects)}
                         components={components}
-                        value={this.state.selectedUser}
+                        value={this.findProject(selectedProjectId)}
                         onChange={this.handleChange}
-                        placeholder="Add new project member"
+                        placeholder="Start typing project name..."
                         isClearable
                         formatOptionLabel={formatOptionLabel}
                         getOptionLabel={getOptionLabel}
                         filterOption={customFilterOption}
                     />
                 </NoSsr>
-                <Button
-                    disabled={!this.state.selectedUser}
-                    onClick={() => this.addUserButtonAction()}
-                    color="primary"
-                    variant="contained"
-                    className={classes.addUserButton}
-                >
-                    <AddIcon className={classes.leftIcon}/>
-                    Add user
-                </Button>
             </div>
         );
     }
 }
 
-ProjectMembersAdd.propTypes = {
+ProjectSelect.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
-    addMemberCallback: PropTypes.func,
-    users: PropTypes.arrayOf(
+    projects: PropTypes.arrayOf(
         PropTypes.shape({
-            userId: PropTypes.number,
-            userName: PropTypes.string,
-            mail: PropTypes.string,
+            id: PropTypes.number,
+            name: PropTypes.string,
+            isOpen: PropTypes.bool,
+            startDate: PropTypes.date,
         })
     ).isRequired,
+    projectChangeCallback: PropTypes.func,
+    selectedProjectId: PropTypes.number,
 };
 
-export default withStyles(styles, {withTheme: true})(ProjectMembersAdd);
+export default withStyles(styles, {withTheme: true})(ProjectSelect);

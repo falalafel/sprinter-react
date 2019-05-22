@@ -42,8 +42,7 @@ const styles = theme => ({
 
 class CloseProject extends React.Component {
 
-    state = {
-    };
+    state = {};
 
     componentDidMount() {
         this.props.buttonDisableCallback()
@@ -87,7 +86,8 @@ class CloseProject extends React.Component {
                     </form>
                     <Button variant="contained" color="primary"
                             onClick={() => closeProjectCallback({
-                                closingStatus: true})}>Close Project</Button>
+                                closingStatus: true
+                            })}>Close Project</Button>
                 </Paper>
                 <Button variant="contained" color="primary" className={classes.button}
                         onClick={closeCloseProject}>Close</Button>

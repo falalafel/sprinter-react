@@ -47,12 +47,13 @@ class DeclareHours extends React.Component {
         comment: "",
     };
 
-    componentDidMount() {
-        this.props.buttonDisableCallback()
-    }
+    // componentDidMount() {
+    //     this.props.buttonDisableCallback()
+    // }
 
     render() {
-        const {classes, projectName, sprintId, closeDeclareHours, declareCallback} = this.props;
+        const {classes} = this.props;
+        const {projectId, sprintId} = this.props.match.params;
 
         return (
             <main className={classes.main}>
@@ -63,10 +64,10 @@ class DeclareHours extends React.Component {
                             Declare Hours
                         </Typography>
                         <Typography variant="h4">
-                            {projectName}
+                            {projectId}
                         </Typography>
                         <Typography variant="h5">
-                            {sprintId}
+                            Sprint {sprintId}
                         </Typography>
                         <TextField
                             id="standard-name"
@@ -98,14 +99,14 @@ class DeclareHours extends React.Component {
                             margin="normal"
                         />
                     </form>
-                    <Button variant="contained" color="primary"
-                            onClick={() => declareCallback({
-                                hoursAvailable: this.state.hoursAvailable,
-                                workNeeded: this.state.workNeeded,
-                                comment: this.state.comment})}>Declare Hours</Button>
+                    <Button variant="contained" color="primary">
+                        Declare Hours
+                    </Button>
                 </Paper>
                 <Button variant="contained" color="primary" className={classes.button}
-                        onClick={closeDeclareHours}>Close</Button>
+                        onClick={() => this.props.history.push(`/overview?project=${projectId}&sprint=${sprintId}`)}>
+                    Cancel
+                </Button>
             </main>
         );
     }
@@ -114,11 +115,11 @@ class DeclareHours extends React.Component {
 
 DeclareHours.propTypes = {
     classes: PropTypes.object.isRequired,
-    projectName: PropTypes.number,
-    sprintId: PropTypes.number,
-    closeDeclareHours: PropTypes.func,
-    declareCallback: PropTypes.func.isRequired,
-    buttonDisableCallback: PropTypes.func.isRequired,
+    // projectName: PropTypes.number,
+    // sprintId: PropTypes.number,
+    // closeDeclareHours: PropTypes.func,
+    // declareCallback: PropTypes.func.isRequired,
+    // buttonDisableCallback: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(DeclareHours);

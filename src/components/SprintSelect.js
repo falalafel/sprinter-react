@@ -8,21 +8,14 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import {emphasize} from '@material-ui/core/styles/colorManipulator';
-import {Button, ListItemText} from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
+import {Tooltip} from "@material-ui/core";
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const styles = theme => ({
-    addUserButton: {
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
-        fontSize: 12,
-    },
-    leftIcon: {
-        marginRight: theme.spacing.unit / 3,
-        fontSize: 16,
-    },
     root: {
         flexGrow: 1,
+        width: 350,
     },
     input: {
         display: 'flex',
@@ -46,7 +39,6 @@ const styles = theme => ({
     },
     option: {
         fontSize: 14,
-
     },
     noOptionsMessage: {
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -123,26 +115,41 @@ function Option(props) {
 }
 
 const getOptionLabel = (option) => {
-    return option.name.trim() + ' ' + option.mail.trim();
+    return option.startDate.toString();
 };
 
 const formatOptionLabel = option => (
-    <div className="option">
-        <ListItemText primary={option.name} secondary={option.mail}/>
+    <div>
+        <Tooltip disableFocusListener disableTouchListener placement="right" title={`Sprint ${option.id}`}>
+            <Typography>
+                {option.startDate} &#8209; {option.startDate} {/* TODO enddate */}
+            </Typography>
+        </Tooltip>
+        {option.isOpen === false ?
+            <ListItemSecondaryAction>
+                <Tooltip disableFocusListener disableTouchListener placement="left" title="Sprint closed"
+                         style={{float: "right", paddingRight: 10}}>
+                    <NotInterestedIcon color='disabled' fontSize='small'/>
+                </Tooltip>
+            </ListItemSecondaryAction>
+            : ""}
     </div>
 );
 
 const customFilterOption = (option, rawInput) => {
-    const words = rawInput.toUpperCase().split(' ');
 
-    const labelWords = option.label.toUpperCase().split(' ');
-    const mail = labelWords[labelWords.length - 1];
-    const name = labelWords.slice(0, -1).join(' ');
+    const inputDate = rawInput.replace(/-|\/|:|\./g, ' '); // replaces possible date separators with single whitespace
+    const words = inputDate.toUpperCase().split(' ').map(w => w.trim().replace(/^0/, '')); // trims trailing zeros
+    const wholeWords = words.slice(0, words.length - 1);
+    const lastWord = words.slice(-1);
+    const date = new Date(option.label);
+    const dateItems = date.toLocaleDateString("en-US").split('/');
 
-    return words.reduce(
-        (acc, cur) => acc && (name.includes(cur) || mail.includes(cur)),
-        true,
-    );
+    // checks if every word from user input matches with some parts of the date
+    return wholeWords.reduce(
+        (acc, cur) => acc && (dateItems.some(i => i === cur)),
+        true
+    ) && dateItems.some(i => i.startsWith(lastWord));
 };
 
 
@@ -159,8 +166,16 @@ function Placeholder(props) {
 }
 
 function SingleValue(props) {
+    // TODO enddate
     return (
-        <div>{props.children}</div>
+        <div>
+            <Tooltip disableFocusListener disableTouchListener placement="right" title={`Sprint ${props.data.id}`}>
+                <Typography>
+                    {props.data.startDate} &#8209; {props.data.startDate} {/* TODO enddate */}
+                </Typography>
+            </Tooltip>
+        </div>
+        // <div>{props.data.startDate} &#8209; {props.data.startDate}</div>
     );
 }
 
@@ -172,6 +187,25 @@ function Menu(props) {
     );
 }
 
+function getSortedSprints(sprints) {
+    return sprints.slice().sort((a, b) => {
+
+        if (a.isOpen === true && b.isOpen === false)
+            return 1;
+
+        if (a.isOpen === false && b.isOpen === true)
+            return -1;
+
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+
+        if (dateA === dateB)
+            return a.id - b.id;
+
+        return dateA - dateB;
+    }).reverse();
+}
+
 const components = {
     Control,
     Menu,
@@ -181,70 +215,60 @@ const components = {
     SingleValue,
 };
 
-class ProjectMembersAdd extends React.Component {
-    state = {
-        selectedUser: null,
+class SprintSelect extends React.Component {
+
+    handleChange = selectedSprint => {
+        if (selectedSprint === null)
+            this.props.sprintChangeCallback(null)
+        else
+            this.props.sprintChangeCallback(selectedSprint.id);
     };
 
-    addUserButtonAction = () => {
-        const {selectedUser} = this.state;
-        this.props.addMemberCallback(selectedUser.userId);
-        this.setState({
-            selectedUser: null,
-        });
-    };
-
-    handleChange = selectedUser => {
-        this.setState({
-            selectedUser: selectedUser,
-        });
+    findSprint = (selectedSprintId) => {
+        const selectedSprint = this.props.sprints.find(sprint => sprint.id === selectedSprintId)
+        return selectedSprint === undefined ? null : selectedSprint
     };
 
     render() {
-        const {classes, users} = this.props;
+        const {classes, sprints, selectedSprintId, isDisabled} = this.props;
+        const sortedSprints = getSortedSprints(sprints)
+        const selectedSprint = this.findSprint(selectedSprintId);
 
         return (
             <div className={classes.root}>
                 <NoSsr>
                     <Select
                         classes={classes}
-                        options={users}
+                        options={sortedSprints}
                         components={components}
-                        value={this.state.selectedUser}
+                        value={selectedSprint}
                         onChange={this.handleChange}
-                        placeholder="Add new project member"
+                        placeholder={isDisabled ? "Project not selected" : "Start typing sprint starting date..."}
                         isClearable
                         formatOptionLabel={formatOptionLabel}
                         getOptionLabel={getOptionLabel}
                         filterOption={customFilterOption}
+                        isDisabled={isDisabled}
                     />
                 </NoSsr>
-                <Button
-                    disabled={!this.state.selectedUser}
-                    onClick={() => this.addUserButtonAction()}
-                    color="primary"
-                    variant="contained"
-                    className={classes.addUserButton}
-                >
-                    <AddIcon className={classes.leftIcon}/>
-                    Add user
-                </Button>
             </div>
         );
     }
 }
 
-ProjectMembersAdd.propTypes = {
+SprintSelect.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
-    addMemberCallback: PropTypes.func,
-    users: PropTypes.arrayOf(
+    sprints: PropTypes.arrayOf(
         PropTypes.shape({
-            userId: PropTypes.number,
-            userName: PropTypes.string,
-            mail: PropTypes.string,
+            id: PropTypes.number,
+            startDate: PropTypes.date,
+            isOpen: PropTypes.bool,
         })
     ).isRequired,
+    sprintChangeCallback: PropTypes.func,
+    selectedSprintId: PropTypes.number,
+    isDisabled: PropTypes.bool
 };
 
-export default withStyles(styles, {withTheme: true})(ProjectMembersAdd);
+export default withStyles(styles, {withTheme: true})(SprintSelect);

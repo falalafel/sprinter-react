@@ -6,11 +6,10 @@ import api from "../api";
 import ProjectConfig from "./ProjectConfig";
 import {Grid, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import {resolve} from 'dns';
 
 const styles = (theme) => ({
-    root: {
-        marginTop: 60,
-    },
+    root: {},
     title: {
         float: 'center',
         textAlign: 'center',
@@ -125,13 +124,32 @@ class AddProject extends React.Component {
             name: this.state.projectName,
             startDate: this.state.startingDate,
             sprintDuration: this.state.sprintLength,
+            startingFactor: this.state.startingFactor,
         };
 
+        // first, adds new project
         api.fetch(
             api.endpoints.createProject(data),
-            () => {
-                this.props.redirectToDashboardCallback();
-            });
+
+            // after the project is added, adds membership for all declared users
+            (newProjectId) => {
+
+                Promise.all(this.state.members.map((member) => {
+
+                    api.fetchNoContent(api.endpoints.setProjectMembership(
+                        newProjectId,
+                        member.userId,
+                        {isScrumMaster: member.isScrumMaster}
+                        ),
+                        () => {
+                            return new Promise(() => resolve())
+                        })
+                })).then(
+                    // when all members are added successfully, redirects to overview for the project
+                    (result) => this.props.history.push(`/overview?project=${newProjectId}`)
+                )
+            }
+        );
     };
 
     render() {
