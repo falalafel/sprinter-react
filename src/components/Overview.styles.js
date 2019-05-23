@@ -30,7 +30,7 @@ const styles = theme => ({
     },
     button: {
         float: "left",
-        marginLeft: 15,
+        marginLeft: 20,
     },
     buttonIcon: {
         float: "left",

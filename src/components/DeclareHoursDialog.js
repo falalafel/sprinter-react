@@ -84,6 +84,7 @@ class DeclareHoursDialog extends React.Component {
 
             <div>
                 <Button variant="contained"
+                        color="primary"
                         onClick={this.handleClickOpen}
                         disabled={this.props.disabled}>
                     Add declaration

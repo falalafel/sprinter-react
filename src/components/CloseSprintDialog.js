@@ -80,7 +80,7 @@ class CloseSprintDialog extends React.Component {
 
         return (
             <div>
-                <Button variant="contained"
+                <Button variant="outlined"
                         onClick={this.handleClickOpen}
                         size='small'
                         disabled={this.props.disabled}>

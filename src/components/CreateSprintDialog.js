@@ -111,7 +111,7 @@ class CreateSprintDialog extends React.Component {
 
         return (
             <div className={classes.root}>
-                <Button variant="contained"
+                <Button variant="outlined"
                         onClick={this.handleClickOpen}
                         size='small'
                         disabled={this.props.disabled}>
