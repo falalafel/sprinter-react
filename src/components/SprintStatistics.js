@@ -8,14 +8,15 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import {Divider, Paper, IconButton} from "@material-ui/core";
+import {Divider, Paper, IconButton, Button} from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
 import Grid from "@material-ui/core/Grid";
 
 const styles = theme => ({
     root: {
         float: "left",
-        padding: 15
+        padding: 15,
+        paddingRight: 30
     },
     title: {
         float: "left",
@@ -24,7 +25,9 @@ const styles = theme => ({
     },
     button: {
         float: "right",
-        marginLeft: 125
+    },
+    editIcon: {
+        marginRight: 10
     },
     header: {
         float: "left",
@@ -35,6 +38,7 @@ const styles = theme => ({
         clear: "left"
     },
     divider: {
+        marginLeft: 10,
         marginTop: 5,
         marginBottom: 10,
     }
@@ -59,15 +63,16 @@ const SprintStatistics = (props) => {
         <div className={classes.root}>
             <div className={classes.header}>
                 <Typography variant="h6" component="h2" className={classes.title}>
-                    Details {sprint ? `of sprint ${sprint.sprintId}` : `...`}
+                    Details of sprint {sprint.sprintId}
                 </Typography>
-                <IconButton size="small" className={classes.button} disabled={sprint === null}>
-                    <EditIcon fontSize="small"/>
-                </IconButton>
+                <Button size="small" className={classes.button} disabled={sprint === null}>
+                    <EditIcon fontSize="small" className={classes.editIcon}/>
+                    Edit
+                </Button>
             </div>
 
             {sprint &&
-            <Grid container>
+            <Grid container spacing={18}>
                 <Grid item xs={12}>
                     <Divider className={classes.divider}/>
                 </Grid>

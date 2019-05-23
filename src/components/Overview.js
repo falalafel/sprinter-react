@@ -12,7 +12,7 @@ import SprintSelect from "./SprintSelect";
 import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
 import CreateSprintDialog from "./CreateSprintDialog";
-import EditIcon from '@material-ui/icons/Edit';
+import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import SprintStatistics from "./SprintStatistics";
 
 
@@ -179,7 +179,7 @@ class Overview extends React.Component {
                                                 className={classes.button}
                                                 size='small'
                                                 disabled={!this.editProjectButtonEnabled()}>
-                                            <EditIcon className={classes.buttonIcon} fontSize='small' />
+                                            <SettingsIcon className={classes.buttonIcon} fontSize='small' />
                                             Configure
                                         </Button>
                                     }
@@ -231,9 +231,11 @@ class Overview extends React.Component {
                         </div>
                     </div>
 
-                    <Paper className={classes.statisticsPaper} elevation={2}>
-                        <SprintStatistics sprint={this.getActiveSprint()} />
-                    </Paper>
+                    {this.getActiveSprint() &&
+                        <Paper className={classes.statisticsPaper} elevation={2}>
+                            <SprintStatistics sprint={this.getActiveSprint()} />
+                        </Paper>
+                    }
 
                     <div className={classes.tableContainer}>
                         <Typography variant="h4" gutterBottom className={classes.sectionTitle}>

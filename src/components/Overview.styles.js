@@ -34,7 +34,7 @@ const styles = theme => ({
     },
     buttonIcon: {
         float: "left",
-        paddingRight: 10
+        paddingRight: 2
     },
     projectSelection: {
         clear: "left",
@@ -49,12 +49,12 @@ const styles = theme => ({
 
     statisticsPaper: {
         float: "left",
-        marginTop: 5,
         marginBottom: 20,
     },
 
     tableContainer: {
         clear: "left",
+        paddingTop: 30,
     },
     table: {
         maxHeight: 320,

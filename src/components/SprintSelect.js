@@ -127,7 +127,7 @@ const formatOptionLabel = option => (
         </Tooltip>
         {option.isOpen === false &&
             <ListItemSecondaryAction>
-                <Tooltip disableFocusListener disableTouchListener placement="left" title="Sprint summerised"
+                <Tooltip disableFocusListener disableTouchListener placement="left" title="Sprint summarised"
                          style={{float: "right", paddingRight: 10, color: "#666666"}}>
                     <DoneIcon fontSize='small'/>
                 </Tooltip>
