@@ -137,7 +137,7 @@ class CreateSprintDialog extends React.Component {
                             onChange={this.handleDateChange("startDate")}
 
                             // error={this.startDateValid()}
-                            helperText={this.startDateValid() ? "chujchujdupacycki" : ""}
+                            helperText={this.startDateValid() ? "bad start date" : ""}
                             FormHelperTextProps={{error: this.startDateValid()}}
 
                             margin="normal"
@@ -152,7 +152,7 @@ class CreateSprintDialog extends React.Component {
                             onChange={this.handleDateChange("endDate")}
 
                             // error={this.endDateValid()}
-                            helperText={this.endDateValid() ? "spierdoliles" : ""}
+                            helperText={this.endDateValid() ? "bad end date" : ""}
                             FormHelperTextProps={{error: this.endDateValid()}}
 
                             margin="normal"

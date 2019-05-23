@@ -16,14 +16,14 @@ const styles = theme => ({
     selectSection: {
         float: 'left',
         width: 500,
-        paddingRight: 140,
+        paddingRight: 50,
     },
     singleSelectionContainer: {
         clear: "left",
         paddingBottom: 30,
     },
     selectionHeader: {
-        // padding:50,
+        // padding:10,
     },
     buttonsContainer: {
         float: "right",
@@ -49,7 +49,8 @@ const styles = theme => ({
 
     statisticsPaper: {
         float: "left",
-        // height: 300,
+        marginTop: 5,
+        marginBottom: 20,
     },
 
     tableContainer: {
