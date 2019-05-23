@@ -83,7 +83,7 @@ export default {
 
         createSprint: (projectId, data) => ({
             path: url(
-                `project/${projectId}`
+                `project/${projectId}/sprint`
             ),
             method: "POST",
             body: JSON.stringify(data),
