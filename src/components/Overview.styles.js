@@ -6,44 +6,61 @@ const styles = theme => ({
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
     },
-    selectSectionContainer: {
+
+
+    sectionTitle: {
         float: "left",
-    },
-    projectSelection: {
-        float: "left",
-        marginRight: 50,
-    },
-    sprintSelection: {
-        float: "left",
-        marginRight: 50,
-    },
-    statistics: {
-        float: "left",
-    },
-    typography: {
-        float: 'left',
         paddingRight: 15,
     },
-    buttonsContainer: {
-        paddingTop: 20,
+
+    selectSection: {
+        float: 'left',
+        width: 500,
+        paddingRight: 50,
+    },
+    singleSelectionContainer: {
         clear: "left",
+        paddingBottom: 30,
     },
-    button: {
-        float: "left",
-        paddingRight: 10,
-        marginRight: 15
+    selectionHeader: {
+        // padding:50,
     },
-    buttonIcon: {
-        float: "left",
-        paddingRight: 10
+    buttonsContainer: {
+        float: "right",
     },
     dialog: {
         float: "left",
         paddingRight: 10
     },
+    button: {
+        float: "left",
+        paddingRight: 25,
+    },
+    buttonIcon: {
+        float: "left",
+        paddingRight: 10
+    },
+    projectSelection: {
+        clear: "left",
+        marginRight: 50,
+        width: "100%",
+    },
+    sprintSelection: {
+        clear: "left",
+        marginRight: 50,
+        width: "100%",
+    },
+
+    statisticsPaper: {
+        float: "left",
+        height: 300,
+    },
+    statistics: {
+        float: "right",
+        height: "100%",
+    },
 
     tableContainer: {
-        paddingTop: 60,
         clear: "left",
     },
     table: {

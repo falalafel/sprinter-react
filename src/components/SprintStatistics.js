@@ -61,7 +61,7 @@ const SprintStatistics = (props) => {
         <div className={classes.root}>
             <div className={classes.header}>
                 <Typography variant="h6" component="h2" className={classes.title}>
-                    Statistics
+                    Details
                 </Typography>
                 <IconButton size="small" className={classes.button} disabled={sprint === null}>
                     <EditIcon fontSize="small"/>
