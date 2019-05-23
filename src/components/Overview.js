@@ -231,8 +231,8 @@ class Overview extends React.Component {
                         </div>
                     </div>
 
-                    <Paper className={classes.statisticsPaper} elevation={3}>
-                        <SprintStatistics className={classes.statistics} sprint={this.getActiveSprint()} />
+                    <Paper className={classes.statisticsPaper} elevation={2}>
+                        <SprintStatistics sprint={this.getActiveSprint()} />
                     </Paper>
 
                     <div className={classes.tableContainer}>

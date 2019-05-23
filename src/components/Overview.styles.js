@@ -16,7 +16,7 @@ const styles = theme => ({
     selectSection: {
         float: 'left',
         width: 500,
-        paddingRight: 50,
+        paddingRight: 140,
     },
     singleSelectionContainer: {
         clear: "left",
@@ -49,11 +49,7 @@ const styles = theme => ({
 
     statisticsPaper: {
         float: "left",
-        height: 300,
-    },
-    statistics: {
-        float: "right",
-        height: "100%",
+        // height: 300,
     },
 
     tableContainer: {

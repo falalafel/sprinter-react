@@ -130,7 +130,7 @@ class CloseSprintDialog extends React.Component {
                             Cancel
                         </Button>
                         <Button onClick={this.closeSprint} color="primary" disabled={!this.isValid()}>
-                            Close sprint
+                            Summarise &amp; close sprint
                         </Button>
                     </DialogActions>
                 </Dialog>

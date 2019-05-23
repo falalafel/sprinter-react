@@ -14,7 +14,7 @@ import EditIcon from '@material-ui/icons/Edit';
 const styles = theme => ({
     root: {
         float: "left",
-        minWidth: 350
+        padding: 15
     },
     title: {
         float: "left",
@@ -22,25 +22,13 @@ const styles = theme => ({
         paddingTop: 5
     },
     button: {
-        float: "left",
+        float: "right",
         marginLeft: 125
     },
-    leftColumn: {
+    dataColumn: {
         float: "left",
-        paddingRight: 0,
-        maxWidth: 200
-    },
-    rightColumn: {
-        float: "right",
-        marginLeft: 50
-    },
-    leftListItem: {
-        display: "flex",
-        justifyContent:'flex-begin'
-    },
-    rightListItem: {
-        display: "flex",
-        justifyContent:'flex-end'
+        paddingRight: 50,
+        minWidth: 280
     },
     header: {
         float: "left",
@@ -48,9 +36,20 @@ const styles = theme => ({
     },
     content: {
         paddingTop: 10,
-        float: "left"
+        float: "left",
+        width: "100%"
     }
 });
+
+const getListItem = (primary, secondary) => {
+    return (
+    <ListItem>
+        {primary}
+        <ListItemSecondaryAction>
+            {secondary}
+        </ListItemSecondaryAction>
+    </ListItem>)
+}
 
 const SprintStatistics = (props) => {
 
@@ -61,7 +60,7 @@ const SprintStatistics = (props) => {
         <div className={classes.root}>
             <div className={classes.header}>
                 <Typography variant="h6" component="h2" className={classes.title}>
-                    Details
+                    Details {sprint ? `of sprint ${sprint.sprintId}` : `...`}
                 </Typography>
                 <IconButton size="small" className={classes.button} disabled={sprint === null}>
                     <EditIcon fontSize="small"/>
@@ -69,44 +68,29 @@ const SprintStatistics = (props) => {
             </div>
       
             
-            <div className={classes.content}>
-                <List className={classes.leftColumn} dense>
-                    <ListItem className={classes.leftListItem}>
-                    Status
-                    </ListItem>
-                    <ListItem className={classes.leftListItem}>
-                    Estimated hours
-                    </ListItem>
-                    <ListItem className={classes.leftListItem}>
-                    Planned hours
-                    </ListItem>
-                    <ListItem className={classes.leftListItem}>
-                    Burned hours
-                    </ListItem>
-                    <ListItem className={classes.leftListItem}>
-                    Effective factor
-                    </ListItem>
+            {sprint && <div className={classes.content}>
+                <List className={classes.dataColumn} dense>
+                    {getListItem("Id", sprint.sprintId)}
+                    {getListItem("Status", "in progress")} {/*// TODO: status future | in progress | not summarised | summarised */}
+                    {/* {getListItem("Start date", sprint.startDate)}
+                    {getListItem("End date", sprint.endDate)} */}
+                    {getListItem("All declared hours", "128")} {/*// TODO: counting declared hours in parent component */}
                 </List>
-                {sprint &&
-                    <List className={classes.rightColumn} dense>
-                        <ListItem className={classes.rightListItem}>
-                        {sprint.closingStatus ? "closed" : "open"}
-                        </ListItem>
-                        <ListItem className={classes.rightListItem}>
-                        {sprint.originalEstimatedHours}
-                        </ListItem>
-                        <ListItem className={classes.rightListItem}>
-                        {sprint.endPlannedHours}
-                        </ListItem>
-                        <ListItem className={classes.rightListItem}>
-                        {sprint.burnedHours}
-                        </ListItem>
-                        <ListItem className={classes.rightListItem}>
-                        {sprint.effectiveFactor}
-                        </ListItem>
-                    </List>
-                }
-            </div>
+                <List className={classes.dataColumn} dense>
+                    {getListItem("Expected factor", "2.44")} {/* factor from previous sprint */}
+                    {getListItem("Estimated effective hours", "52.46")} {/* declared / factor */}
+                </List>
+                <List className={classes.dataColumn} dense> {/*// TODO: whole column */}
+                    {getListItem("Original estimated hours", "30")}
+                    {getListItem("End planned hours", "45")} 
+                    {getListItem("Burned hours", "43")}
+                </List>
+                <List className={classes.dataColumn} dense> {/*// TODO: whole column */}
+                    {getListItem("Effective hours needed", "52")}
+                    {getListItem("Effective sprint factor", "3.42")}
+                    {getListItem("Effective project factor", "3.20")}
+                </List>
+            </div>}
         </div>
     );
 }
