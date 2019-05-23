@@ -10,66 +10,57 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import api from "../api";
 import AddIcon from '@material-ui/icons/Add';
+import {resolve} from "dns";
 
 
 const styles = theme => ({
+    root: {
+        float: "left",
+    },
     textField: {
-        width: '100%',
+        width: "100%",
+        height: 60,
+
     },
     button: {
         marginTop: theme.spacing.unit * 4,
     },
-    mainButton: {
-        float: "left",
-    },
-    buttonIcon: {
-        float: "left",
-        paddingRight: 10
-    },
 });
 
 function getCurrentDate() {
-  const today = new Date();
-  const dd = String(today.getDate()).padStart(2, '0');
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const yyyy = today.getFullYear();
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
 
-  return yyyy + '-' + mm + '-' + dd
+    return yyyy + '-' + mm + '-' + dd
 }
 
-function isValidDate(strdate){
-  var splitdate = strdate.split("-");
-  var day = Number(splitdate[2]);
-  var month = Number(splitdate[1]);
-  var year = Number(splitdate[0]);
-  var date = new Date();
-  date.setFullYear(year, month - 1, day);
-  // month - 1 since the month index is 0-based (0 = January)
-  if ((date.getFullYear() === year) && 
-      (date.getMonth() === month - 1) && 
-      (date.getDate() === day) )
-    return true;
-  return false;
-}
-
-function isAfter(strdate1, strdate2){
-  var date1 = new Date();
-  var date2 = new Date();
-  var date1split = strdate1.split("-");
-  var date2split = strdate2.split("-");
-  date1.setFullYear(Number(date1split[0]), Number(date1split[1] - 1), Number(date1split[2]));
-  date2.setFullYear(Number(date2split[0]), Number(date2split[1] - 1), Number(date2split[2]));
-  if(date1 < date2)
-    return true
-  return false
-}
+// function isValidDate(strdate) {
+//     var splitdate = strdate.split("-");
+//     var day = Number(splitdate[2]);
+//     var month = Number(splitdate[1]);
+//     var year = Number(splitdate[0]);
+//     var date = new Date();
+//     date.setFullYear(year, month - 1, day);
+//     // month - 1 since the month index is 0-based (0 = January)
+//     if ((date.getFullYear() === year) &&
+//         (date.getMonth() === month - 1) &&
+//         (date.getDate() === day))
+//         return true;
+//     return false;
+// }
+//
+// function isAfter(strdate1, strdate2) {
+//     return new Date(strdate1) > new Date(strdate2)
+// }
 
 class CreateSprintDialog extends React.Component {
 
     state = {
         open: false,
-        startDate: getCurrentDate(),
-        endDate: getCurrentDate(),
+        startDate: getCurrentDate(), //TODO data konca poprzedniego sprintu
+        endDate: getCurrentDate(), // TODO startDate + duration of sprint
     };
 
     handleClickOpen = () => {
@@ -81,7 +72,15 @@ class CreateSprintDialog extends React.Component {
     };
 
     handleDateChange = name => (event) => {
-      this.setState({[name]: event.target.value})
+        this.setState({[name]: event.target.value})
+    };
+
+    startDateValid = () => {
+        return this.state.startDate === ''
+    };
+
+    endDateValid = () => {
+        return this.state.endDate === '' || new Date(this.state.startDate) >= new Date(this.state.endDate)
     };
 
     createSprint = () => {
@@ -89,33 +88,34 @@ class CreateSprintDialog extends React.Component {
         const {startDate, endDate} = this.state;
 
         const data = {
-          startDate: startDate,
-          endDate: endDate,
+            startDate: startDate,
+            endDate: endDate,
         };
 
-        api.fetchNoContent(
+        // TODO wait for backend fix
+        api.fetch(
             api.endpoints.createSprint(
                 projectId,
                 data
             ),
-            () => {
+            (projectId) => {
+                console.log(projectId)
                 this.handleClose();
                 this.props.parentUpdateCallback();
             });
-    }
+    };
 
     render() {
         const {classes, project} = this.props;
         const projectName = project ? project.name : null;
 
         return (
-            <div>
-                <Button variant="contained" color="primary"
+            <div className={classes.root}>
+                <Button variant="outlined"
                         onClick={this.handleClickOpen}
-                        className={classes.mainButton}
                         size='small'
                         disabled={this.props.disabled}>
-                    <AddIcon className={classes.buttonIcon} fontSize='small' />
+                    <AddIcon className={classes.buttonIcon} fontSize='small'/>
                     New Sprint
                 </Button>
                 <Dialog
@@ -126,28 +126,38 @@ class CreateSprintDialog extends React.Component {
                     <DialogTitle id="create-sprint-form">New sprint</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Creating sprint in project: {projectName}
+                            Adding a sprint to project {projectName}
                         </DialogContentText>
                         <TextField
-                        id="start-date"
-                        label ="Planned start date for sprint"
-                        className={classes.textField}
-                        value={this.state.startDate}
-                        onChange={this.handleDateChange("startDate")}
-                        error={!isValidDate(this.state.startDate)}
-                        margin="normal"
-                        type="date"
-                      />
-                      <TextField
-                        id="end-date"
-                        label ="Planned end date for sprint"
-                        className={classes.textField}
-                        value={this.state.endDate}
-                        onChange={this.handleDateChange("endDate")}
-                        error={!isValidDate(this.state.endDate) || !isAfter(this.state.startDate, this.state.endDate)}
-                        margin="normal"
-                        type="date"
-                      />
+                            id="start-date"
+                            label="Start date"
+                            InputLabelProps={{shrink: true}}
+                            className={classes.textField}
+                            value={this.state.startDate}
+                            onChange={this.handleDateChange("startDate")}
+
+                            // error={this.startDateValid()}
+                            helperText={this.startDateValid() ? "bad start date" : ""}
+                            FormHelperTextProps={{error: this.startDateValid()}}
+
+                            margin="normal"
+                            type="date"
+                        />
+                        <TextField
+                            id="end-date"
+                            label="End date"
+                            InputLabelProps={{shrink: true}}
+                            className={classes.textField}
+                            value={this.state.endDate}
+                            onChange={this.handleDateChange("endDate")}
+
+                            // error={this.endDateValid()}
+                            helperText={this.endDateValid() ? "bad end date" : ""}
+                            FormHelperTextProps={{error: this.endDateValid()}}
+
+                            margin="normal"
+                            type="date"
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color="primary">

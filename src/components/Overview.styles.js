@@ -6,41 +6,55 @@ const styles = theme => ({
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
     },
-    selectSectionContainer: {
+
+
+    sectionTitle: {
         float: "left",
+        paddingRight: 25,
     },
-    projectSelection: {
-        float: "left",
-        marginRight: 50,
-    },
-    sprintSelection: {
-        float: "left",
-    },
-    typography: {
+
+    selectSection: {
         float: 'left',
-        paddingRight: 15,
+        width: 500,
+        paddingRight: 50,
+    },
+    singleSelectionContainer: {
+        clear: "left",
+        paddingBottom: 30,
+    },
+    selectionHeader: {
+        // padding:10,
     },
     buttonsContainer: {
-        paddingTop: 20,
-        clear: "left",
+        float: "right",
     },
     button: {
         float: "left",
-        paddingRight: 10,
-        marginRight: 15
+        marginLeft: 20,
     },
     buttonIcon: {
         float: "left",
-        paddingRight: 10
+        paddingRight: 2
     },
-    dialog: {
+    projectSelection: {
+        clear: "left",
+        marginRight: 50,
+        width: "100%",
+    },
+    sprintSelection: {
+        clear: "left",
+        marginRight: 50,
+        width: "100%",
+    },
+
+    statisticsPaper: {
         float: "left",
-        paddingRight: 10
+        marginBottom: 20,
     },
 
     tableContainer: {
-        paddingTop: 60,
         clear: "left",
+        paddingTop: 30,
     },
     table: {
         maxHeight: 320,

@@ -6,13 +6,14 @@ import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
 import api from "../api";
 import styles from "./Overview.styles";
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider, Paper} from "@material-ui/core";
 import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
 import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
 import CreateSprintDialog from "./CreateSprintDialog";
-import EditIcon from '@material-ui/icons/Edit';
+import SettingsIcon from '@material-ui/icons/SettingsOutlined';
+import SprintStatistics from "./SprintStatistics";
 
 
 function declarationListItem(declaration) {
@@ -158,14 +159,33 @@ class Overview extends React.Component {
         return (
             <div className={classes.root}>
                 <div className={classes.content}>
-                    <div>
-                        <div className={classes.selectSectionContainer}>
-                            <div className={classes.projectSelection}>
-
-                                <Typography variant="h6" component="h2" className={classes.typography}>
+                    <div className={classes.selectSection}>
+                        <div className={classes.singleSelectionContainer}>
+                            <div className={classes.selectionHeader} >
+                                <Typography variant="h4" className={classes.sectionTitle}>
                                     Project
                                 </Typography>
-                                
+                                <div className={classes.buttonsContainer}>
+                                    {//this.newSprintButtonEnabled() && //TODO am i scrum master
+                                        <CreateSprintDialog
+                                            project={this.getActiveProject()}
+                                            parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
+                                            disabled={!this.newSprintButtonEnabled()}
+                                        />
+                                    }
+                                    {//this.editProjectButtonEnabled() && //TODO am i scrum master
+                                        <Button variant="outlined"
+                                                onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
+                                                className={classes.button}
+                                                size='small'
+                                                disabled={!this.editProjectButtonEnabled()}>
+                                            <SettingsIcon className={classes.buttonIcon} fontSize='small' />
+                                            Configure
+                                        </Button>
+                                    }
+                                </div>
+                            </div>
+                            <div className={classes.projectSelection}>
                                 <ProjectSelect
                                     projects={this.state.projects.map(p => ({
                                         id: p.projectId,
@@ -177,41 +197,25 @@ class Overview extends React.Component {
                                     selectedProjectId={this.state.projectId}
                                 />
                             </div>
-                            <div className={classes.buttonsContainer}>
-                                {//this.newSprintButtonEnabled() &&
-                                    // <Button variant="contained" color="primary"
-                                    //         onClick={this.handleClickOpen}
-                                    //         className={classes.button}
-                                    //         size='small'
-                                    //         disabled={!this.newSprintButtonEnabled()}>
-                                    //     <AddIcon className={classes.buttonIcon} fontSize='small' />
-                                    //     New sprint
-                                    // </Button>
-                                    <CreateSprintDialog
-                                        className={classes.dialog}
-                                        project={this.getActiveProject()}
-                                        parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
-                                        disabled={!this.newSprintButtonEnabled()}
-                                    />
-                                }
-                                {//this.editProjectButtonEnabled() &&
-                                    <Button variant="contained" color="primary"
-                                            onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
-                                            className={classes.button}
-                                            size='small'
-                                            disabled={!this.editProjectButtonEnabled()}>
-                                        <EditIcon className={classes.buttonIcon} fontSize='small' />
-                                        Configure
-                                    </Button>
-                                }
-                            </div>
                         </div>
 
-                        <div className={classes.selectSectionContainer}>
-                            <div className={classes.sprintSelection}>
-                                <Typography variant="h6" component="h2" className={classes.typography}>
+                        <div className={classes.singleSelectionContainer}>
+                            <div className={classes.selectionHeader}>
+                                <Typography variant="h4" className={classes.sectionTitle}>
                                     Sprint
                                 </Typography>
+                                <div className={classes.buttonsContainer}>
+                                    {//this.closeSprintButtonEnabled() && //TODO am i scrum master
+                                        <CloseSprintDialog
+                                            project={this.getActiveProject()}
+                                            sprint={this.getActiveSprint()}
+                                            parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
+                                            disabled={!this.closeSprintButtonEnabled()}
+                                        />
+                                    }
+                                </div>
+                            </div>
+                            <div className={classes.sprintSelection}>
                                 <SprintSelect
                                     sprints={this.state.sprints.map(s => ({
                                         id: s.sprintId,
@@ -224,28 +228,20 @@ class Overview extends React.Component {
                                     isDisabled={this.state.projectId === undefined}
                                 />
                             </div>
-
-                            <div className={classes.buttonsContainer}>
-                                
-                                {//this.closeSprintButtonEnabled() &&
-                                    <CloseSprintDialog
-                                        className={classes.dialog}
-                                        project={this.getActiveProject()}
-                                        sprint={this.getActiveSprint()}
-                                        parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
-                                        disabled={!this.closeSprintButtonEnabled()}
-                                    />
-                                }
-                            </div>
                         </div>
                     </div>
 
+                    {this.getActiveSprint() &&
+                        <Paper className={classes.statisticsPaper} elevation={2}>
+                            <SprintStatistics sprint={this.getActiveSprint()} />
+                        </Paper>
+                    }
+
                     <div className={classes.tableContainer}>
-                        <Typography variant="h4" gutterBottom component="h2" className={classes.typography}>
-                            Declarations table
+                        <Typography variant="h4" gutterBottom className={classes.sectionTitle}>
+                            Declarations
                         </Typography>
                         <DeclareHoursDialog
-                            className={classes.dialog}
                             disabled={!this.declareHoursButtonEnabled()}
                             project={this.getActiveProject()}
                             sprint={this.getActiveSprint()}
@@ -260,7 +256,7 @@ class Overview extends React.Component {
                     </div>
 
                     <div className={classes.chartContainer}>
-                        <Typography variant="h4" gutterBottom component="h2">
+                        <Typography variant="h4" gutterBottom>
                             Factor chart
                         </Typography>
                         <div component="div" className={classes.chart}>

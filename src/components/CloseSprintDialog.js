@@ -9,7 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import api from "../api";
-import CloseIcon from '@material-ui/icons/Close';
+import CheckIcon from '@material-ui/icons/Check';
 
 
 const styles = theme => ({
@@ -18,13 +18,6 @@ const styles = theme => ({
     },
     button: {
         marginTop: theme.spacing.unit * 4,
-    },
-    mainButton: {
-        float: "left",
-    },
-    buttonIcon: {
-        float: "left",
-        paddingRight: 10
     },
 });
 
@@ -86,15 +79,13 @@ class CloseSprintDialog extends React.Component {
         const projectName = project ? project.name : null;
 
         return (
-
             <div>
-                <Button variant="contained" color="primary"
+                <Button variant="outlined"
                         onClick={this.handleClickOpen}
-                        className={classes.mainButton}
                         size='small'
                         disabled={this.props.disabled}>
-                    <CloseIcon className={classes.buttonIcon} fontSize='small' />
-                    Close
+                    <CheckIcon className={classes.buttonIcon} fontSize='small'/>
+                    Summarise
                 </Button>
                 <Dialog
                     open={this.state.open}
@@ -139,7 +130,7 @@ class CloseSprintDialog extends React.Component {
                             Cancel
                         </Button>
                         <Button onClick={this.closeSprint} color="primary" disabled={!this.isValid()}>
-                            Close sprint
+                            Summarise &amp; close sprint
                         </Button>
                     </DialogActions>
                 </Dialog>
