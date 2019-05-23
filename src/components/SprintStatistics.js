@@ -56,7 +56,7 @@ const getListItem = (primary, secondary) => {
 }
 
 const SprintStatistics = (props) => {
-
+    
     const {classes, sprint} = props;
 
     return (
@@ -72,37 +72,34 @@ const SprintStatistics = (props) => {
             </div>
 
             {sprint &&
-            <Grid container spacing={18}>
+            <Grid container spacing={16}>
                 <Grid item xs={12}>
                     <Divider className={classes.divider}/>
                 </Grid>
                 <Grid item xs={3}>
                     <List dense>
-                        {getListItem("Id", sprint.sprintId)}
-                        {getListItem("Status", "in progress")} {/*// TODO: status future | in progress | not summarised | summarised */}
-                        {/* {getListItem("Start date", sprint.startDate)}
-                            {getListItem("End date", sprint.endDate)} */}
-                        {getListItem("All declared hours", "128")} {/*// TODO: counting declared hours in parent component */}
+                        {getListItem("Status", sprint.closingStatus ? "closed" : "open")} {/*// TODO: status future | in progress | not summarised | summarised */}
+                        {getListItem("All declared hours", null)} {/*// TODO: counting hours sum in backend */}
                     </List>
                 </Grid>
                 <Grid item xs={3}>
                     <List dense>
-                        {getListItem("Expected factor", "2.44")} {/* factor from previous sprint */}
-                        {getListItem("Estimated effective hours", "52.46")} {/* declared / factor */}
+                        {getListItem("Expected factor", sprint.factor)}
+                        {getListItem("Estimated effective hours", null)} {/* TODO: calculations in backend */}
                     </List>
                 </Grid>
                 <Grid item xs={3}>
                     <List dense> {/*// TODO: whole column */}
-                        {getListItem("Original estimated hours", "30")}
-                        {getListItem("End planned hours", "45")}
-                        {getListItem("Burned hours", "43")}
+                        {getListItem("Original estimated hours", sprint.originalEstimatedHours)}
+                        {getListItem("End planned hours", sprint.endPlannedHours)}
+                        {getListItem("Burned hours", sprint.burnedHours)}
                     </List>
                 </Grid>
                 <Grid item xs={3}>
                     <List dense> {/*// TODO: whole column */}
-                        {getListItem("Effective hours needed", "52")}
-                        {getListItem("Effective sprint factor", "3.42")}
-                        {getListItem("Effective project factor", "3.20")}
+                        {getListItem("Effective hours needed", null)} {/*// TODO: weird calculations in backend */}
+                        {getListItem("Effective sprint factor", sprint.effectiveFactor)}
+                        {getListItem("Effective project factor", sprint.effectiveFactorWithHistory)}
                     </List>
                 </Grid>
             </Grid>
