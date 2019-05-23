@@ -69,6 +69,7 @@ export default {
                 "Content-Type": "application/json"
             }
         }),
+
         setProjectMembership: (projectId, userId, data) => ({
             path: url(
                 `project/${projectId}/membership/${userId}/`
@@ -79,6 +80,18 @@ export default {
                 "Content-Type": "application/json"
             }
         }),
+
+        createSprint: (projectId, data) => ({
+            path: url(
+                `project/${projectId}/sprint`
+            ),
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }),
+
         closeSprint: (projectId, sprintId, data) => ({
             path: url(
                 `project/${projectId}/sprint/${sprintId}`

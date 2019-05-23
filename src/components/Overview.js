@@ -11,9 +11,11 @@ import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
 import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
+import CreateSprintDialog from "./CreateSprintDialog";
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import SprintStatistics from "./SprintStatistics";
+
 
 
 function declarationListItem(declaration) {
@@ -167,14 +169,11 @@ class Overview extends React.Component {
                                 </Typography>
                                 <div className={classes.buttonsContainer}>
                                     {//this.newSprintButtonEnabled() && //TODO am i scrum master
-                                        <Button variant="contained"
-                                                onClick={this.handleClickOpen}
-                                                className={classes.button}
-                                                size='small'
-                                                disabled={!this.newSprintButtonEnabled()}>
-                                            <AddIcon className={classes.buttonIcon} fontSize='small' />
-                                            New sprint
-                                        </Button>
+                                        <CreateSprintDialog
+                                            project={this.getActiveProject()}
+                                            parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
+                                            disabled={!this.newSprintButtonEnabled()}
+                                        />
                                     }
                                     {//this.editProjectButtonEnabled() && //TODO am i scrum master
                                         <Button variant="contained"
@@ -210,7 +209,6 @@ class Overview extends React.Component {
                                 <div className={classes.buttonsContainer}>
                                     {//this.closeSprintButtonEnabled() && //TODO am i scrum master
                                         <CloseSprintDialog
-                                            className={classes.dialog}
                                             project={this.getActiveProject()}
                                             sprint={this.getActiveSprint()}
                                             parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
@@ -244,7 +242,6 @@ class Overview extends React.Component {
                             Declarations
                         </Typography>
                         <DeclareHoursDialog
-                            className={classes.dialog}
                             disabled={!this.declareHoursButtonEnabled()}
                             project={this.getActiveProject()}
                             sprint={this.getActiveSprint()}
