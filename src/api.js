@@ -83,9 +83,13 @@ export default {
 
         createSprint: (projectId, data) => ({
             path: url(
-                `project/${projectId}/create_sprint`
+                `project/${projectId}`
             ),
             method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
         }),
 
         closeSprint: (projectId, sprintId, data) => ({
