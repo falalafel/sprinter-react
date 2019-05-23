@@ -120,27 +120,32 @@ const getOptionLabel = (option) => {
     return option.name.trim();
 };
 
-const formatOptionLabel = option => (
-    <div>
-        {option.name}
-        <ListItemSecondaryAction>
-            {!option.isOpen ?
-                <Tooltip disableFocusListener disableTouchListener placement="left" title="Project closed"
-                         style={{float: "right", paddingRight: 10, color: "#666666"}}>
+const formatOptionLabel = (option) => {
+    return (
+        <div>
+            {option.name}
+            <ListItemSecondaryAction>
+                {!option.isOpen &&
+                <Tooltip disableFocusListener
+                         disableTouchListener
+                         placement="left"
+                         title="Project closed"
+                         style={{float: "right", paddingRight: 10, color: "#666666"}}
+                         PopperProps={option.id > 6 && option.id !== 3 ? {style: {paddingRight: 30}} : {}} //TODO in im scrum master
+                >
                     <NotInterestedIcon fontSize='small'/>
                 </Tooltip>
-                : ""
-            }
-            {option.id > 6 && option.id !== 3 ? //TODO if im scrum master
+                }
+                {option.id > 6 && option.id !== 3 && //TODO if im scrum master
                 <Tooltip disableFocusListener disableTouchListener placement="left" title="Scrum master permissions"
                          style={{float: "right", paddingRight: 10, color: "#666666"}}>
                     <PeopleIcon fontSize='small'/>
                 </Tooltip>
-                : ""
-            }
-        </ListItemSecondaryAction>
-    </div>
-);
+                }
+            </ListItemSecondaryAction>
+        </div>
+    );
+};
 
 const customFilterOption = (option, rawInput) => {
     const inputWords = rawInput.toUpperCase().split(/ +|-|_/);
