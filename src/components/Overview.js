@@ -11,8 +11,8 @@ import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
 import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
+import CreateSprintDialog from "./CreateSprintDialog";
 import EditIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
 
 
 function declarationListItem(declaration) {
@@ -179,14 +179,20 @@ class Overview extends React.Component {
                             </div>
                             <div className={classes.buttonsContainer}>
                                 {//this.newSprintButtonEnabled() &&
-                                    <Button variant="contained" color="primary"
-                                            onClick={this.handleClickOpen}
-                                            className={classes.button}
-                                            size='small'
-                                            disabled={!this.newSprintButtonEnabled()}>
-                                        <AddIcon className={classes.buttonIcon} fontSize='small' />
-                                        New sprint
-                                    </Button>
+                                    // <Button variant="contained" color="primary"
+                                    //         onClick={this.handleClickOpen}
+                                    //         className={classes.button}
+                                    //         size='small'
+                                    //         disabled={!this.newSprintButtonEnabled()}>
+                                    //     <AddIcon className={classes.buttonIcon} fontSize='small' />
+                                    //     New sprint
+                                    // </Button>
+                                    <CreateSprintDialog
+                                        className={classes.dialog}
+                                        project={this.getActiveProject()}
+                                        parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
+                                        disabled={!this.newSprintButtonEnabled()}
+                                    />
                                 }
                                 {//this.editProjectButtonEnabled() &&
                                     <Button variant="contained" color="primary"
