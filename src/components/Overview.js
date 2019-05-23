@@ -96,6 +96,10 @@ class Overview extends React.Component {
 
     componentDidMount() {
         const {projectId, sprintId} = this.getUrlParams(window.location);
+        this.setState({
+            projectId: projectId,
+            sprintId: sprintId
+        });
 
         this.fetchAndSetProjects();
         this.fetchAndSetSprints(projectId);
@@ -123,6 +127,20 @@ class Overview extends React.Component {
 
     getActiveSprint() {
         return this.state.sprints.find(s => s.sprintId === this.state.sprintId) || null
+    }
+
+    getNeighbourSprints() {
+        const {sprints, sprintId} = this.state;
+        if (sprintId === undefined)
+            return {previous: undefined, next: undefined};
+
+        const sortedSprints = sprints.slice().sort((a, b) => a.sprintId - b.sprintId);
+        const index = sortedSprints.findIndex(s => s.sprintId === sprintId);
+
+        return {
+            previous: sortedSprints[index - 1],
+            next: sortedSprints[index + 1]
+        };
     }
 
     declareHoursButtonEnabled() {
@@ -155,6 +173,7 @@ class Overview extends React.Component {
     render() {
         const {classes} = this.props;
         const {projectId, sprintId} = this.state;
+        const {next, previous} = this.getNeighbourSprints();
 
         return (
             <div className={classes.root}>
@@ -205,6 +224,24 @@ class Overview extends React.Component {
                                     Sprint
                                 </Typography>
                                 <div className={classes.buttonsContainer}>
+
+                                        <Button variant="outlined"
+                                                onClick={() => this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${previous.sprintId}`)}
+                                                className={classes.button}
+                                                size='small'
+                                                disabled={previous === undefined}>
+                                            <SettingsIcon className={classes.buttonIcon} fontSize='small' />
+                                            Previous
+                                        </Button>
+                                        <Button variant="outlined"
+                                                onClick={() => this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${next.sprintId}`)}
+                                                className={classes.button}
+                                                size='small'
+                                                disabled={next === undefined}>
+                                            <SettingsIcon className={classes.buttonIcon} fontSize='small' />
+                                            Next
+                                        </Button>
+
                                     {//this.closeSprintButtonEnabled() && //TODO am i scrum master
                                         <CloseSprintDialog
                                             project={this.getActiveProject()}
