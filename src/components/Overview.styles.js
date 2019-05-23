@@ -10,7 +10,7 @@ const styles = theme => ({
 
     sectionTitle: {
         float: "left",
-        paddingRight: 15,
+        paddingRight: 25,
     },
 
     selectSection: {
@@ -27,10 +27,6 @@ const styles = theme => ({
     },
     buttonsContainer: {
         float: "right",
-    },
-    dialog: {
-        float: "left",
-        paddingRight: 10
     },
     button: {
         float: "left",

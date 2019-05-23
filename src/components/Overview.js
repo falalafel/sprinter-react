@@ -13,9 +13,7 @@ import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
 import CreateSprintDialog from "./CreateSprintDialog";
 import EditIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
 import SprintStatistics from "./SprintStatistics";
-
 
 
 function declarationListItem(declaration) {

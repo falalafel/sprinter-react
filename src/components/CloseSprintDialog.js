@@ -19,13 +19,6 @@ const styles = theme => ({
     button: {
         marginTop: theme.spacing.unit * 4,
     },
-    mainButton: {
-        float: "left",
-    },
-    buttonIcon: {
-        float: "left",
-        paddingRight: 10
-    },
 });
 
 class CloseSprintDialog extends React.Component {
@@ -86,14 +79,12 @@ class CloseSprintDialog extends React.Component {
         const projectName = project ? project.name : null;
 
         return (
-
             <div>
                 <Button variant="contained"
                         onClick={this.handleClickOpen}
-                        className={classes.mainButton}
                         size='small'
                         disabled={this.props.disabled}>
-                    <CheckIcon className={classes.buttonIcon} fontSize='small' />
+                    <CheckIcon className={classes.buttonIcon} fontSize='small'/>
                     Summarise
                 </Button>
                 <Dialog
