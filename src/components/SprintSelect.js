@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import {emphasize} from '@material-ui/core/styles/colorManipulator';
 import {Tooltip} from "@material-ui/core";
-import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import DoneIcon from '@material-ui/icons/Done';
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const styles = theme => ({
@@ -127,9 +127,9 @@ const formatOptionLabel = option => (
         </Tooltip>
         {option.isOpen === false &&
             <ListItemSecondaryAction>
-                <Tooltip disableFocusListener disableTouchListener placement="left" title="Sprint closed"
-                         style={{float: "right", paddingRight: 10}}>
-                    <NotInterestedIcon color='disabled' fontSize='small'/>
+                <Tooltip disableFocusListener disableTouchListener placement="left" title="Sprint summerised"
+                         style={{float: "right", paddingRight: 10, color: "#666666"}}>
+                    <DoneIcon fontSize='small'/>
                 </Tooltip>
             </ListItemSecondaryAction>
         }

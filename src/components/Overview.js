@@ -167,7 +167,7 @@ class Overview extends React.Component {
                                 </Typography>
                                 <div className={classes.buttonsContainer}>
                                     {//this.newSprintButtonEnabled() && //TODO am i scrum master
-                                        <Button variant="outlined" color="primary"
+                                        <Button variant="contained"
                                                 onClick={this.handleClickOpen}
                                                 className={classes.button}
                                                 size='small'
@@ -177,7 +177,7 @@ class Overview extends React.Component {
                                         </Button>
                                     }
                                     {//this.editProjectButtonEnabled() && //TODO am i scrum master
-                                        <Button variant="outlined" color="primary"
+                                        <Button variant="contained"
                                                 onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
                                                 className={classes.button}
                                                 size='small'

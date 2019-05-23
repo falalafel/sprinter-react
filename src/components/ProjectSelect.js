@@ -126,15 +126,15 @@ const formatOptionLabel = option => (
         <ListItemSecondaryAction>
             {!option.isOpen ?
                 <Tooltip disableFocusListener disableTouchListener placement="left" title="Project closed"
-                         style={{float: "right", paddingRight: 10}}>
-                    <NotInterestedIcon color='disabled' fontSize='small'/>
+                         style={{float: "right", paddingRight: 10, color: "#666666"}}>
+                    <NotInterestedIcon fontSize='small'/>
                 </Tooltip>
                 : ""
             }
             {option.id > 6 && option.id !== 3 ? //TODO if im scrum master
                 <Tooltip disableFocusListener disableTouchListener placement="left" title="Scrum master permissions"
-                         style={{float: "right", paddingRight: 10}}>
-                    <PeopleIcon color='disabled' fontSize='small'/>
+                         style={{float: "right", paddingRight: 10, color: "#666666"}}>
+                    <PeopleIcon fontSize='small'/>
                 </Tooltip>
                 : ""
             }

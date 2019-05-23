@@ -34,7 +34,7 @@ const styles = theme => ({
     },
     button: {
         float: "left",
-        paddingRight: 25,
+        marginLeft: 15,
     },
     buttonIcon: {
         float: "left",
