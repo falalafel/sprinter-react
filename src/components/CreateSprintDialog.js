@@ -14,16 +14,9 @@ import {resolve} from "dns";
 
 
 const styles = theme => ({
-    root: {
-        float: "left",
-    },
     textField: {
         width: "100%",
         height: 60,
-
-    },
-    button: {
-        marginTop: theme.spacing.unit * 4,
     },
 });
 
@@ -35,25 +28,6 @@ function getCurrentDate() {
 
     return yyyy + '-' + mm + '-' + dd
 }
-
-// function isValidDate(strdate) {
-//     var splitdate = strdate.split("-");
-//     var day = Number(splitdate[2]);
-//     var month = Number(splitdate[1]);
-//     var year = Number(splitdate[0]);
-//     var date = new Date();
-//     date.setFullYear(year, month - 1, day);
-//     // month - 1 since the month index is 0-based (0 = January)
-//     if ((date.getFullYear() === year) &&
-//         (date.getMonth() === month - 1) &&
-//         (date.getDate() === day))
-//         return true;
-//     return false;
-// }
-//
-// function isAfter(strdate1, strdate2) {
-//     return new Date(strdate1) > new Date(strdate2)
-// }
 
 class CreateSprintDialog extends React.Component {
 
@@ -110,12 +84,12 @@ class CreateSprintDialog extends React.Component {
         const projectName = project ? project.name : null;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <Button variant="outlined"
                         onClick={this.handleClickOpen}
                         size='small'
                         disabled={this.props.disabled}>
-                    <AddIcon className={classes.buttonIcon} fontSize='small'/>
+                    <AddIcon fontSize='small'/>
                     New Sprint
                 </Button>
                 <Dialog
@@ -164,7 +138,7 @@ class CreateSprintDialog extends React.Component {
                             Cancel
                         </Button>
                         <Button onClick={this.createSprint} color="primary">
-                            Create sprint
+                            Create
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -176,6 +150,7 @@ class CreateSprintDialog extends React.Component {
 
 CreateSprintDialog.propTypes = {
     classes: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
     project: PropTypes.object,
     parentUpdateCallback: PropTypes.func
 };
