@@ -16,7 +16,7 @@ const styles = theme => ({
     root: {
         float: "left",
         padding: 15,
-        paddingRight: 30
+        paddingRight: 30,
     },
     title: {
         float: "left",

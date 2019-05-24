@@ -29,13 +29,29 @@ const styles = theme => ({
         float: "right",
     },
     button: {
-        float: "left",
-        marginLeft: 20,
+        float: "right",
+        marginLeft: 15,
     },
     buttonIcon: {
         float: "left",
         paddingRight: 2
     },
+    arrowButton: {
+        float: "right",
+        marginLeft: 3,
+    },
+    test: {
+      padding: -10,
+    },
+
+    dialogCreateSprint: {
+        float: "right",
+    },
+    dialogCloseSprint: {
+        float: "right",
+        marginRight: 12,
+    },
+
     projectSelection: {
         clear: "left",
         marginRight: 50,
@@ -50,6 +66,7 @@ const styles = theme => ({
     statisticsPaper: {
         float: "left",
         marginBottom: 20,
+
     },
 
     tableContainer: {

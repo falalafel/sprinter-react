@@ -8,15 +8,18 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import WatchLaterIcon from "@material-ui/icons/WatchLaterOutlined";
+import HowToVoteIcon from "@material-ui/icons/HowToVote";
+import CachedIcon from "@material-ui/icons/Cached";
 import api from "../api";
 
 const styles = theme => ({
     textField: {
         width: '100%',
     },
-    button: {
-        marginTop: theme.spacing.unit * 4,
-    },
+    buttonIcon: {
+        marginRight: 10,
+    }
 });
 
 class DeclareHoursDialog extends React.Component {
@@ -25,7 +28,7 @@ class DeclareHoursDialog extends React.Component {
         open: false,
         availableHours: "",
         hoursLeft: "",
-        comment: ""
+        comment: "",
     };
 
     handleClickOpen = () => {
@@ -66,8 +69,8 @@ class DeclareHoursDialog extends React.Component {
             api.endpoints.declareHours(
                 projectId,
                 sprintId,
-                1, //TODO add proper userID
-                data
+                this.props.userId,
+                data,
             ),
             () => {
                 this.handleClose();
@@ -75,20 +78,43 @@ class DeclareHoursDialog extends React.Component {
             });
     };
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {declaration} = this.props;
+
+        if (prevProps.declaration !== declaration) {
+            this.setState(
+                {
+                    availableHours: declaration ? declaration.hoursAvailable : "",
+                    hoursLeft: declaration ? declaration.workNeeded : "",
+                    comment: declaration ? declaration.comment : "",
+                }
+            )
+        }
+    }
+
     render() {
-        const {classes, sprint, project} = this.props;
+        const {classes, declaration, sprint, project} = this.props;
         const sprintId = sprint ? sprint.sprintId : null;
         const projectName = project ? project.name : null;
 
         return (
 
             <div>
-                <Button variant="contained"
-                        color="primary"
-                        onClick={this.handleClickOpen}
-                        disabled={this.props.disabled}>
-                    Add declaration
-                </Button>
+                {declaration ?
+                    <Button variant="outlined"
+                            onClick={this.handleClickOpen}
+                            disabled={this.props.disabled}>
+                        <CachedIcon className={classes.buttonIcon} fontSize="small"/>
+                        Change Declaration
+                    </Button>
+                    :
+                    <Button variant="outlined"
+                            onClick={this.handleClickOpen}
+                            disabled={this.props.disabled}>
+                        <HowToVoteIcon className={classes.buttonIcon} fontSize="small"/>
+                        Add Declaration
+                    </Button>
+                }
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
@@ -144,8 +170,11 @@ class DeclareHoursDialog extends React.Component {
 
 DeclareHoursDialog.propTypes = {
     classes: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
+    declaration: PropTypes.object,
     project: PropTypes.object,
     sprint: PropTypes.object,
+    userId: PropTypes.number,
     parentUpdateCallback: PropTypes.func
 };
 
