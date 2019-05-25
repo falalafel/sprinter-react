@@ -60,7 +60,8 @@ class SignIn extends React.Component {
     };
 
     handleLogin = () => {
-        this.props.history.push('/')
+        //this.props.history.push('/')
+
     };
 
     fetchLogin = (login, password) => {
@@ -70,12 +71,13 @@ class SignIn extends React.Component {
 
                 //TODO setting global const userId
                 this.handleLogin()
-
+                console.log(response)
             }
         )
     };
 
     render() {
+        console.log(this.props.location.state)
         const {classes} = this.props;
 
         return (
