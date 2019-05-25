@@ -5,7 +5,6 @@ import AddProject from './AddProject';
 import Overview from './Overview';
 import SignIn from "./SignIn";
 import ProtectedRoute from "./ProtectedRoute";
-import authentication from "../authentication";
 
 
 const Sprinter = (props) => {
@@ -29,7 +28,7 @@ class App extends React.Component {
             <div>
                 <Switch>
                     <Route exact strict path='/sign-in' component={SignIn}/>
-                    <Route exact strict path='/log-in' component={SignIn}/>
+                    <Route exact strict path='/sign-up' component={SignIn}/> {/* TODO add proper component */}
                     <Route strict path='/' component={Sprinter}/>
                 </Switch>
             </div>

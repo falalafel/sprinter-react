@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import {userRole} from "../userRole";
 
 const styles = theme => ({
     root: {
@@ -37,8 +38,14 @@ class SprinterAppBar extends React.Component {
         this.props.history.push('/overview')
     };
 
+    handleLogOut = () => {
+        localStorage.removeItem('user');
+        this.props.history.push('/sign-in')
+    };
+
     render() {
         const {classes} = this.props;
+        const loggedUser = JSON.parse(localStorage.getItem('user'));
 
         return (
             <div className={classes.root}>
@@ -47,9 +54,10 @@ class SprinterAppBar extends React.Component {
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             Sprinter
                         </Typography>
-                        <Button color="inherit" onClick={this.handleOverview}>Overview</Button>
-                        <Button color="inherit" onClick={this.handleAddProject}>New Project</Button>
-                        <Button color="inherit">Calendar</Button>
+                        {loggedUser && <Button color="inherit" onClick={this.handleOverview}>Overview</Button>}
+                        {loggedUser && loggedUser.role === userRole.ADMIN && <Button color="inherit" onClick={this.handleAddProject}>New Project</Button>}
+                        {loggedUser && <Button color="inherit">Calendar</Button>}
+                        {loggedUser && <Button color="inherit" onClick={this.handleLogOut}>Log Out</Button>}
                     </Toolbar>
                 </AppBar>
                 <div className={classes.appBarSpacer}/>

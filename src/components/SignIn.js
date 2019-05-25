@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import api from "../api";
-import authentication from "../authentication";
+import {userRole} from "../userRole";
 
 const styles = theme => ({
     main: {
@@ -61,7 +61,6 @@ class SignIn extends React.Component {
     };
 
     redirectAfterLogin = () => {
-        console.log(this.props.location.state.from.pathname)
         if(this.props.location.state)
             this.props.history.push(this.props.location.state.from.pathname)
         else
@@ -73,9 +72,12 @@ class SignIn extends React.Component {
             api.endpoints.signIn(login, password),
             (response) => {
 
-                //TODO setting global const userId
-                // console.log(response)
-                authentication.login(response);
+                const user = {
+                    userId: response,
+                    role: userRole.ADMIN, // TODO set proper role
+                };
+                localStorage.setItem('user', JSON.stringify(user));
+
                 this.redirectAfterLogin();
 
             }
@@ -83,8 +85,6 @@ class SignIn extends React.Component {
     };
 
     render() {
-        // console.log(this.props.location.state)
-        // console.log(this.state)
         const {classes} = this.props;
 
         return (
