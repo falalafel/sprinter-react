@@ -16,9 +16,6 @@ const styles = theme => ({
     textField: {
         width: '100%',
     },
-    button: {
-        marginTop: theme.spacing.unit * 4,
-    },
 });
 
 class CloseSprintDialog extends React.Component {
@@ -84,7 +81,7 @@ class CloseSprintDialog extends React.Component {
                         onClick={this.handleClickOpen}
                         size='small'
                         disabled={this.props.disabled}>
-                    <CheckIcon className={classes.buttonIcon} fontSize='small'/>
+                    <CheckIcon fontSize='small'/>
                     Summarise
                 </Button>
                 <Dialog
@@ -142,6 +139,7 @@ class CloseSprintDialog extends React.Component {
 
 CloseSprintDialog.propTypes = {
     classes: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
     project: PropTypes.object,
     sprint: PropTypes.object,
     parentUpdateCallback: PropTypes.func
