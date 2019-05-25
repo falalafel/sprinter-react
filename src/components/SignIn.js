@@ -13,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import api from "../api";
+import authentication from "../authentication";
 
 const styles = theme => ({
     main: {
@@ -59,9 +60,12 @@ class SignIn extends React.Component {
         });
     };
 
-    handleLogin = () => {
-        //this.props.history.push('/')
-
+    redirectAfterLogin = () => {
+        console.log(this.props.location.state.from.pathname)
+        if(this.props.location.state)
+            this.props.history.push(this.props.location.state.from.pathname)
+        else
+            this.props.history.push("/overview")
     };
 
     fetchLogin = (login, password) => {
@@ -70,14 +74,17 @@ class SignIn extends React.Component {
             (response) => {
 
                 //TODO setting global const userId
-                this.handleLogin()
-                console.log(response)
+                // console.log(response)
+                authentication.login(response);
+                this.redirectAfterLogin();
+
             }
         )
     };
 
     render() {
-        console.log(this.props.location.state)
+        // console.log(this.props.location.state)
+        // console.log(this.state)
         const {classes} = this.props;
 
         return (
