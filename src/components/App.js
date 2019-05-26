@@ -4,6 +4,7 @@ import SprinterAppBar from './SprinterAppBar';
 import AddProject from './AddProject';
 import Overview from './Overview';
 import SignIn from "./SignIn";
+import ConfigureProject from "./ConfigureProject";
 import ProtectedRoute from "./ProtectedRoute";
 
 
@@ -15,7 +16,7 @@ const Sprinter = (props) => {
             <Switch>
                 <ProtectedRoute exact strict path='/overview' component={Overview}/>
                 <ProtectedRoute exact strict path='/new-project' component={AddProject}/>
-                <ProtectedRoute exact strict path='/manage-project/projectId=:projectid'/> {/*TODO: component={ManageProject}/>*/}
+                <ProtectedRoute exact strict path='/project-configuration/project=:projectid' component={ConfigureProject}/> {/*TODO: component={ManageProject}/>*/}
                 <Route exact strict path='*' render={() => "Page not found: 404"}/>
             </Switch>
         </div>

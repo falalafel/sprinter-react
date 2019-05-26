@@ -194,7 +194,7 @@ class Overview extends React.Component {
                                 <div className={classes.buttonsContainer}>
                                     {//this.editProjectButtonEnabled() && //TODO am i scrum master
                                         <Button variant="outlined"
-                                                onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
+                                                onClick={() => this.props.history.push(`/project-configuration/project=${projectId}`)}
                                                 className={classes.button}
                                                 size='small'
                                                 disabled={!this.editProjectButtonEnabled()}>
