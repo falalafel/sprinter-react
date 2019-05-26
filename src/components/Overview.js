@@ -36,7 +36,7 @@ class Overview extends React.Component {
         declarations: [],
         projectId: undefined,
         sprintId: undefined,
-        userId: 1 //TODO change
+        userId: null
     };
 
     fetchAndSetProjects() {
@@ -101,7 +101,8 @@ class Overview extends React.Component {
         const {projectId, sprintId} = this.getUrlParams(window.location);
         this.setState({
             projectId: projectId,
-            sprintId: sprintId
+            sprintId: sprintId,
+            userId: JSON.parse(localStorage.getItem('user')).userId
         });
 
         this.fetchAndSetProjects();
