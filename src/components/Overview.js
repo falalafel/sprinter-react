@@ -251,17 +251,6 @@ class Overview extends React.Component {
                                         <KeyboardArrowLeftIcon fontSize='small'/>
                                         prev
                                     </Button>
-
-                                    {//this.closeSprintButtonEnabled() && //TODO am i scrum master
-                                        <div className={classes.dialogCloseSprint}>
-                                            <CloseSprintDialog
-                                                project={this.getActiveProject()}
-                                                sprint={this.getActiveSprint()}
-                                                parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
-                                                disabled={!this.closeSprintButtonEnabled()}
-                                            />
-                                        </div>
-                                    }
                                 </div>
                             </div>
                             <div className={classes.sprintSelection}>
@@ -283,7 +272,10 @@ class Overview extends React.Component {
                     {this.getActiveSprint() &&
                     <Paper className={classes.statisticsPaper} elevation={2}>
                         <SprintStatistics className={classes.sprintStatisticsContainer}
-                                          sprint={this.getActiveSprint()}/>
+                                          sprint={this.getActiveSprint()}
+                                          project={this.getActiveProject()}
+                                          summariseDisabled={!this.closeSprintButtonEnabled()}
+                                          afterCloseUpdateCallback={() => this.fetchAndSetSprints(projectId)}/>
                     </Paper>
                     }
 
