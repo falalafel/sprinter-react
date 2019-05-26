@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import api from "../api";
 import {userRole} from "../userRole";
+import {Redirect} from "react-router-dom";
 
 const styles = theme => ({
     main: {
@@ -67,7 +68,9 @@ class SignIn extends React.Component {
             this.props.history.push("/overview")
     };
 
-    fetchLogin = (login, password) => {
+    fetchLogin = (login, password) => event => {
+        event.preventDefault();
+
         api.fetch(
             api.endpoints.signIn(login, password),
             (response) => {
@@ -87,6 +90,9 @@ class SignIn extends React.Component {
     render() {
         const {classes} = this.props;
 
+        if(localStorage.getItem('user'))
+            return (<Redirect to={{pathname: "/overview"}}/>);
+
         return (
             <main className={classes.main}>
                 <CssBaseline/>
@@ -97,7 +103,7 @@ class SignIn extends React.Component {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <form className={classes.form}>
+                    <form className={classes.form} onSubmit={this.fetchLogin(this.state.login, this.state.password)}>
                         <FormControl margin="normal"
                                      required fullWidth
                                      value={this.state.login}
@@ -121,7 +127,7 @@ class SignIn extends React.Component {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
-                            onClick={() => {this.fetchLogin(this.state.login, this.state.password)}}
+                            type="submit"
                         >
                             Sign in
                         </Button>
