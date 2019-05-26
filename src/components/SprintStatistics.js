@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {Divider, Paper, IconButton, Button} from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
 import Grid from "@material-ui/core/Grid";
+import CloseSprintDialog from "./CloseSprintDialog";
 
 const styles = theme => ({
     root: {
@@ -25,6 +26,7 @@ const styles = theme => ({
     },
     button: {
         float: "right",
+        marginTop: 5
     },
     editIcon: {
         marginRight: 10
@@ -41,6 +43,11 @@ const styles = theme => ({
         marginLeft: 10,
         marginTop: 5,
         marginBottom: 10,
+    },
+    dialogCloseSprint: {
+        float: "left",
+        marginLeft: 30,
+        marginTop: 5
     }
 });
 
@@ -49,7 +56,7 @@ const getListItem = (primary, secondary) => {
         <ListItem>
             {primary}
             <ListItemSecondaryAction>
-                {secondary}
+                {secondary ? secondary.toFixed(2) : "—"}
             </ListItemSecondaryAction>
         </ListItem>
     )
@@ -57,14 +64,25 @@ const getListItem = (primary, secondary) => {
 
 const SprintStatistics = (props) => {
     
-    const {classes, sprint} = props;
+    
+    const {classes, sprint, project, afterCloseUpdateCallback, summariseDisabled} = props;
 
     return (
         <div className={classes.root}>
             <div className={classes.header}>
                 <Typography variant="h6" component="h2" className={classes.title}>
-                    Details of sprint {sprint.sprintId}
+                    Details of sprint {sprint.sprintId} {sprint.closingStatus ? "(closed)" : "(open)"}
                 </Typography>
+                {!summariseDisabled && //TODO am i scrum master
+                    <div className={classes.dialogCloseSprint}>
+                        <CloseSprintDialog
+                            project={project}
+                            sprint={sprint}
+                            parentUpdateCallback={afterCloseUpdateCallback}
+                            disabled={summariseDisabled}
+                        />
+                    </div>
+                }
                 <Button size="small" className={classes.button} disabled={sprint === null}>
                     <EditIcon fontSize="small" className={classes.editIcon}/>
                     Edit
@@ -76,26 +94,27 @@ const SprintStatistics = (props) => {
                 <Grid item xs={12}>
                     <Divider className={classes.divider}/>
                 </Grid>
-                <Grid item xs={3}>
+                {/* <Grid item xs={3}>
                     <List dense>
-                        {getListItem("Status", sprint.closingStatus ? "closed" : "open")} {/*// TODO: status future | in progress | not summarised | summarised */}
-                        {getListItem("All declared hours", null)} {/*// TODO: counting hours sum in backend */}
+                        {getListItem("Status", sprint.closingStatus ? "closed" : "open")} // TODO: status future | in progress | not summarised | summarised 
+                        {getListItem("All declared hours", null)} // TODO: counting hours sum in backend 
                     </List>
-                </Grid>
-                <Grid item xs={3}>
+                </Grid> */}
+                <Grid item xs={4}>
                     <List dense>
+                        {getListItem("All declared hours", null)} {/*// TODO: counting hours sum in backend */}
                         {getListItem("Expected factor", sprint.factor)}
                         {getListItem("Estimated effective hours", null)} {/* TODO: calculations in backend */}
                     </List>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                     <List dense> {/*// TODO: whole column */}
                         {getListItem("Original estimated hours", sprint.originalEstimatedHours)}
                         {getListItem("End planned hours", sprint.endPlannedHours)}
                         {getListItem("Burned hours", sprint.burnedHours)}
                     </List>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                     <List dense> {/*// TODO: whole column */}
                         {getListItem("Effective hours needed", null)} {/*// TODO: weird calculations in backend */}
                         {getListItem("Effective sprint factor", sprint.effectiveFactor)}
