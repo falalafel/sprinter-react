@@ -8,7 +8,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import WatchLaterIcon from "@material-ui/icons/WatchLaterOutlined";
 import HowToVoteIcon from "@material-ui/icons/HowToVote";
 import CachedIcon from "@material-ui/icons/Cached";
 import api from "../api";

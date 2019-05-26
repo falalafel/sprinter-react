@@ -6,10 +6,9 @@ import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
 import api from "../api";
 import styles from "./Overview.styles";
-import {Button, Divider, IconButton, Paper} from "@material-ui/core";
+import {Button, Divider, Paper} from "@material-ui/core";
 import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
-import CloseSprintDialog from "./CloseSprintDialog";
 import DeclareHoursDialog from "./DeclareHoursDialog";
 import CreateSprintDialog from "./CreateSprintDialog";
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
@@ -115,12 +114,12 @@ class Overview extends React.Component {
         const {projectId, sprintId} = this.getUrlParams(window.location);
 
         if (prevState.projectId !== projectId) {
-            this.setState({projectId: projectId})
+            this.setState({projectId: projectId});
             this.fetchAndSetSprints(projectId)
         }
 
         if (prevState.projectId !== projectId || prevState.sprintId !== sprintId) {
-            this.setState({sprintId: sprintId})
+            this.setState({sprintId: sprintId});
             this.fetchAndSetDeclarations(projectId, sprintId)
         }
     }
@@ -148,8 +147,8 @@ class Overview extends React.Component {
     }
 
     declareHoursButtonEnabled() {
-        const activeProject = this.getActiveProject()
-        const activeSprint = this.getActiveSprint()
+        const activeProject = this.getActiveProject();
+        const activeSprint = this.getActiveSprint();
 
         return activeProject && activeProject.closingStatus === false && activeSprint && activeSprint.closingStatus === false
     }
@@ -160,7 +159,7 @@ class Overview extends React.Component {
 
     newSprintButtonEnabled() {
         // TODO: check scrum master permissions
-        const activeProject = this.getActiveProject()
+        const activeProject = this.getActiveProject();
 
         return activeProject && activeProject.closingStatus === false
     }
@@ -173,9 +172,7 @@ class Overview extends React.Component {
     editProjectButtonEnabled() {
         // TODO: check scrum master permissions
         const {projects, projectId} = this.state;
-        const activeProject = projects.find(p => p.projectId === projectId) || null
-
-        return activeProject
+        return projects.find(p => p.projectId === projectId) || null
     }
 
     render() {

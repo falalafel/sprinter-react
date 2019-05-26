@@ -11,7 +11,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import api from "../api";
 import CheckIcon from '@material-ui/icons/Check';
 
-
 const styles = theme => ({
     textField: {
         width: '100%',
@@ -44,7 +43,7 @@ class CloseSprintDialog extends React.Component {
     isValid = () => {
         const {burned, estimated, endPlanned} = this.state;
         return burned !== "" && estimated !== "" && endPlanned !== "";
-    }
+    };
 
     closeSprint = () => {
         const projectId = this.props.project.projectId;
@@ -68,7 +67,7 @@ class CloseSprintDialog extends React.Component {
                 this.handleClose();
                 this.props.parentUpdateCallback();
             });
-    }
+    };
 
     render() {
         const {classes, sprint, project} = this.props;

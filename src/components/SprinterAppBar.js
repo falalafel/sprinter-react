@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {userRole} from "../userRole";
+import api from "../api";
 
 const styles = theme => ({
     root: {
@@ -39,6 +40,7 @@ class SprinterAppBar extends React.Component {
     };
 
     handleLogOut = () => {
+        api.fetch(api.endpoints.signOut(), (response) => {});
         localStorage.removeItem('user');
         this.props.history.push('/sign-in')
     };

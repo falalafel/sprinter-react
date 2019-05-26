@@ -10,8 +10,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import api from "../api";
 import AddIcon from '@material-ui/icons/Add';
-import {resolve} from "dns";
-
 
 const styles = theme => ({
     textField: {

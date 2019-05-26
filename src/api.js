@@ -115,6 +115,13 @@ export default {
             headers: {
                 'Authorization': `Basic ${base64.encode(login + ":" + password)}`
             }
+        }),
+
+        signOut: () => ({
+            path: url(
+                `signout`
+            ),
+            method: "GET"
         })
     }
 };
