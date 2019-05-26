@@ -16,7 +16,7 @@ const Sprinter = (props) => {
             <Switch>
                 <ProtectedRoute exact strict path='/overview' component={Overview}/>
                 <ProtectedRoute exact strict path='/new-project' component={AddProject}/>
-                <ProtectedRoute exact strict path='/project-configuration/project=:projectid' component={ConfigureProject}/> {/*TODO: component={ManageProject}/>*/}
+                <ProtectedRoute exact strict path='/project-configuration/project=:projectId' component={ConfigureProject}/> {/*TODO: component={ManageProject}/>*/}
                 <Route exact strict path='*' render={() => "Page not found: 404"}/>
             </Switch>
         </div>

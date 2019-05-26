@@ -7,6 +7,7 @@ import ProjectConfig from "./ProjectConfig";
 import {Grid, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {resolve} from 'dns';
+import axios from 'axios';
 
 const styles = (theme) => ({
     root: {},
@@ -46,50 +47,77 @@ class ConfigureProject extends React.Component {
 
     state = {
         // users list component
-        usersList: [],
+        users: [],
         members: [],
         // project configuration component
+        project: null,
         projectName: '',
-        startingDate: getCurrentDate(),
-        sprintLength: 7,
-        startingFactor: 2.5,
+        startingDate: '',
+        sprintLength: '',
+        startingFactor: '',
     };
 
-    fetchAndSetUsers() {
+    getProjectId() {
+        return this.props.match.params.projectId;
+    }
+
+    fetchAndSetProject() {
+        api.fetch(
+            api.endpoints.getProjectById(this.getProjectId()),
+            (response) => {
+                this.setState({project: response})
+            });
+    }
+
+    fetchAndSetUsersData() {
         api.fetch(
             api.endpoints.getUsers(),
-            (response) => {
-                this.setState({usersList: response})
+            (users) => {
+                api.fetch(
+                    api.endpoints.getProjectMembership(this.getProjectId()),
+                    (members) => {
+                        this.setState({
+                            users: users,
+                            members: members.map(m => ({...(users.find(u => u.userId === m.userId)), isScrumMaster: m.isScrumMaster}))
+                        })
+                    });
             });
     }
 
     addMember = (userId) => {
-        const user = this.state.usersList.find(u => u.userId === userId);
-        const newMember = ({...user, isScrumMaster: false, declared: false}); //TODO fetch declared
-        this.setState({members: [newMember].concat(this.state.members)})
+        // const user = this.state.usersList.find(u => u.userId === userId);
+        // const newMember = ({...user, isScrumMaster: false, declared: false}); //TODO fetch declared
+        // this.setState({members: [newMember].concat(this.state.members)})
+        console.log("dodawanko")
     };
 
     toggleScrumMaster = (userId) => {
-        this.setState({
-            members: this.state.members.map(
-                user => user.userId === userId ? ({
-                    ...user,
-                    isScrumMaster: !user.isScrumMaster
-                }) : user
-            )
-        })
-    };
 
-    notifyMember = (userId) => {
-        console.log("I AM NOTIFAJING!!! user: ", userId)
+        const member = this.state.members.find(u => u.userId === userId)
+
+        axios.put(`http://localhost:8080/project/${this.state.project.projectId}/membership/${userId}/`, {isScrumMaster: member.isScrumMaster})
+        .then(res => {
+            console.log(res);
+            this.setState({
+                members: this.state.members.map(
+                    user => user.userId === userId ? ({
+                        ...user,
+                        isScrumMaster: !user.isScrumMaster
+                    }) : user
+                )
+            });
+        })
+        
+        console.log("toglowanko")
     };
 
     removeMember = (userId) => {
-        this.setState({
-            members: this.state.members.filter(
-                user => userId !== user.userId
-            )
-        })
+        // this.setState({
+        //     members: this.state.members.filter(
+        //         user => userId !== user.userId
+        //     )
+        // })
+        console.log("usówanko")
     };
 
     handleProjectNameChange = (event) => {
@@ -154,13 +182,22 @@ class ConfigureProject extends React.Component {
     };
 
     componentDidMount() {
-        this.fetchAndSetUsers()
+        this.fetchAndSetUsersData()
+        this.fetchAndSetProject()
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const project = this.state.project
+
+        if (project !== prevState.project) {
+            this.setState({...project})
+        }
     }
 
     render() {
 
         const {classes} = this.props;
-        const {members, usersList} = this.state;
+        const {members, users} = this.state;
 
         const {
             projectName, startingDate, sprintLength, startingFactor,
@@ -168,8 +205,8 @@ class ConfigureProject extends React.Component {
 
         const valid = this.validate();
 
-        const notMembers = usersList.filter(user => (
-            !members.map(m => m.userId).includes(user.userId)
+        const notMembers = users.filter(u => (
+            !members.some(m => m.userId === u.userId)
         ));
 
         return (
@@ -213,7 +250,6 @@ class ConfigureProject extends React.Component {
                                 notMembers={notMembers}
                                 addMemberCallback={(userId) => this.addMember(userId)}
                                 toggleScrumMasterCallback={(userId) => this.toggleScrumMaster(userId)}
-                                notifyCallback={(userId) => this.notifyMember(userId)}
                                 removeMemberCallback={(userId) => this.removeMember(userId)}
                             />
                         </div>

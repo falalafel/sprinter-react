@@ -32,6 +32,10 @@ export default {
             path: url(`project`),
             method: "GET"
         }),
+        getProjectById: (projectId) => ({
+            path: url(`project/${projectId}`),
+            method: "GET"
+        }),
         getSprints: projectId => ({
             path: url(`project/${projectId}/sprint`),
             method: "GET"
@@ -83,6 +87,13 @@ export default {
             headers: {
                 "Content-Type": "application/json"
             }
+        }),
+
+        getProjectMembership: (projectId) => ({
+            path: url(
+                `project/${projectId}/membership/`
+            ),
+            method: "GET",
         }),
 
         createSprint: (projectId, data) => ({
