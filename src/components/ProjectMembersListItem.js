@@ -14,7 +14,7 @@ const styles = {
     }
 };
 
-class ProjectMembresCreateItem extends React.Component {
+class ProjectMembersListItem extends React.Component {
 
     render() {
         const {classes, listElem, isScrumMaster, toggleScrumMasterCallback, removeMemberCallback} = this.props;
@@ -47,7 +47,7 @@ class ProjectMembresCreateItem extends React.Component {
     }
 }
 
-ProjectMembresCreateItem.propTypes = {
+ProjectMembersListItem.propTypes = {
     listElem: PropTypes.object,
     isScrumMaster: PropTypes.bool,
     toggleScrumMasterCallback: PropTypes.func,
@@ -55,4 +55,4 @@ ProjectMembresCreateItem.propTypes = {
     key: PropTypes.number
 };
 
-export default withStyles(styles)(ProjectMembresCreateItem);
+export default withStyles(styles)(ProjectMembersListItem);

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles/index';
-import ProjectMembersCreate from "./ProjectMembersCreate";
+import ProjectMembers from "./ProjectMembers";
 import api from "../api";
 import ProjectConfig from "./ProjectConfig";
 import {Grid, Typography} from "@material-ui/core";
@@ -204,7 +204,7 @@ class AddProject extends React.Component {
                     </Grid>
                     <Grid item xs={6}>
                         <div className={classes.projectMembers}>
-                            <ProjectMembersCreate
+                            <ProjectMembers
                                 members={members}
                                 notMembers={notMembers}
                                 addMemberCallback={(userId) => this.addMember(userId)}

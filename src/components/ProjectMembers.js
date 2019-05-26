@@ -1,6 +1,6 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles/index';
-import ProjectMembersCreateItem from "./ProjectMembersCreateItem";
+import ProjectMembersCreateItem from "./ProjectMembersListItem";
 import ProjectMembersAdd from "./ProjectMembersAdd";
 import PropTypes from "prop-types";
 import List from '@material-ui/core/List/index';
@@ -21,7 +21,7 @@ const styles = {
     }
 };
 
-class ProjectMembersCreate extends React.Component {
+class ProjectMembers extends React.Component {
 
     renderProjectMembersList = () => {
 
@@ -62,7 +62,7 @@ class ProjectMembersCreate extends React.Component {
     }
 }
 
-ProjectMembersCreate.propTypes = {
+ProjectMembers.propTypes = {
     members: PropTypes.arrayOf(
         PropTypes.shape({
             userId: PropTypes.number,
@@ -83,4 +83,4 @@ ProjectMembersCreate.propTypes = {
     removeMemberCallback: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(ProjectMembersCreate);
+export default withStyles(styles)(ProjectMembers);

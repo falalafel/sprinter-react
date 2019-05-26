@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles/index';
-import ProjectMembersCreate from "./ProjectMembersCreate";
+import ProjectMembers from "./ProjectMembers";
 import api from "../api";
 import ProjectConfig from "./ProjectConfig";
 import {Grid, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {resolve} from 'dns';
-import ProjectMembersManage from "./ProjectMembersManage";
 
 const styles = (theme) => ({
     root: {},
@@ -209,7 +208,7 @@ class ConfigureProject extends React.Component {
                     </Grid>
                     <Grid item xs={6}>
                         <div className={classes.projectMembers}>
-                            <ProjectMembersManage
+                            <ProjectMembers
                                 members={members}
                                 notMembers={notMembers}
                                 addMemberCallback={(userId) => this.addMember(userId)}
