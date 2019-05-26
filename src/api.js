@@ -1,13 +1,16 @@
 const host = "localhost";
 const port = 8080;
 const url = endpoint => `http://${host}:${port}/${endpoint}`;
+let base64 = require('base-64');
 
 export default {
+
     fetch: (opt, action) => {
         fetch(opt.path, {
             method: opt.method,
             body: opt.body,
             headers: opt.headers,
+            credentials: 'include'
         })
             .then(res => res.json())
             .then(response => {
@@ -19,6 +22,7 @@ export default {
             method: opt.method,
             body: opt.body,
             headers: opt.headers,
+            credentials: 'include'
         }).then(response => {
             action(response);
         });
@@ -100,6 +104,16 @@ export default {
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json"
+            }
+        }),
+
+        signIn: (login, password) => ({
+            path: url(
+              `signin`
+            ),
+            method: "GET",
+            headers: {
+                'Authorization': `Basic ${base64.encode(login + ":" + password)}`
             }
         })
     }

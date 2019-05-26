@@ -1,17 +1,36 @@
 import React from 'react';
-import {Route} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import SprinterAppBar from './SprinterAppBar';
 import AddProject from './AddProject';
 import Overview from './Overview';
+import SignIn from "./SignIn";
+import ProtectedRoute from "./ProtectedRoute";
+
+
+const Sprinter = (props) => {
+    return (
+        <div>
+            <SprinterAppBar history={props.history}/>
+
+            <Switch>
+                <ProtectedRoute exact strict path='/overview' component={Overview}/>
+                <ProtectedRoute exact strict path='/new-project' component={AddProject}/>
+                <ProtectedRoute exact strict path='/manage-project/projectId=:projectid'/> {/*TODO: component={ManageProject}/>*/}
+                <Route exact strict path='*' render={() => "Page not found: 404"}/>
+            </Switch>
+        </div>
+    );
+};
 
 class App extends React.Component {
     render() {
         return (
             <div>
-                <Route strict path='/' component={SprinterAppBar}/>
-                <Route exact strict path='/overview' component={Overview}/>
-                <Route exact strict path='/new-project' component={AddProject}/>
-                <Route exact strict path='/manage-project/projectId=:projectid'/>  {/*TODO: component={ManageProject}/>*/}
+                <Switch>
+                    <Route exact strict path='/sign-in' component={SignIn}/>
+                    <Route exact strict path='/sign-up' component={SignIn}/> {/* TODO add proper component */}
+                    <Route strict path='/' component={Sprinter}/>
+                </Switch>
             </div>
         );
     }
