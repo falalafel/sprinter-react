@@ -30,7 +30,7 @@ const styles = theme => ({
     },
     button: {
         float: "right",
-        marginLeft: 15,
+        marginLeft: 5,
     },
     buttonIcon: {
         float: "left",
@@ -38,7 +38,7 @@ const styles = theme => ({
     },
     arrowButton: {
         float: "right",
-        marginLeft: 3,
+        marginLeft: 5,
     },
     test: {
       padding: -10,
