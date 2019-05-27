@@ -122,7 +122,7 @@ const formatOptionLabel = option => (
     <div>
         <Tooltip disableFocusListener disableTouchListener placement="right" title={`Sprint ${option.id}`}>
             <Typography>
-                {option.startDate} &#8209; {option.endDate}
+                {(new Date(option.startDate)).toLocaleDateString()} &#8209; {(new Date(option.endDate)).toLocaleDateString()}
             </Typography>
         </Tooltip>
         {option.isOpen === false &&
@@ -170,7 +170,7 @@ function SingleValue(props) {
         <div>
             <Tooltip disableFocusListener disableTouchListener placement="right" title={`Sprint ${props.data.id}`}>
                 <Typography>
-                    {props.data.startDate} &#8209; {props.data.endDate}
+                    {(new Date(props.data.startDate)).toLocaleDateString()} &#8209; {(new Date(props.data.endDate)).toLocaleDateString()}
                 </Typography>
             </Tooltip>
         </div>

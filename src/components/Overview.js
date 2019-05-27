@@ -175,6 +175,13 @@ class Overview extends React.Component {
         return projects.find(p => p.projectId === projectId) || null
     }
 
+    getDefaultNewSprintDate() {
+        const {sprints} = this.state;
+
+        const latestSprint = sprints.reduce((acc, s) => (acc === null || s.sprintId > acc.sprintId) ? s : acc, null)
+        return latestSprint ? new Date(latestSprint.endDate) : null
+    }
+
     render() {
         const {classes} = this.props;
         const {projectId, sprintId, userId} = this.state;
@@ -206,6 +213,7 @@ class Overview extends React.Component {
                                                 project={this.getActiveProject()}
                                                 parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
                                                 disabled={!this.newSprintButtonEnabled()}
+                                                defaultStartDate={this.getDefaultNewSprintDate()}
                                             />
                                         </div>
                                     }
