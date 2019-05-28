@@ -32,17 +32,30 @@ export default {
             path: url(`project`),
             method: "GET"
         }),
+
         getSprints: projectId => ({
             path: url(`project/${projectId}/sprint`),
             method: "GET"
         }),
+
         getDeclarations: (projectId, sprintId) => ({
             path: url(`project/${projectId}/sprint/${sprintId}/declaration`),
             method: "GET"
         }),
+
         getUsers: () => ({
             path: url(`user`)
         }),
+
+        addUser: (data) => ({
+            path: url(`user`),
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }),
+
         declareHours: (projectId, sprintId, userId, data) => ({
             path: url(
                 `project/${projectId}/sprint/${sprintId}/declaration/${userId}`
