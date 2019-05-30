@@ -101,6 +101,18 @@ class CreateSprintDialog extends React.Component {
         }
     }
 
+    getErrorMessage() {
+        const project = this.props.project;
+        const {startDate} = this.state;
+
+        const projectStart = new Date(project.startDate);
+        const sprintStart = new Date(startDate);
+
+        return projectStart < sprintStart ?
+            'Sprint cannot start before the previous one ends' : 
+            'Sprint cannot start before the project starts'
+    }
+
     submitButtonValid() {
         const {startDate, endDate} = this.state;
         const parsedStartDate = new Date(startDate);
@@ -123,9 +135,12 @@ class CreateSprintDialog extends React.Component {
                 projectId,
                 data
             ),
-            (projectId) => {
+            (response) => {
+                console.log(response)
+                const sprintId = response[1]
                 this.handleClose();
                 this.props.parentUpdateCallback();
+                this.props.history.push(`/overview?project=${projectId}&sprint=${sprintId}`)
             });
     };
 
@@ -172,7 +187,7 @@ class CreateSprintDialog extends React.Component {
                             value={this.state.startDate}
                             onChange={this.handleStartDateChange}
 
-                            helperText={this.state.showStartDateError ? 'Sprint cannot start before the previous one ends' : ''}
+                            helperText={this.state.showStartDateError ? this.getErrorMessage() : ''}
 
                             margin="normal"
                             type="date"
@@ -209,7 +224,8 @@ CreateSprintDialog.propTypes = {
     disabled: PropTypes.bool,
     project: PropTypes.object,
     parentUpdateCallback: PropTypes.func,
-    defaultStartDate: PropTypes.object
+    defaultStartDate: PropTypes.object,
+    history: PropTypes.object,
 };
 
 export default withStyles(styles)(CreateSprintDialog);
