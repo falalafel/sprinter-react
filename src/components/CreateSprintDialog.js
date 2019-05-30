@@ -21,19 +21,19 @@ const styles = theme => ({
     }
 });
 
-Date.prototype.addDays = function(days) {
-    var date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-}
+const addDaysToDate = (date, days) => {
+    var newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + days);
+    return newDate;
+};
 
-Date.prototype.simpleFormat = function() {
-    const dd = String(this.getDate()).padStart(2, '0');
-    const mm = String(this.getMonth() + 1).padStart(2, '0');
-    const yyyy = this.getFullYear();
+const dateToString = (date) => {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
 
     return yyyy + '-' + mm + '-' + dd
-}
+};
 
 class CreateSprintDialog extends React.Component {
 
@@ -62,13 +62,13 @@ class CreateSprintDialog extends React.Component {
 
         const invalidChange = newStartDate < minDate
         this.setState({
-            startDate: invalidChange ? minDate.simpleFormat() : newStartDate.simpleFormat(),
+            startDate: invalidChange ? dateToString(minDate) : dateToString(newStartDate),
             showStartDateError: invalidChange
         })
 
         if (endDate && endDate < newStartDate)
             this.setState({
-                endDate: newStartDate.simpleFormat()
+                endDate: dateToString(newStartDate)
             })
     }
 
@@ -79,23 +79,23 @@ class CreateSprintDialog extends React.Component {
 
         if (newEndDate < minDate) {
             this.setState({
-                endDate: minDate.simpleFormat(),
-                startDate: minDate.simpleFormat(),
+                endDate: dateToString(minDate),
+                startDate: dateToString(minDate),
                 showStartDateError: true,
             })
         }
 
         else if (newEndDate < startDate) {
             this.setState({
-                endDate: newEndDate.simpleFormat(),
-                startDate: newEndDate.simpleFormat(),
+                endDate: dateToString(newEndDate),
+                startDate: dateToString(newEndDate),
                 showStartDateError: false,
             })
         }
 
         else {
             this.setState({
-                endDate: newEndDate.simpleFormat(),
+                endDate: dateToString(newEndDate),
                 showStartDateError: false,
             })
         }
@@ -147,10 +147,10 @@ class CreateSprintDialog extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         const {defaultStartDate, project} = this.props;
         
-        if (prevProps.defaultStartDate != defaultStartDate) {
+        if (prevProps.defaultStartDate !== defaultStartDate) {
             this.setState({
-                startDate: project ? defaultStartDate.simpleFormat() : '',
-                endDate: project ? defaultStartDate.addDays(project.sprintDuration).simpleFormat() : '',
+                startDate: project ? dateToString(defaultStartDate) : '',
+                endDate: project ? dateToString(addDaysToDate(defaultStartDate, project.sprintDuration)) : '',
             })
         }
     }

@@ -39,34 +39,53 @@ class Overview extends React.Component {
     };
 
     fetchAndSetProjects() {
+        document.body.style.cursor = 'wait';
         api.fetch(
             api.endpoints.getProjects(),
             (response) => {
                 this.setState({projects: response})
+                document.body.style.cursor = 'default';
             });
     }
 
     fetchAndSetSprints(projectId) {
-        if (projectId !== undefined)
+        if (projectId !== undefined) {
+            document.body.style.cursor = 'wait';
             api.fetch(
                 api.endpoints.getSprints(projectId),
                 (response) => {
                     this.setState({sprints: response})
+                    document.body.style.cursor = 'default';
                 });
-        else
+        } else
             this.setState({sprints: []})
     }
 
     fetchAndSetDeclarations(projectId, sprintId) {
-        if (projectId !== undefined && sprintId !== undefined)
+        if (projectId !== undefined && sprintId !== undefined) {
+            document.body.style.cursor = 'wait';
             api.fetch(
                 api.endpoints.getDeclarations(projectId, sprintId),
                 (response) => {
                     this.setState({declarations: response})
+                    document.body.style.cursor = 'default';
                 });
-        else
+        } else
             this.setState({declarations: []})
     }
+
+    // fetchAndSetSprintParameters(projectId, sprintId) {
+    //     if (projectId !== undefined && sprintId !== undefined) {
+    //         document.body.style.cursor = 'wait';
+    //         api.fetch(
+    //             api.endpoints.getSprintStatistics(projectId, sprintId),
+    //             (response) => {
+    //                 this.setState({declarations: response})
+    //                 document.body.style.cursor = 'default';
+    //             });
+    //     } else
+    //         this.setState({sprint_statistics: []})
+    // }
 
     getUrlParams(location) {
         const searchParams = new URLSearchParams(location.search);
@@ -115,12 +134,12 @@ class Overview extends React.Component {
 
         if (prevState.projectId !== projectId) {
             this.setState({projectId: projectId});
-            this.fetchAndSetSprints(projectId)
+            this.fetchAndSetSprints(projectId);
         }
 
         if (prevState.projectId !== projectId || prevState.sprintId !== sprintId) {
             this.setState({sprintId: sprintId});
-            this.fetchAndSetDeclarations(projectId, sprintId)
+            this.fetchAndSetDeclarations(projectId, sprintId);
         }
     }
 
@@ -212,7 +231,7 @@ class Overview extends React.Component {
                                         </Button>
                                     }
                                     {//this.newSprintButtonEnabled() && //TODO am i scrum master
-                                        <div className={classes.dialogCreateSprint} >
+                                        <div className={classes.dialogCreateSprint}>
                                             <CreateSprintDialog
                                                 project={this.getActiveProject()}
                                                 parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
@@ -238,6 +257,7 @@ class Overview extends React.Component {
                             </div>
                         </div>
 
+                        {this.getActiveProject() &&
                         <div className={classes.singleSelectionContainer}>
                             <div className={classes.selectionHeader}>
                                 <Typography variant="h4" className={classes.sectionTitle}>
@@ -245,20 +265,20 @@ class Overview extends React.Component {
                                 </Typography>
                                 <div className={classes.buttonsContainer}>
                                     <Button variant="outlined"
-                                                onClick={() => this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${next.sprintId}`)}
-                                                className={classes.arrowButton}
-                                                size='small'
-                                                disabled={next === undefined}>
+                                            onClick={() => this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${next.sprintId}`)}
+                                            className={classes.arrowButton}
+                                            size='small'
+                                            disabled={next === undefined}>
                                         next
                                         <KeyboardArrowRightIcon fontSize='small' className={classes.test}/>
 
                                     </Button>
 
                                     <Button variant="outlined"
-                                                onClick={() => this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${previous.sprintId}`)}
-                                                className={classes.arrowButton}
-                                                size='small'
-                                                disabled={previous === undefined}>
+                                            onClick={() => this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${previous.sprintId}`)}
+                                            className={classes.arrowButton}
+                                            size='small'
+                                            disabled={previous === undefined}>
                                         <KeyboardArrowLeftIcon fontSize='small'/>
                                         prev
                                     </Button>
@@ -278,46 +298,48 @@ class Overview extends React.Component {
                                 />
                             </div>
                         </div>
+                        }
                     </div>
 
                     {this.getActiveSprint() &&
-                    <Paper className={classes.statisticsPaper} elevation={2}>
-                        <SprintStatistics className={classes.sprintStatisticsContainer}
-                                          sprint={this.getActiveSprint()}
-                                          project={this.getActiveProject()}
-                                          summariseDisabled={!this.closeSprintButtonEnabled()}
-                                          afterCloseUpdateCallback={() => this.fetchAndSetSprints(projectId)}/>
-                    </Paper>
+                    <div>
+                        <Paper className={classes.statisticsPaper} elevation={2}>
+                            <SprintStatistics sprint={this.getActiveSprint()}
+                                              project={this.getActiveProject()}
+                                              summariseDisabled={!this.closeSprintButtonEnabled()}
+                                              afterCloseUpdateCallback={() => this.fetchAndSetSprints(projectId)}/>
+                        </Paper>
+
+                        <div className={classes.tableContainer}>
+                            <Typography variant="h4" gutterBottom className={classes.sectionTitle}>
+                                Declarations
+                            </Typography>
+                            <DeclareHoursDialog
+                                disabled={!this.declareHoursButtonEnabled()}
+                                declaration={this.userDeclaration()}
+                                project={this.getActiveProject()}
+                                sprint={this.getActiveSprint()}
+                                userId={userId}
+                                parentUpdateCallback={() => this.fetchAndSetDeclarations(projectId, sprintId)}
+                            />
+                            <div className={classes.table}>
+                                <Divider/>
+                                <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                                <Divider/>
+                            </div>
+
+                        </div>
+
+                        <div className={classes.chartContainer}>
+                            <Typography variant="h4" gutterBottom>
+                                Factor chart (mock)
+                            </Typography>
+                            <div component="div" className={classes.chart}>
+                                <SimpleLineChart/>
+                            </div>
+                        </div>
+                    </div>
                     }
-
-                    <div className={classes.tableContainer}>
-                        <Typography variant="h4" gutterBottom className={classes.sectionTitle}>
-                            Declarations
-                        </Typography>
-                        <DeclareHoursDialog
-                            disabled={!this.declareHoursButtonEnabled()}
-                            declaration={this.userDeclaration()}
-                            project={this.getActiveProject()}
-                            sprint={this.getActiveSprint()}
-                            userId={userId}
-                            parentUpdateCallback={() => this.fetchAndSetDeclarations(projectId, sprintId)}
-                        />
-                        <div className={classes.table}>
-                            <Divider/>
-                            <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
-                            <Divider/>
-                        </div>
-
-                    </div>
-
-                    <div className={classes.chartContainer}>
-                        <Typography variant="h4" gutterBottom>
-                            Factor chart
-                        </Typography>
-                        <div component="div" className={classes.chart}>
-                            <SimpleLineChart/>
-                        </div>
-                    </div>
                 </div>
             </div>
         );
