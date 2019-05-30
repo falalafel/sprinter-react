@@ -177,9 +177,13 @@ class Overview extends React.Component {
 
     getDefaultNewSprintDate() {
         const {sprints} = this.state;
+        const project = this.getActiveProject();
+
+        if (!project)
+            return null
 
         const latestSprint = sprints.reduce((acc, s) => (acc === null || s.sprintId > acc.sprintId) ? s : acc, null)
-        return latestSprint ? new Date(latestSprint.endDate) : null
+        return latestSprint ? new Date(latestSprint.endDate) : new Date(project.startDate)
     }
 
     render() {
@@ -214,6 +218,7 @@ class Overview extends React.Component {
                                                 parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
                                                 disabled={!this.newSprintButtonEnabled()}
                                                 defaultStartDate={this.getDefaultNewSprintDate()}
+                                                history={this.props.history}
                                             />
                                         </div>
                                     }
