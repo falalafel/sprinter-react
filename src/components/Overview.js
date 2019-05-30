@@ -39,34 +39,53 @@ class Overview extends React.Component {
     };
 
     fetchAndSetProjects() {
+        document.body.style.cursor = 'wait';
         api.fetch(
             api.endpoints.getProjects(),
             (response) => {
                 this.setState({projects: response})
+                document.body.style.cursor = 'default';
             });
     }
 
     fetchAndSetSprints(projectId) {
-        if (projectId !== undefined)
+        if (projectId !== undefined) {
+            document.body.style.cursor = 'wait';
             api.fetch(
                 api.endpoints.getSprints(projectId),
                 (response) => {
                     this.setState({sprints: response})
+                    document.body.style.cursor = 'default';
                 });
-        else
+        } else
             this.setState({sprints: []})
     }
 
     fetchAndSetDeclarations(projectId, sprintId) {
-        if (projectId !== undefined && sprintId !== undefined)
+        if (projectId !== undefined && sprintId !== undefined) {
+            document.body.style.cursor = 'wait';
             api.fetch(
                 api.endpoints.getDeclarations(projectId, sprintId),
                 (response) => {
                     this.setState({declarations: response})
+                    document.body.style.cursor = 'default';
                 });
-        else
+        } else
             this.setState({declarations: []})
     }
+
+    // fetchAndSetSprintParameters(projectId, sprintId) {
+    //     if (projectId !== undefined && sprintId !== undefined) {
+    //         document.body.style.cursor = 'wait';
+    //         api.fetch(
+    //             api.endpoints.getSprintStatistics(projectId, sprintId),
+    //             (response) => {
+    //                 this.setState({declarations: response})
+    //                 document.body.style.cursor = 'default';
+    //             });
+    //     } else
+    //         this.setState({sprint_statistics: []})
+    // }
 
     getUrlParams(location) {
         const searchParams = new URLSearchParams(location.search);
@@ -115,12 +134,12 @@ class Overview extends React.Component {
 
         if (prevState.projectId !== projectId) {
             this.setState({projectId: projectId});
-            this.fetchAndSetSprints(projectId)
+            this.fetchAndSetSprints(projectId);
         }
 
         if (prevState.projectId !== projectId || prevState.sprintId !== sprintId) {
             this.setState({sprintId: sprintId});
-            this.fetchAndSetDeclarations(projectId, sprintId)
+            this.fetchAndSetDeclarations(projectId, sprintId);
         }
     }
 
