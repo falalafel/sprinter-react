@@ -15,6 +15,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import api from "../api";
 import {userRole} from "../userRole";
 import {Redirect} from "react-router-dom";
+import BeatLoader from 'react-spinners/BeatLoader';
 
 const styles = theme => ({
     main: {
@@ -35,9 +36,15 @@ const styles = theme => ({
         alignItems: 'center',
         padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
     },
+    avatarContainer: {
+        height: 50
+    },
+    loader: {
+        marginTop: 20
+    },
     avatar: {
         margin: theme.spacing.unit,
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.main,
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -52,7 +59,9 @@ class SignIn extends React.Component {
 
     state = {
         login: "",
-        password: ""
+        password: "",
+        loading: false,
+        error: false
     };
 
     handleChange = event => {
@@ -68,10 +77,25 @@ class SignIn extends React.Component {
             this.props.history.push("/overview")
     };
 
+    handleLoginError = error => {
+        this.setState({
+            loading: false,
+            error: true
+        });
+    }
+
     fetchLogin = (login, password) => event => {
+        if (this.state.loading) {
+            return;
+        }
         event.preventDefault();
 
-        api.fetch(
+        this.setState({
+            loading: true,
+            error: false
+        })
+
+        api.fetchHandleError(
             api.endpoints.signIn(login, password),
             (response) => {
 
@@ -83,12 +107,14 @@ class SignIn extends React.Component {
 
                 this.redirectAfterLogin();
 
-            }
+            },
+            this.handleLoginError.bind(this)
         )
     };
 
     render() {
         const {classes} = this.props;
+        const {loading, error} = this.state;
 
         if(localStorage.getItem('user'))
             return (<Redirect to={{pathname: "/overview"}}/>);
@@ -97,12 +123,25 @@ class SignIn extends React.Component {
             <main className={classes.main}>
                 <CssBaseline/>
                 <Paper className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon/>
-                    </Avatar>
+                    <div className={classes.avatarContainer}>
+                        {loading ? 
+                            <div className={classes.loader}>
+                            <BeatLoader
+                                loading={loading}
+                                size={10}
+                                color={'#0000f0'}
+                            /></div> :
+                            <Avatar className={classes.avatar}>
+                                <LockOutlinedIcon />
+                            </Avatar>
+                        }
+                    </div>
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
+                    {error &&
+                        <Typography color="secondary">Incorrect login or password</Typography>
+                    }
                     <form className={classes.form} onSubmit={this.fetchLogin(this.state.login, this.state.password)}>
                         <FormControl margin="normal"
                                      required fullWidth
