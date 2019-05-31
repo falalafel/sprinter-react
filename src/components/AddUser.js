@@ -59,35 +59,35 @@ class AddUser extends React.Component {
 
     handleUsernameChange = (event) => {
         this.setState({username: event.target.value.trim()})
-    }
+    };
 
     handleNameChange = (event) => {
         this.setState({name: event.target.value.trim()})
-    }
+    };
 
     handleMailChange = event => {
         this.setState({mail: event.target.value.trim()})
-    }
+    };
 
     handlePasswordChange = event => {
         this.setState({password: event.target.value})
-    }
+    };
 
     handleRepeatedPasswordChange = event => {
         this.setState({repeatedPassword: event.target.value})
-    }
+    };
 
     handleRoleChange = event => {
         this.setState({role: event.target.value})
-    }
+    };
 
     isAdmin = () => {
         return this.state.role === userRole.ADMIN
-    }
+    };
 
     handleToggleRole = (event) => {
         this.isAdmin() ? this.setState({role: userRole.NORMAL}) : this.setState({role: userRole.ADMIN})
-    }
+    };
 
     validate() {
         const {username, name, mail, password, repeatedPassword, role} = this.state;
@@ -115,7 +115,7 @@ class AddUser extends React.Component {
         api.fetch(
             api.endpoints.addUser(data),
             (user) => {
-                this.props.history.push(`/overview`)
+                this.props.history.push(`/overview`);
                 console.log(user.userId)
             }
         );
@@ -145,7 +145,7 @@ class AddUser extends React.Component {
                         className={classes.adminIcon}
                         aria-label='Toggle scrum master'
                         onClick={() => this.handleToggleRole()}
-                        title={(this.isAdmin() ? 'add' : 'remove') + ' admin status'}
+                        title={(this.isAdmin() ? 'remove' : 'add') + ' admin status'}
                         >
                         <PeopleIcon color={this.isAdmin() ? 'inherit' : 'disabled'}/>
                     </IconButton>
@@ -171,6 +171,7 @@ class AddUser extends React.Component {
 
                 <TextField
                     label="Password"
+                    type="password"
                     className={classes.textField}
                     margin="normal"
                     error={this.state.password.length < 3}
@@ -180,9 +181,10 @@ class AddUser extends React.Component {
 
                 <TextField
                     label="Repeat password"
+                    type="password"
                     className={classes.textField}
                     margin="normal"
-                    error={this.state.password != this.state.repeatedPassword}
+                    error={this.state.password !== this.state.repeatedPassword}
                     value={this.state.repeatedPassword}
                     onChange={this.handleRepeatedPasswordChange}
                 />

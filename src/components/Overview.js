@@ -43,7 +43,7 @@ class Overview extends React.Component {
         api.fetch(
             api.endpoints.getProjects(),
             (response) => {
-                this.setState({projects: response})
+                this.setState({projects: response});
                 document.body.style.cursor = 'default';
             });
     }
@@ -54,7 +54,7 @@ class Overview extends React.Component {
             api.fetch(
                 api.endpoints.getSprints(projectId),
                 (response) => {
-                    this.setState({sprints: response})
+                    this.setState({sprints: response});
                     document.body.style.cursor = 'default';
                 });
         } else
@@ -67,7 +67,7 @@ class Overview extends React.Component {
             api.fetch(
                 api.endpoints.getDeclarations(projectId, sprintId),
                 (response) => {
-                    this.setState({declarations: response})
+                    this.setState({declarations: response});
                     document.body.style.cursor = 'default';
                 });
         } else
@@ -199,7 +199,7 @@ class Overview extends React.Component {
         const project = this.getActiveProject();
 
         if (!project)
-            return null
+            return null;
 
         const latestSprint = sprints.reduce((acc, s) => (acc === null || s.sprintId > acc.sprintId) ? s : acc, null)
         return latestSprint ? new Date(latestSprint.endDate) : new Date(project.startDate)
