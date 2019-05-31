@@ -1,6 +1,6 @@
 const host = "localhost";
 const port = 8080;
-const url = endpoint => `https://sprinter-api.herokuapp.com/${endpoint}`;
+const url = endpoint => `http://${host}:${port}/${endpoint}`;
 let base64 = require('base-64');
 
 export default {
