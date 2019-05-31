@@ -1,6 +1,6 @@
 const host = "localhost";
 const port = 8080;
-const url = endpoint => `http://${host}:${port}/${endpoint}`;
+const url = endpoint => `https://sprinter-api.herokuapp.com/${endpoint}`;
 let base64 = require('base-64');
 
 export default {
@@ -26,6 +26,19 @@ export default {
         }).then(response => {
             action(response);
         });
+    },
+    fetchHandleError: (opt, action, errorCallback) => {
+        fetch(opt.path, {
+            method: opt.method,
+            body: opt.body,
+            headers: opt.headers,
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(response => {
+                action(response);
+            })
+            .catch(errorCallback);
     },
     endpoints: {
         getProjects: () => ({

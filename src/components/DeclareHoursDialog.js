@@ -49,8 +49,8 @@ class DeclareHoursDialog extends React.Component {
     };
 
     isValid = () => {
-        const {availableHours, hoursLeft} = this.state;
-        return availableHours !== "" && hoursLeft !== "";
+        const {availableHours} = this.state;
+        return availableHours !== "";
     };
 
     submitDeclaration = () => {
@@ -60,7 +60,7 @@ class DeclareHoursDialog extends React.Component {
 
         const data = {
             hoursAvailable: availableHours,
-            workNeeded: hoursLeft,
+            workNeeded: hoursLeft || 0,
             comment: comment
         };
 
