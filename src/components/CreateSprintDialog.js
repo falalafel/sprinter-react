@@ -14,25 +14,34 @@ import AddIcon from '@material-ui/icons/Add';
 const styles = theme => ({
     textField: {
         width: "100%",
-        height: 60,
+        height: 60
     },
+    dialogSubtitle: {
+        marginBottom: 10
+    }
 });
 
-function getCurrentDate() {
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
+const addDaysToDate = (date, days) => {
+    var newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + days);
+    return newDate;
+};
+
+const dateToString = (date) => {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
 
     return yyyy + '-' + mm + '-' + dd
-}
+};
 
 class CreateSprintDialog extends React.Component {
 
     state = {
         open: false,
-        startDate: getCurrentDate(), //TODO data konca poprzedniego sprintu
-        endDate: getCurrentDate(), // TODO startDate + duration of sprint
+        startDate: '',
+        endDate: '',
+        showStartDateError: false,
     };
 
     handleClickOpen = () => {
@@ -40,20 +49,76 @@ class CreateSprintDialog extends React.Component {
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({
+            open: false,
+            showStartDateError: false
+        });
     };
 
-    handleDateChange = name => (event) => {
-        this.setState({[name]: event.target.value})
-    };
+    handleStartDateChange = event => {
+        const newStartDate = new Date(event.target.value)
+        const minDate = this.props.defaultStartDate
+        const endDate = new Date(this.state.endDate)
 
-    startDateValid = () => {
-        return this.state.startDate === ''
-    };
+        const invalidChange = newStartDate < minDate
+        this.setState({
+            startDate: invalidChange ? dateToString(minDate) : dateToString(newStartDate),
+            showStartDateError: invalidChange
+        })
 
-    endDateValid = () => {
-        return this.state.endDate === '' || new Date(this.state.startDate) >= new Date(this.state.endDate)
-    };
+        if (endDate && endDate < newStartDate)
+            this.setState({
+                endDate: dateToString(newStartDate)
+            })
+    }
+
+    handleEndDateChange = event => {
+        const newEndDate = new Date(event.target.value)
+        const startDate = new Date(this.state.startDate)
+        const minDate = this.props.defaultStartDate
+
+        if (newEndDate < minDate) {
+            this.setState({
+                endDate: dateToString(minDate),
+                startDate: dateToString(minDate),
+                showStartDateError: true,
+            })
+        }
+
+        else if (newEndDate < startDate) {
+            this.setState({
+                endDate: dateToString(newEndDate),
+                startDate: dateToString(newEndDate),
+                showStartDateError: false,
+            })
+        }
+
+        else {
+            this.setState({
+                endDate: dateToString(newEndDate),
+                showStartDateError: false,
+            })
+        }
+    }
+
+    getErrorMessage() {
+        const project = this.props.project;
+        const {startDate} = this.state;
+
+        const projectStart = new Date(project.startDate);
+        const sprintStart = new Date(startDate);
+
+        return projectStart < sprintStart ?
+            'Sprint cannot start before the previous one ends' : 
+            'Sprint cannot start before the project starts'
+    }
+
+    submitButtonValid() {
+        const {startDate, endDate} = this.state;
+        const parsedStartDate = new Date(startDate);
+        const parsedEndDate = new Date(endDate);
+        return !isNaN(parsedStartDate) && !isNaN(parsedEndDate);
+    }
 
     createSprint = () => {
         const projectId = this.props.project.projectId;
@@ -70,12 +135,25 @@ class CreateSprintDialog extends React.Component {
                 projectId,
                 data
             ),
-            (projectId) => {
-                console.log(projectId)
+            (response) => {
+                console.log(response)
+                const sprintId = response[1]
                 this.handleClose();
                 this.props.parentUpdateCallback();
+                this.props.history.push(`/overview?project=${projectId}&sprint=${sprintId}`)
             });
     };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {defaultStartDate, project} = this.props;
+        
+        if (prevProps.defaultStartDate !== defaultStartDate) {
+            this.setState({
+                startDate: project ? dateToString(defaultStartDate) : '',
+                endDate: project ? dateToString(addDaysToDate(defaultStartDate, project.sprintDuration)) : '',
+            })
+        }
+    }
 
     render() {
         const {classes, project} = this.props;
@@ -94,11 +172,12 @@ class CreateSprintDialog extends React.Component {
                     open={this.state.open}
                     onClose={this.handleClose}
                     aria-labelledby="create-sprint-form"
+                    PaperProps={{style: {width: 450}}}
                 >
                     <DialogTitle id="create-sprint-form">New sprint</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            Adding a sprint to project {projectName}
+                        <DialogContentText className={classes.dialogSubtitle}>
+                            Creating a sprint in project {projectName}
                         </DialogContentText>
                         <TextField
                             id="start-date"
@@ -106,11 +185,9 @@ class CreateSprintDialog extends React.Component {
                             InputLabelProps={{shrink: true}}
                             className={classes.textField}
                             value={this.state.startDate}
-                            onChange={this.handleDateChange("startDate")}
+                            onChange={this.handleStartDateChange}
 
-                            // error={this.startDateValid()}
-                            helperText={this.startDateValid() ? "bad start date" : ""}
-                            FormHelperTextProps={{error: this.startDateValid()}}
+                            helperText={this.state.showStartDateError ? this.getErrorMessage() : ''}
 
                             margin="normal"
                             type="date"
@@ -121,11 +198,7 @@ class CreateSprintDialog extends React.Component {
                             InputLabelProps={{shrink: true}}
                             className={classes.textField}
                             value={this.state.endDate}
-                            onChange={this.handleDateChange("endDate")}
-
-                            // error={this.endDateValid()}
-                            helperText={this.endDateValid() ? "bad end date" : ""}
-                            FormHelperTextProps={{error: this.endDateValid()}}
+                            onChange={this.handleEndDateChange}
 
                             margin="normal"
                             type="date"
@@ -135,7 +208,7 @@ class CreateSprintDialog extends React.Component {
                         <Button onClick={this.handleClose} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={this.createSprint} color="primary">
+                        <Button onClick={this.createSprint} color="primary" disabled={!this.submitButtonValid()}>
                             Create
                         </Button>
                     </DialogActions>
@@ -150,7 +223,9 @@ CreateSprintDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
     project: PropTypes.object,
-    parentUpdateCallback: PropTypes.func
+    parentUpdateCallback: PropTypes.func,
+    defaultStartDate: PropTypes.object,
+    history: PropTypes.object,
 };
 
 export default withStyles(styles)(CreateSprintDialog);

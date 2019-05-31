@@ -27,6 +27,19 @@ export default {
             action(response);
         });
     },
+    fetchHandleError: (opt, action, errorCallback) => {
+        fetch(opt.path, {
+            method: opt.method,
+            body: opt.body,
+            headers: opt.headers,
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(response => {
+                action(response);
+            })
+            .catch(errorCallback);
+    },
     endpoints: {
         getProjects: () => ({
             path: url(`project`),
