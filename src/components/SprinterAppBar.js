@@ -35,6 +35,10 @@ class SprinterAppBar extends React.Component {
         this.props.history.push('/new-project')
     };
 
+    handleAddUser = () => {
+        this.props.history.push('/add-user')
+    };
+
     handleOverview = () => {
         this.props.history.push('/overview')
     };
@@ -58,6 +62,7 @@ class SprinterAppBar extends React.Component {
                         </Typography>
                         {loggedUser && <Button color="inherit" onClick={this.handleOverview}>Overview</Button>}
                         {loggedUser && loggedUser.role === userRole.ADMIN && <Button color="inherit" onClick={this.handleAddProject}>New Project</Button>}
+                        {loggedUser && loggedUser.role === userRole.ADMIN && <Button color="inherit" onClick={this.handleAddUser}>New User</Button>}
                         {loggedUser && <Button color="inherit">Calendar</Button>}
                         {loggedUser && <Button color="inherit" onClick={this.handleLogOut}>Log Out</Button>}
                     </Toolbar>
