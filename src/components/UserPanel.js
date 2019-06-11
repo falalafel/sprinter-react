@@ -15,11 +15,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton/index';
 import BeatLoader from 'react-spinners/BeatLoader';
 import TextField from '@material-ui/core/TextField';
+import ChangePasswordDialog from "./ChangePasswordDialog";
 
 const styles = (theme) => ({
     root: {},
     title: {
-        float: 'center',
         textAlign: 'center',
         padding: 40
     },
@@ -45,6 +45,9 @@ const styles = (theme) => ({
         float: 'left',
         marginTop: '-10px'
     },
+    passwordChangeButton: {
+
+    }
 
 });
 
@@ -191,6 +194,11 @@ class UserPanel extends React.Component {
                                         ? <Typography className={classes.dataTypography} variant='h5'>administrator</Typography>
                                         : <Typography className={classes.dataTypography} variant='h5'>standard</Typography>
                                     }
+                                </div>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <div className={classes.passwordChangeButton}>
+                                    <ChangePasswordDialog />
                                 </div>
                             </Grid>
                         </Grid>
