@@ -23,28 +23,13 @@ const styles = (theme) => ({
         textAlign: 'center',
         padding: 40
     },
-    userData: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    descriptionColumn: {
-        float: 'left',
-        textAlign: 'right',
-        // marginTop: 7,
-    },
     descriptionTypography: {
+        float: 'right',
         height: 70,
         marginRight: 20,
     },
-    dataColumn: {
-        float: 'left',
-    },
     dataLine: {
-        clear: 'left',
         height: 70,
-        textAlign: 'center',
-        verticalAlign: 'center'
     },
     dataTypography: {
         float: 'left',
@@ -53,15 +38,13 @@ const styles = (theme) => ({
     },
     button: {
         float: 'left',
+        marginTop: -6,
     },
-    editIcon: {},
+    // editIcon: {},
     textField: {
         float: 'left',
         marginTop: '-10px'
     },
-    chuj: {
-        
-    }
 
 });
 
@@ -135,25 +118,21 @@ class UserPanel extends React.Component {
                             </Typography>
                         </div>
 
-                        <div className={classes.userData}>
+                        <Grid container spacing={0} justify='center'>
 
-                            <div className={classes.descriptionColumn}>
-                            <div className={classes.chuj}><Typography variant='h5' className={classes.descriptionTypography}>Full name:</Typography></div>
-                                <Typography variant='h5' className={classes.descriptionTypography}>E-mail:</Typography>
-                                <Typography variant='h5' className={classes.descriptionTypography}>Account type:</Typography>
-                            </div>
-
-                            <div className={classes.dataColumn}>
+                            <Grid item xs={6}>
+                                <Typography variant='h5' className={classes.descriptionTypography}>Full name:</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
                                 {editName
-                                    ? 
-                                    <div className={classes.dataLine}>
+                                    ? <div className={classes.dataLine}>
                                         <TextField
                                             id="edit-name"
                                             className={classes.textField}
                                             defaultValue={user.name}
                                             margin="normal"
                                             variant="outlined"
-                                            inputProps={{ 'aria-label': 'edit-name' }}
+                                            inputProps={{'aria-label': 'edit-name'}}
                                         />
                                         <IconButton size="small" className={classes.button} title='Submit' onClick={this.submitNewName.bind(this)}>
                                             <DoneIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
@@ -162,50 +141,60 @@ class UserPanel extends React.Component {
                                             <CloseIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
                                         </IconButton>
                                     </div>
-                                    :
-                                    <div className={classes.dataLine}>
+                                    : <div className={classes.dataLine}>
                                         <Typography className={classes.dataTypography} variant='h5'>{user.name}</Typography>
                                         <IconButton size="small" className={classes.button} title='Edit full name' onClick={this.toggleEditName.bind(this)}>
                                             <EditIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
                                         </IconButton>
                                     </div>
                                 }
+                            </Grid>
+
+
+                            <Grid item xs={6}>
+                                <Typography variant='h5' className={classes.descriptionTypography}>E-mail:</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
                                 {editMail
-                                    ? 
-                                    <div className={classes.dataLine}>
+                                    ? <div className={classes.dataLine}>
                                         <TextField
                                             id="edit-mail"
                                             className={classes.textField}
                                             defaultValue={user.mail}
                                             margin="normal"
                                             variant="outlined"
-                                            inputProps={{ 'aria-label': 'edit-mail' }}
+                                            inputProps={{'aria-label': 'edit-mail'}}
                                         />
-                                        <IconButton size="small" className={classes.button} title='Submin' onClick={this.submitNewMail.bind(this)}>
+                                        <IconButton size="small" className={classes.button} title='Submit' onClick={this.submitNewMail.bind(this)}>
                                             <DoneIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
                                         </IconButton>
                                         <IconButton size="small" className={classes.button} title='Cancel' onClick={this.toggleEditMail.bind(this)}>
                                             <CloseIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
                                         </IconButton>
                                     </div>
-                                    :
-                                    <div className={classes.dataLine}>
-                                    <Typography className={classes.dataTypography} variant={'h5'}>{user.mail}</Typography>
-                                    <IconButton size="small" className={classes.button} title='Edit e-mail' onClick={this.toggleEditMail.bind(this)}>
-                                        <EditIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
-                                    </IconButton>
+                                    : <div className={classes.dataLine}>
+                                        <Typography className={classes.dataTypography} variant={'h5'}>{user.mail}</Typography>
+                                        <IconButton size="small" className={classes.button} title='Edit e-mail' onClick={this.toggleEditMail.bind(this)}>
+                                            <EditIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        </IconButton>
                                     </div>
                                 }
-                                
+                            </Grid>
+
+
+                            <Grid item xs={6}>
+                                <Typography variant='h5' className={classes.descriptionTypography}>Account type:</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
                                 <div className={classes.dataLine}>
                                     {user.role === userRole.ADMIN
                                         ? <Typography className={classes.dataTypography} variant='h5'>administrator</Typography>
                                         : <Typography className={classes.dataTypography} variant='h5'>standard</Typography>
                                     }
                                 </div>
-                            </div>
+                            </Grid>
+                        </Grid>
 
-                        </div>
                     </div>
                 }
             </div>
