@@ -66,7 +66,6 @@ const styles = theme => ({
     statisticsPaper: {
         float: "left",
         marginBottom: 20,
-
     },
 
     tableContainer: {
