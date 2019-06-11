@@ -10,8 +10,11 @@ import {resolve} from 'dns';
 import List from "@material-ui/core/List";
 import {userRole} from "../userRole";
 import EditIcon from '@material-ui/icons/Edit';
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton/index';
 import BeatLoader from 'react-spinners/BeatLoader';
+import TextField from '@material-ui/core/TextField';
 
 const styles = (theme) => ({
     root: {},
@@ -28,7 +31,7 @@ const styles = (theme) => ({
     descriptionColumn: {
         float: 'left',
         textAlign: 'right',
-        marginTop: 7,
+        // marginTop: 7,
     },
     descriptionTypography: {
         height: 70,
@@ -39,17 +42,26 @@ const styles = (theme) => ({
     },
     dataLine: {
         clear: 'left',
+        height: 70,
+        textAlign: 'center',
+        verticalAlign: 'center'
     },
     dataTypography: {
         float: 'left',
-        height: 70,
         marginRight: 15,
+        fontWeight: 'bold',
     },
-
     button: {
         float: 'left',
     },
     editIcon: {},
+    textField: {
+        float: 'left',
+        marginTop: '-10px'
+    },
+    chuj: {
+        
+    }
 
 });
 
@@ -58,6 +70,8 @@ class UserPanel extends React.Component {
     state = {
         user: undefined,
         loading: true,
+        editName: false,
+        editMail: false
     };
 
     componentDidMount() {
@@ -79,12 +93,30 @@ class UserPanel extends React.Component {
             });
     }
 
+    toggleEditName() {
+        this.setState({
+            editName: !this.state.editName
+        })
+    }
+
+    submitNewName() {
+        // TODO
+    }
+
+    toggleEditMail() {
+        this.setState({
+            editMail: !this.state.editMail
+        })
+    }
+
+    submitNewMail() {
+        // TODO
+    }
+
     render() {
 
         const {classes} = this.props;
-        const {loading, user} = this.state;
-
-        console.log(user);
+        const {loading, user, editName, editMail} = this.state;
 
         return (
             <div className={classes.root}>
@@ -106,29 +138,69 @@ class UserPanel extends React.Component {
                         <div className={classes.userData}>
 
                             <div className={classes.descriptionColumn}>
-                                <Typography variant='h5' className={classes.descriptionTypography}>Full name:</Typography>
+                            <div className={classes.chuj}><Typography variant='h5' className={classes.descriptionTypography}>Full name:</Typography></div>
                                 <Typography variant='h5' className={classes.descriptionTypography}>E-mail:</Typography>
                                 <Typography variant='h5' className={classes.descriptionTypography}>Account type:</Typography>
                             </div>
 
                             <div className={classes.dataColumn}>
-                                <div className={classes.dataLine}>
-                                    <Typography className={classes.dataTypography} variant='h4'>{user.name}jhvadsbajasdsadasdasdasdasdasdsadasdasdasdasdasdsadsad</Typography>
-                                    <IconButton size="small" className={classes.button} title='Edit full name'>
+                                {editName
+                                    ? 
+                                    <div className={classes.dataLine}>
+                                        <TextField
+                                            id="edit-name"
+                                            className={classes.textField}
+                                            defaultValue={user.name}
+                                            margin="normal"
+                                            variant="outlined"
+                                            inputProps={{ 'aria-label': 'edit-name' }}
+                                        />
+                                        <IconButton size="small" className={classes.button} title='Submit' onClick={this.submitNewName.bind(this)}>
+                                            <DoneIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        </IconButton>
+                                        <IconButton size="small" className={classes.button} title='Cancel' onClick={this.toggleEditName.bind(this)}>
+                                            <CloseIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        </IconButton>
+                                    </div>
+                                    :
+                                    <div className={classes.dataLine}>
+                                        <Typography className={classes.dataTypography} variant='h5'>{user.name}</Typography>
+                                        <IconButton size="small" className={classes.button} title='Edit full name' onClick={this.toggleEditName.bind(this)}>
+                                            <EditIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        </IconButton>
+                                    </div>
+                                }
+                                {editMail
+                                    ? 
+                                    <div className={classes.dataLine}>
+                                        <TextField
+                                            id="edit-mail"
+                                            className={classes.textField}
+                                            defaultValue={user.mail}
+                                            margin="normal"
+                                            variant="outlined"
+                                            inputProps={{ 'aria-label': 'edit-mail' }}
+                                        />
+                                        <IconButton size="small" className={classes.button} title='Submin' onClick={this.submitNewMail.bind(this)}>
+                                            <DoneIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        </IconButton>
+                                        <IconButton size="small" className={classes.button} title='Cancel' onClick={this.toggleEditMail.bind(this)}>
+                                            <CloseIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        </IconButton>
+                                    </div>
+                                    :
+                                    <div className={classes.dataLine}>
+                                    <Typography className={classes.dataTypography} variant={'h5'}>{user.mail}</Typography>
+                                    <IconButton size="small" className={classes.button} title='Edit e-mail' onClick={this.toggleEditMail.bind(this)}>
                                         <EditIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
                                     </IconButton>
-                                </div>
-                                <div className={classes.dataLine}>
-                                    <Typography className={classes.dataTypography}
-                                                variant={'h4'}>{user.mail}</Typography>
-                                    <IconButton size="small" className={classes.button} title='Edit e-mail'>
-                                        <EditIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
-                                    </IconButton>
-                                </div>
+                                    </div>
+                                }
+                                
                                 <div className={classes.dataLine}>
                                     {user.role === userRole.ADMIN
-                                        ? <Typography className={classes.dataTypography} variant='h4'>administrator</Typography>
-                                        : <Typography className={classes.dataTypography} variant='h4'>standard</Typography>
+                                        ? <Typography className={classes.dataTypography} variant='h5'>administrator</Typography>
+                                        : <Typography className={classes.dataTypography} variant='h5'>standard</Typography>
                                     }
                                 </div>
                             </div>
