@@ -60,6 +60,11 @@ export default {
             path: url(`user`)
         }),
 
+        getUserById: (id) => ({
+            path: url(`user/${id}`),
+            method: "GET"
+        }),
+
         addUser: (data) => ({
             path: url(`user`),
             method: "POST",

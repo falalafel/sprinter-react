@@ -6,6 +6,7 @@ import Overview from './Overview';
 import SignIn from "./SignIn";
 import ProtectedRoute from "./ProtectedRoute";
 import AddUser from './AddUser';
+import UserPanel from './UserPanel';
 
 const RootRouter = (props) => {
     return (
@@ -29,6 +30,7 @@ const InnerRouter = (props) => {
                 <ProtectedRoute exact strict path='/overview' component={Overview}/>
                 <ProtectedRoute exact strict path='/new-project' component={AddProject}/>
                 <ProtectedRoute exact strict path='/add-user' component={AddUser}/>
+                <ProtectedRoute exact strict path='/profile' component={UserPanel}/>
                 <ProtectedRoute exact strict path='/manage-project/projectId=:projectid'/> {/*TODO: component={ManageProject}/>*/}
                 <Route exact strict path='*' render={() => "Page not found: 404"}/>
             </Switch>
