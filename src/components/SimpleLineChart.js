@@ -7,32 +7,52 @@ import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Legend from 'recharts/lib/component/Legend';
+import PropTypes from "prop-types";
 
-const data = [
-    {name: 'Mon', Factor: 2200, "Avg Factor": 3400},
-    {name: 'Tue', Factor: 1280, "Avg Factor": 2398},
-    {name: 'Wed', Factor: 5000, "Avg Factor": 4300},
-    {name: 'Thu', Factor: 4780, "Avg Factor": 2908},
-    {name: 'Fri', Factor: 5890, "Avg Factor": 4800},
-    {name: 'Sat', Factor: 4390, "Avg Factor": 3800},
-    {name: 'Sun', Factor: 4490, "Avg Factor": 4300},
-];
 
-function SimpleLineChart() {
+function SimpleLineChart(props) {
+
+    const {sprints} = props;
+    const minMax = sprints.reduce((acc, sprint) => {
+        acc[0] = ( acc[0] === undefined || sprint.factor < acc[0] || sprint.effectiveFactor < acc[0] )
+            ? Math.min(sprint.factor,sprint.effectiveFactor) : acc[0]
+        acc[1] = ( acc[1] === undefined || sprint.factor > acc[1] || sprint.effectiveFactor > acc[1])
+            ? Math.max(sprint.factor,sprint.effectiveFactor) : acc[1]
+        return acc;
+    }, []);
+
+    const data = sprints.map(s => ({
+            Date: new Date(s.startDate).toLocaleDateString() + " - " + new Date(s.endDate).toLocaleDateString(),
+            Factor: s.factor,
+            "Avg Factor": s.effectiveFactor
+        }));
+
+    console.log(data);
+    console.log([Math.round(minMax[0]*10 - 5)/10,Math.round(minMax[1]*10 + 5)/10]);
+
     return (
-        // 99% per https://github.com/recharts/recharts/issues/172
         <ResponsiveContainer width="99%" height={320}>
             <LineChart data={data}>
-                <XAxis dataKey="name"/>
-                <YAxis/>
+                <XAxis dataKey="Date"/>
+                <YAxis domain={[Math.round(minMax[0]*10 - 5)/10,Math.round(minMax[1]*10 + 5)/10]}/>
                 <CartesianGrid vertical={false} strokeDasharray="3 3"/>
                 <Tooltip/>
                 <Legend/>
-                <Line type="monotone" dataKey="Factor" stroke="#82ca9d"/>
-                <Line type="monotone" dataKey="Avg Factor" stroke="#8884d8" activeDot={{r: 8}}/>
+                <Line type="monotone" dataKey="Factor" stroke="#3f51b5"/>
+                <Line type="monotone" dataKey="Avg Factor" stroke="#d83232" activeDot={{r: 8}}/>
             </LineChart>
         </ResponsiveContainer>
     );
 }
+
+SimpleLineChart.propTypes = {
+    sprints: PropTypes.arrayOf(
+        PropTypes.shape({
+            date: PropTypes.date,
+            factor: PropTypes.number,
+            effectiveFactor: PropTypes.number,
+        })
+    ).isRequired
+};
 
 export default SimpleLineChart;
