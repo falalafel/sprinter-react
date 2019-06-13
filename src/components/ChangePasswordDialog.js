@@ -55,8 +55,8 @@ class ChangePasswordDialog extends React.Component {
     }    
 
     handleSubmit = () => {
-        // TODO
-        console.log(this.state)
+        const {old, newPassword} = this.state;
+        this.props.passwordChangeCallback(old, newPassword);
     }
 
     render() {
@@ -65,7 +65,8 @@ class ChangePasswordDialog extends React.Component {
 
         return (
             <div>
-                <Button variant="outlined"
+                <Button variant="contained"
+                        color="primary"
                         onClick={this.handleClickOpen}
                         disabled={this.props.disabled}>
                     Change password

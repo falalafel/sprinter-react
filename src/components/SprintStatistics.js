@@ -91,29 +91,23 @@ const SprintStatistics = (props) => {
                 <Grid item xs={12}>
                     <Divider className={classes.divider}/>
                 </Grid>
-                {/* <Grid item xs={3}>
-                    <List dense>
-                        {getListItem("Status", sprint.closingStatus ? "closed" : "open")} // TODO: status future | in progress | not summarised | summarised 
-                        {getListItem("All declared hours", null)} // TODO: counting hours sum in backend 
-                    </List>
-                </Grid> */}
                 <Grid item xs={4}>
                     <List dense>
-                        {getListItem("All declared hours", null)} {/*// TODO: counting hours sum in backend */}
+                        {getListItem("All declared hours", sprint.allHours)}
                         {getListItem("Expected factor", sprint.factor)}
-                        {getListItem("Estimated effective hours", null)} {/* TODO: calculations in backend */}
+                        {getListItem("Estimated effective hours", sprint.estimatedEffectiveHours)}
                     </List>
                 </Grid>
                 <Grid item xs={4}>
-                    <List dense> {/*// TODO: whole column */}
+                    <List dense>
                         {getListItem("Original estimated hours", sprint.originalEstimatedHours)}
                         {getListItem("End planned hours", sprint.endPlannedHours)}
                         {getListItem("Burned hours", sprint.burnedHours)}
                     </List>
                 </Grid>
                 <Grid item xs={4}>
-                    <List dense> {/*// TODO: whole column */}
-                        {getListItem("Effective hours needed", null)} {/*// TODO: weird calculations in backend */}
+                    <List dense>
+                        {getListItem("Effective hours needed", sprint.effectiveHoursNeeded)}
                         {getListItem("Effective sprint factor", sprint.effectiveFactor)}
                         {getListItem("Effective project factor", sprint.effectiveFactorWithHistory)}
                     </List>
