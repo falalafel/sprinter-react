@@ -67,7 +67,6 @@ class ChangePasswordDialog extends React.Component {
             <div>
                 <Button variant="outlined"
                         onClick={this.handleClickOpen}
-                        size='small'
                         disabled={this.props.disabled}>
                     Change password
                 </Button>

@@ -40,13 +40,14 @@ const styles = (theme) => ({
         float: 'left',
         marginTop: -6,
     },
-    // editIcon: {},
     textField: {
         float: 'left',
         marginTop: '-10px'
     },
     passwordChangeButton: {
-
+        display: 'flex',
+        justifyContent:'center',
+        alignItems:'center'
     }
 
 });
