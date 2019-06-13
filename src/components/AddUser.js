@@ -4,201 +4,168 @@ import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
 import api from "../api";
-import { userRole } from '../userRole';
+import {userRole} from '../userRole';
 import Typography from '@material-ui/core/Typography';
-import PeopleIcon from '@material-ui/icons/People';
-import IconButton from '@material-ui/core/IconButton/index';
+import {Grid} from "@material-ui/core";
+import Switch from '@material-ui/core/Switch';
+import Snackbar from "@material-ui/core/Snackbar";
 
-const styles = theme => ({
-    root: {
-        width: 'auto',
-        display: 'block', // Fix IE 11 issue.
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
-        [theme.breakpoints.up(600 + theme.spacing.unit * 3 * 2)]: {
-            width: 600,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
+const styles = {
+    root: {},
+    title: {
+        float: 'center',
+        textAlign: 'center',
+        padding: 40,
     },
-    container: {
-        marginTop: theme.spacing.unit * 8,
+    inputContainer: {
+        marginTop: 10,
         display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    firstRow:{
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing.unit,
+    mailInput: {
+        width: 400,
+        height: 60
     },
-    firstField:{
-        width:'85%',
-        marginTop: theme.spacing.unit,
+    roleInputContainer: {
+        marginTop: 40,
+        marginLeft: -20,
+        fontSize: 20,
     },
-    adminIcon:{
-        marginTop: theme.spacing.unit*2,
-        marginLeft: theme.spacing.unit*3,
+    submitButtonContainer: {
+        marginTop: 40,
     },
-    textField: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing.unit,
-    },
-});
+
+};
 
 class AddUser extends React.Component {
 
     state = {
-        username: 'mabe will be added',
         name: '',
         mail: '',
-        password: '',
-        repeatedPassword: '',
         role: userRole.NORMAL,
+        createdMessageOpen: false,
     };
 
-    handleUsernameChange = (event) => {
-        this.setState({username: event.target.value.trim()})
-    };
-
-    handleNameChange = (event) => {
-        this.setState({name: event.target.value.trim()})
+    handleNameChange = event => {
+        this.setState({name: event.target.value})
     };
 
     handleMailChange = event => {
         this.setState({mail: event.target.value.trim()})
     };
 
-    handlePasswordChange = event => {
-        this.setState({password: event.target.value})
+    handleRoleChange = () => {
+        this.setState({role: this.state.role === userRole.ADMIN ? userRole.NORMAL : userRole.ADMIN});
     };
 
-    handleRepeatedPasswordChange = event => {
-        this.setState({repeatedPassword: event.target.value})
+    isMailValid = () => {
+        const result = this.state.mail.match(/.+@.+\..+/g);
+        return result !== null;
     };
 
-    handleRoleChange = event => {
-        this.setState({role: event.target.value})
+    isNameValid = () => {
+        return this.state.name.trim() !== '';
     };
-
-    isAdmin = () => {
-        return this.state.role === userRole.ADMIN
-    };
-
-    handleToggleRole = (event) => {
-        this.isAdmin() ? this.setState({role: userRole.NORMAL}) : this.setState({role: userRole.ADMIN})
-    };
-
-    validate() {
-        const {username, name, mail, password, repeatedPassword, role} = this.state;
-        return (
-            (username.length >= 3) &&
-            (name.length >= 3) &&
-            (mail.length >= 3) &&
-            (mail.includes('@')) &&
-            (password.length >= 3) &&
-            (password === repeatedPassword) &&
-            (role === userRole.NORMAL || role === userRole.ADMIN)
-        );
-    }
 
     handleAddUser = () => {
-        const {name, mail, password, role} = this.state;
+        const {name, mail, role} = this.state;
 
         const data = {
-            name: name,
+            name: name.trim(),
             mail: mail,
-            password: password,
             role: role,
         };
 
         api.fetch(
             api.endpoints.addUser(data),
             (user) => {
-                this.props.history.push(`/overview`);
-                console.log(user.userId)
+                this.setState({
+                    name: '',
+                    mail: '',
+                    role: userRole.NORMAL,
+                    createdMessageOpen: true,
+                })
             }
         );
     };
 
     render() {
         const {classes} = this.props;
+        const {role} = this.state;
 
         return (
             <div className={classes.root}>
-            <form className={classes.container} noValidate>
-                <Typography component="h1" variant="h3">
-                    Create user account
-                </Typography>
-
-                <div className={classes.firstRow}>
-                    <TextField 
-                        className={classes.firstField}
-                        label="Name"
-                        margin="normal"
-                        error={this.state.name.length < 3}
-                        value={this.state.name}
-                        onChange={this.handleNameChange}
-                    />
-
-                    <IconButton
-                        className={classes.adminIcon}
-                        aria-label='Toggle scrum master'
-                        onClick={() => this.handleToggleRole()}
-                        title={(this.isAdmin() ? 'remove' : 'add') + ' admin status'}
-                        >
-                        <PeopleIcon color={this.isAdmin() ? 'inherit' : 'disabled'}/>
-                    </IconButton>
+                <div className={classes.title}>
+                    <Typography variant="h3">
+                        Create new user account
+                    </Typography>
                 </div>
 
-                {/* <TextField
-                    label="Full name"
-                    className={classes.textField}
-                    margin="normal"
-                    error={this.state.name.length < 3}
-                    value={this.state.name}
-                    onChange={this.handleNameChange}
-                /> */}
+                <form>
+                    <Grid container spacing={0} justify='center'>
+                        <Grid item xs={12}>
+                            <div className={classes.inputContainer}>
+                                <TextField
+                                    label="Full name"
+                                    className={classes.mailInput}
+                                    value={this.state.name}
+                                    onChange={this.handleNameChange}
+                                />
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className={classes.inputContainer}>
+                                <TextField
+                                    label="E-mail"
+                                    className={classes.mailInput}
+                                    helperText={this.isMailValid() ? '' : 'Given e-mail is not valid'}
+                                    value={this.state.mail}
+                                    onChange={this.handleMailChange}
+                                />
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className={classes.inputContainer}>
+                                <div className={classes.roleInputContainer}>
+                                    <Switch
+                                        checked={role === userRole.ADMIN}
+                                        onChange={() => this.handleRoleChange()}
+                                        color="primary"
+                                    />
+                                    Administrator privileges
+                                </div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className={classes.inputContainer}>
+                                <div className={classes.submitButtonContainer}>
+                                    <Button
+                                        disabled={!this.isMailValid() || !this.isNameValid()}
+                                        onClick={this.handleAddUser}
+                                        color="primary"
+                                        variant="contained"
+                                        className={classes.addUserButton}
+                                    >
+                                        Register user
+                                    </Button>
+                                </div>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </form>
 
-                <TextField
-                    label="Mail"
-                    className={classes.textField}
-                    margin="normal"
-                    error={this.state.mail.length < 3 || !this.state.mail.includes('@')}
-                    value={this.state.mail}
-                    onChange={this.handleMailChange}
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.createdMessageOpen}
+                    onClose={() => this.setState({createdMessageOpen: false})}
+                    autoHideDuration={3500}
+                    message={'Account created successfully'}
                 />
-
-                <TextField
-                    label="Password"
-                    type="password"
-                    className={classes.textField}
-                    margin="normal"
-                    error={this.state.password.length < 3}
-                    value = {this.state.password}
-                    onChange={this.handlePasswordChange}
-                />
-
-                <TextField
-                    label="Repeat password"
-                    type="password"
-                    className={classes.textField}
-                    margin="normal"
-                    error={this.state.password !== this.state.repeatedPassword}
-                    value={this.state.repeatedPassword}
-                    onChange={this.handleRepeatedPasswordChange}
-                />
-                <Button
-                    disabled={!this.validate()}
-                    onClick={this.handleAddUser}
-                    color="primary"
-                    variant="contained"
-                    className={classes.addUserButton}
-                    >
-                    Register user
-                </Button>
-            </form>
-        </div>
+            </div>
         );
     }
 

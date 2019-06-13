@@ -67,7 +67,7 @@ class SprinterAppBar extends React.Component {
                         </Typography>
                         {loggedUser && <Button color="inherit" onClick={this.handleOverview}>Overview</Button>}
                         {loggedUser && loggedUser.role === userRole.ADMIN && <Button color="inherit" onClick={this.handleAddProject}>New Project</Button>}
-                        {loggedUser && loggedUser.role === userRole.ADMIN && <Button color="inherit" onClick={this.handleAddUser}>New User</Button>}
+                        {loggedUser && loggedUser.role === userRole.ADMIN && <Button color="inherit" onClick={this.handleAddUser}>Add User</Button>}
                         {loggedUser && <ProfileDropdownMenu logoutCallback={this.handleLogOut} profileCallback={this.handleProfile}/>}
                     </Toolbar>
                 </AppBar>
