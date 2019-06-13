@@ -44,6 +44,7 @@ class CreateSprintDialog extends React.Component {
         open: false,
         startDate: '',
         endDate: '',
+        estimated: "",
         showStartDateError: false,
     };
 
@@ -104,6 +105,12 @@ class CreateSprintDialog extends React.Component {
         }
     }
 
+    setNonNegativeValue = name => event => {
+        const value = event.target.value || null;
+        const properValue = value !== null ? Math.max(value, 0) : "";
+        this.setState({[name]: properValue});
+    };
+
     getErrorMessage() {
         const project = this.props.project;
         const {startDate} = this.state;
@@ -117,19 +124,21 @@ class CreateSprintDialog extends React.Component {
     }
 
     submitButtonValid() {
-        const {startDate, endDate} = this.state;
+        const {startDate, endDate, estimated} = this.state;
         const parsedStartDate = new Date(startDate);
         const parsedEndDate = new Date(endDate);
-        return !isNaN(parsedStartDate) && !isNaN(parsedEndDate);
+        
+        return !isNaN(parsedStartDate) && !isNaN(parsedEndDate) && estimated !== "";
     }
 
     createSprint = () => {
         const projectId = this.props.project.projectId;
-        const {startDate, endDate} = this.state;
+        const {startDate, endDate, estimated} = this.state;
 
         const data = {
             startDate: startDate,
             endDate: endDate,
+            originalEstimatedHours: estimated,
         };
 
         // TODO wait for backend fix
@@ -206,6 +215,15 @@ class CreateSprintDialog extends React.Component {
 
                             margin="normal"
                             type="date"
+                        />
+                        <TextField
+                            id="estimated-hours"
+                            label="Originally estimated work hours"
+                            className={classes.textField}
+                            value={this.state.estimated}
+                            onChange={this.setNonNegativeValue("estimated")}
+                            margin="normal"
+                            type="number"
                         />
                     </DialogContent>
                     <DialogActions>
