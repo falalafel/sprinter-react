@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {userRole} from "../userRole";
 import api from "../api";
+import ProfileDropdownMenu from './ProfileDropdownMenu';
 
 const styles = theme => ({
     root: {
@@ -49,6 +50,10 @@ class SprinterAppBar extends React.Component {
         this.props.history.push('/sign-in')
     };
 
+    handleProfile = () => {
+        this.props.history.push('/profile')
+    };
+
     render() {
         const {classes} = this.props;
         const loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -63,8 +68,7 @@ class SprinterAppBar extends React.Component {
                         {loggedUser && <Button color="inherit" onClick={this.handleOverview}>Overview</Button>}
                         {loggedUser && loggedUser.role === userRole.ADMIN && <Button color="inherit" onClick={this.handleAddProject}>New Project</Button>}
                         {loggedUser && loggedUser.role === userRole.ADMIN && <Button color="inherit" onClick={this.handleAddUser}>New User</Button>}
-                        {loggedUser && <Button color="inherit">Calendar</Button>}
-                        {loggedUser && <Button color="inherit" onClick={this.handleLogOut}>Log Out</Button>}
+                        {loggedUser && <ProfileDropdownMenu logoutCallback={this.handleLogOut} profileCallback={this.handleProfile}/>}
                     </Toolbar>
                 </AppBar>
                 <div className={classes.appBarSpacer}/>
