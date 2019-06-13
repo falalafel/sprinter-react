@@ -19,9 +19,9 @@ const styles = {
         float: 'center',
         textAlign: 'center',
         padding: 40,
-        marginBottom: 15,
     },
     inputContainer: {
+        marginTop: 10,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
@@ -44,8 +44,13 @@ const styles = {
 class AddUser extends React.Component {
 
     state = {
+        name: '',
         mail: '',
         role: userRole.NORMAL,
+    };
+
+    handleNameChange = event => {
+        this.setState({name: event.target.value})
     };
 
     handleMailChange = event => {
@@ -61,10 +66,15 @@ class AddUser extends React.Component {
         return result !== null;
     };
 
+    isNameValid = () => {
+        return this.state.name.trim() !== '';
+    };
+
     handleAddUser = () => {
-        const {mail, role} = this.state;
+        const {name, mail, role} = this.state;
 
         const data = {
+            name: name.trim(),
             mail: mail,
             role: role,
         };
@@ -73,7 +83,6 @@ class AddUser extends React.Component {
             api.endpoints.addUser(data),
             (user) => {
                 this.props.history.push('/overview');
-                console.log(user.userId)
             }
         );
     };
@@ -95,9 +104,19 @@ class AddUser extends React.Component {
                         <Grid item xs={12}>
                             <div className={classes.inputContainer}>
                                 <TextField
+                                    label="Full name"
+                                    className={classes.mailInput}
+                                    value={this.state.name}
+                                    onChange={this.handleNameChange}
+                                />
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className={classes.inputContainer}>
+                                <TextField
                                     label="E-mail"
                                     className={classes.mailInput}
-                                    helperText={this.isMailValid() ? '' : 'Inserted e-mail is not valid'}
+                                    helperText={this.isMailValid() ? '' : 'Given e-mail is not valid'}
                                     value={this.state.mail}
                                     onChange={this.handleMailChange}
                                 />
@@ -119,7 +138,7 @@ class AddUser extends React.Component {
                             <div className={classes.inputContainer}>
                                 <div className={classes.submitButtonContainer}>
                                     <Button
-                                        disabled={!this.isMailValid()}
+                                        disabled={!this.isMailValid() || !this.isNameValid()}
                                         onClick={this.handleAddUser}
                                         color="primary"
                                         variant="contained"
