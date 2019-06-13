@@ -14,21 +14,18 @@ function SimpleLineChart(props) {
 
     const {sprints} = props;
     const minMax = sprints.reduce((acc, sprint) => {
-        acc[0] = ( acc[0] === undefined || sprint.factor < acc[0] || sprint.effectiveFactor < acc[0] )
-            ? Math.min(sprint.factor,sprint.effectiveFactor) : acc[0]
-        acc[1] = ( acc[1] === undefined || sprint.factor > acc[1] || sprint.effectiveFactor > acc[1])
-            ? Math.max(sprint.factor,sprint.effectiveFactor) : acc[1]
+        acc[0] = ( acc[0] === undefined || sprint.effectiveFactor < acc[0] || sprint.effectiveFactorWithHistory < acc[0] )
+            ? Math.min(sprint.effectiveFactor, sprint.effectiveFactorWithHistory) : acc[0]
+        acc[1] = ( acc[1] === undefined || sprint.effectiveFactor > acc[1] || sprint.effectiveFactorWithHistory > acc[1])
+            ? Math.max(sprint.effectiveFactor, sprint.effectiveFactorWithHistory) : acc[1]
         return acc;
     }, []);
 
     const data = sprints.map(s => ({
-            Date: new Date(s.startDate).toLocaleDateString() + " - " + new Date(s.endDate).toLocaleDateString(),
-            Factor: s.factor,
-            "Avg Factor": s.effectiveFactor
-        }));
-
-    console.log(data);
-    console.log([Math.round(minMax[0]*10 - 5)/10,Math.round(minMax[1]*10 + 5)/10]);
+        Date: new Date(s.startDate).toLocaleDateString() + " - " + new Date(s.endDate).toLocaleDateString(),
+        Factor: s.effectiveFactor.toFixed(2),
+        "Avg Factor": s.effectiveFactorWithHistory.toFixed(2)
+    }));
 
     return (
         <ResponsiveContainer width="99%" height={320}>
