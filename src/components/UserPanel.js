@@ -58,7 +58,10 @@ class UserPanel extends React.Component {
         user: undefined,
         loading: true,
         editName: false,
-        editMail: false
+        editMail: false,
+        buttonsEnabled: true,
+        name: "",
+        email: ""
     };
 
     componentDidMount() {
@@ -70,12 +73,16 @@ class UserPanel extends React.Component {
     }
 
     fetchAndSetUser() {
+        this.setState({
+            buttonsEnabled: false
+        });
         api.fetch(
             api.endpoints.getUserById(this.getUserId()),
             (response) => {
                 this.setState({
                     user: response,
-                    loading: false
+                    loading: false,
+                    buttonsEnabled: true,
                 })
             });
     }
@@ -87,7 +94,19 @@ class UserPanel extends React.Component {
     }
 
     submitNewName() {
-        // TODO
+        const data = {name: this.state.name}
+        console.log(this.state)
+        this.setState({
+            editName: false,
+        });
+        api.fetchNoContent(
+            api.endpoints.updateUser(
+                this.getUserId(),
+                data
+            ),
+            () => {
+                this.fetchAndSetUser();
+            });
     }
 
     toggleEditMail() {
@@ -133,13 +152,23 @@ class UserPanel extends React.Component {
                                         <TextField
                                             id="edit-name"
                                             className={classes.textField}
-                                            defaultValue={user.name}
+                                            defaultValue={this.state.name}
+                                            onChange={(event) => this.setState({name: event.target.value})}
                                             margin="normal"
                                             variant="outlined"
                                             inputProps={{'aria-label': 'edit-name'}}
                                         />
-                                        <IconButton size="small" className={classes.button} title='Submit' onClick={this.submitNewName.bind(this)}>
-                                            <DoneIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        <IconButton
+                                            size="small"
+                                            className={classes.button}
+                                            title='Submit'
+                                            onClick={this.submitNewName.bind(this)}
+                                        >
+                                            <DoneIcon
+                                                fontSize="small"
+                                                className={classes.editIcon}
+                                                color={'disabled'}/
+                                            >
                                         </IconButton>
                                         <IconButton size="small" className={classes.button} title='Cancel' onClick={this.toggleEditName.bind(this)}>
                                             <CloseIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>

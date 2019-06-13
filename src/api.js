@@ -60,6 +60,15 @@ export default {
             path: url(`user`)
         }),
 
+        updateUser: (id, data) => ({
+            path: url(`user/${id}`),
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }),
+
         getUserById: (id) => ({
             path: url(`user/${id}`),
             method: "GET"
