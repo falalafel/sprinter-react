@@ -18,6 +18,9 @@ const styles = theme => ({
     },
     dialogSubtitle: {
         marginBottom: 10
+    },
+    button: {
+        float: "right"
     }
 });
 
@@ -161,12 +164,13 @@ class CreateSprintDialog extends React.Component {
 
         return (
             <div>
-                <Button variant="outlined"
+                <Button className={classes.button}
+                        variant="outlined"
                         onClick={this.handleClickOpen}
                         size='small'
                         disabled={this.props.disabled}>
                     <AddIcon fontSize='small'/>
-                    New Sprint
+                    New
                 </Button>
                 <Dialog
                     open={this.state.open}
