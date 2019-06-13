@@ -21,7 +21,6 @@ class CloseSprintDialog extends React.Component {
 
     state = {
         open: false,
-        estimated: "",
         burned: "",
         endPlanned: ""
     };
@@ -41,18 +40,18 @@ class CloseSprintDialog extends React.Component {
     };
 
     isValid = () => {
-        const {burned, estimated, endPlanned} = this.state;
-        return burned !== "" && estimated !== "" && endPlanned !== "";
+        const {burned, endPlanned} = this.state;
+        return burned !== "" && endPlanned !== "";
     };
 
     closeSprint = () => {
         const projectId = this.props.project.projectId;
         const sprintId = this.props.sprint.sprintId;
-        const {burned, estimated, endPlanned} = this.state;
+        const {burned, endPlanned} = this.state;
 
         const data = {
             closingStatus: true,
-            originalEstimatedHours: estimated,
+            // originalEstimatedHours: estimated,
             endPlannedHours: endPlanned,
             burnedHours: burned
         };
@@ -93,15 +92,7 @@ class CloseSprintDialog extends React.Component {
                         <DialogContentText>
                             Closing sprint {sprintId}
                         </DialogContentText>
-                        <TextField
-                            id="estimated-hours"
-                            label="Originally estimated work hours"
-                            className={classes.textField}
-                            value={this.state.estimated}
-                            onChange={this.setNonNegativeValue("estimated")}
-                            margin="normal"
-                            type="number"
-                        />
+                        
                         <TextField
                             id="end-planned-hours"
                             label="End planned hours"
