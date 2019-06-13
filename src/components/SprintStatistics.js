@@ -6,7 +6,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import {Divider, Button} from "@material-ui/core";
-import EditIcon from '@material-ui/icons/Edit';
 import Grid from "@material-ui/core/Grid";
 import CloseSprintDialog from "./CloseSprintDialog";
 
@@ -24,9 +23,6 @@ const styles = theme => ({
     button: {
         float: "right",
         marginTop: 5
-    },
-    editIcon: {
-        marginRight: 10
     },
     header: {
         float: "left",
@@ -80,10 +76,6 @@ const SprintStatistics = (props) => {
                         />
                     </div>
                 }
-                <Button size="small" className={classes.button} disabled={sprint === null}>
-                    <EditIcon fontSize="small" className={classes.editIcon}/>
-                    Edit
-                </Button>
             </div>
 
             {sprint &&
