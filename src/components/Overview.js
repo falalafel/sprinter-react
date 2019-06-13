@@ -335,10 +335,13 @@ class Overview extends React.Component {
 
                         <div className={classes.chartContainer}>
                             <Typography variant="h4" gutterBottom>
-                                Factor chart (mock)
+                                Factor chart
                             </Typography>
                             <div component="div" className={classes.chart}>
-                                <SimpleLineChart/>
+                                <SimpleLineChart
+                                    sprints={this.state.sprints.map(s => ({
+                                        ...s,
+                                    })).filter(s => s.closingStatus)}/>
                             </div>
                         </div>
                     </div>
