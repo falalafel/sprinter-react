@@ -1,21 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles/index';
-import ProjectMembersCreate from "./ProjectMembersCreate";
 import api from "../api";
-import ProjectConfig from "./ProjectConfig";
-import {Divider, Grid, Typography} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import {resolve} from 'dns';
-import List from "@material-ui/core/List";
+import {Grid, Typography} from "@material-ui/core";
 import {userRole} from "../userRole";
-import EditIcon from '@material-ui/icons/Edit';
-import DoneIcon from '@material-ui/icons/Done';
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton/index';
 import Snackbar from '@material-ui/core/Snackbar';
 import BeatLoader from 'react-spinners/BeatLoader';
-import TextField from '@material-ui/core/TextField';
 import ChangePasswordDialog from "./ChangePasswordDialog";
 
 const styles = (theme) => ({

@@ -27,20 +27,20 @@ function SimpleTable(props) {
                 <TableHead>
                     <TableRow>
                         <TableCell align="left">Name</TableCell>
-                        <TableCell align="left">UserId</TableCell>
+                        <TableCell align="left">E-mail</TableCell>
                         <TableCell align="left">Available hours</TableCell>
                         <TableCell align="left">Work needed</TableCell>
                         <TableCell align="left">Comment</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map(declaration => (
-                        <TableRow key={declaration.userId}>
-                            <TableCell align="left" component="th" scope="row">{declaration.userName}</TableCell>
-                            <TableCell align="left">{declaration.userId}</TableCell>
-                            <TableCell align="left">{declaration.hoursAvailable}</TableCell>
-                            <TableCell align="left">{declaration.workNeeded}</TableCell>
-                            <TableCell align="left">{declaration.comment}</TableCell>
+                    {data.map(entry => (
+                        <TableRow key={entry.userId}>
+                            <TableCell align="left" component="th" scope="row">{entry.name}</TableCell>
+                            <TableCell align="left">{entry.mail}</TableCell>
+                            <TableCell align="left">{entry.hoursAvailable}</TableCell>
+                            <TableCell align="left">{entry.workNeeded}</TableCell>
+                            <TableCell align="left">{entry.comment}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

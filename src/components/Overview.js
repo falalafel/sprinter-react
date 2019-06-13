@@ -11,20 +11,22 @@ import ProjectSelect from "./ProjectSelect";
 import SprintSelect from "./SprintSelect";
 import DeclareHoursDialog from "./DeclareHoursDialog";
 import CreateSprintDialog from "./CreateSprintDialog";
-import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import SprintStatistics from "./SprintStatistics";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
+function usersDeclarationsJoin(users, declarations) {
+    if(users === [] || declarations === [])
+        return [];
 
-function declarationListItem(declaration) {
-    return {
-        userId: declaration.userId,
-        userName: "testowa nazwa uzytkownika xd",
-        hoursAvailable: declaration.hoursAvailable,
-        workNeeded: declaration.workNeeded,
-        comment: declaration.comment
-    };
+    return declarations.map(d => {
+        const user = users.find(u => u.userId === d.userId);
+        return ({
+            ...d,
+            mail: user.mail,
+            name: user.name
+        });
+    });
 }
 
 class Overview extends React.Component {
@@ -33,6 +35,8 @@ class Overview extends React.Component {
         projects: [],
         sprints: [],
         declarations: [],
+        users: [],
+        memberships: [],
         projectId: undefined,
         sprintId: undefined,
         userId: null
@@ -74,18 +78,15 @@ class Overview extends React.Component {
             this.setState({declarations: []})
     }
 
-    // fetchAndSetSprintParameters(projectId, sprintId) {
-    //     if (projectId !== undefined && sprintId !== undefined) {
-    //         document.body.style.cursor = 'wait';
-    //         api.fetch(
-    //             api.endpoints.getSprintStatistics(projectId, sprintId),
-    //             (response) => {
-    //                 this.setState({declarations: response})
-    //                 document.body.style.cursor = 'default';
-    //             });
-    //     } else
-    //         this.setState({sprint_statistics: []})
-    // }
+    fetchAndSetUsers() {
+        document.body.style.cursor = 'wait';
+        api.fetch(
+            api.endpoints.getUsers(),
+            (response) => {
+                this.setState({users: response});
+                document.body.style.cursor = 'default';
+            });
+    }
 
     getUrlParams(location) {
         const searchParams = new URLSearchParams(location.search);
@@ -126,6 +127,7 @@ class Overview extends React.Component {
         this.fetchAndSetProjects();
         this.fetchAndSetSprints(projectId);
         this.fetchAndSetDeclarations(projectId, sprintId);
+        this.fetchAndSetUsers();
 
     }
 
@@ -156,12 +158,9 @@ class Overview extends React.Component {
         if (sprintId === undefined)
             return {previous: undefined, next: undefined};
 
-        const sortedSprints = sprints.slice().sort((a, b) => a.sprintId - b.sprintId);
-        const index = sortedSprints.findIndex(s => s.sprintId === sprintId);
-
         return {
-            previous: sortedSprints[index - 1],
-            next: sortedSprints[index + 1]
+            previous: sprints.find(s => s.sprintId === sprintId - 1),
+            next: sprints.find(s => s.sprintId === sprintId + 1),
         };
     }
 
@@ -207,7 +206,7 @@ class Overview extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {projectId, sprintId, userId} = this.state;
+        const {projectId, sprintId, userId, declarations, users} = this.state;
         const {next, previous} = this.getNeighbourSprints();
 
         return (
@@ -219,18 +218,6 @@ class Overview extends React.Component {
                                 <Typography variant="h4" className={classes.sectionTitle}>
                                     Project
                                 </Typography>
-                                <div className={classes.buttonsContainer}>
-                                    {//this.editProjectButtonEnabled() && //TODO am i scrum master
-                                        <Button variant="outlined"
-                                                onClick={() => this.props.history.push(`/manage-project/project=${projectId}`)}
-                                                className={classes.button}
-                                                size='small'
-                                                disabled={!this.editProjectButtonEnabled()}>
-                                            <SettingsIcon className={classes.buttonIcon} fontSize='small'/>
-                                            Configure
-                                        </Button>
-                                    }
-                                </div>
                             </div>
                             <div className={classes.projectSelection}>
                                 <ProjectSelect
@@ -327,12 +314,14 @@ class Overview extends React.Component {
                             />
                             <div className={classes.table}>
                                 <Divider/>
-                                <SimpleTable data={this.state.declarations.map(item => declarationListItem(item))}/>
+                                <SimpleTable data={usersDeclarationsJoin(users, declarations)}/>
                                 <Divider/>
                             </div>
 
                         </div>
-
+                    </div>
+                    }
+                    {this.getActiveSprint() &&
                         <div className={classes.chartContainer}>
                             <Typography variant="h4" gutterBottom>
                                 Factor chart
@@ -344,7 +333,6 @@ class Overview extends React.Component {
                                     })).filter(s => s.closingStatus)}/>
                             </div>
                         </div>
-                    </div>
                     }
                 </div>
             </div>
