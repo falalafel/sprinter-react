@@ -230,17 +230,6 @@ class Overview extends React.Component {
                                             Configure
                                         </Button>
                                     }
-                                    {//this.newSprintButtonEnabled() && //TODO am i scrum master
-                                        <div className={classes.dialogCreateSprint}>
-                                            <CreateSprintDialog
-                                                project={this.getActiveProject()}
-                                                parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
-                                                disabled={!this.newSprintButtonEnabled()}
-                                                defaultStartDate={this.getDefaultNewSprintDate()}
-                                                history={this.props.history}
-                                            />
-                                        </div>
-                                    }
                                 </div>
                             </div>
                             <div className={classes.projectSelection}>
@@ -264,6 +253,7 @@ class Overview extends React.Component {
                                     Sprint
                                 </Typography>
                                 <div className={classes.buttonsContainer}>
+                                    
                                     <Button variant="outlined"
                                             onClick={() => this.props.history.push(`/overview?project=${this.state.projectId}&sprint=${next.sprintId}`)}
                                             className={classes.arrowButton}
@@ -282,6 +272,19 @@ class Overview extends React.Component {
                                         <KeyboardArrowLeftIcon fontSize='small'/>
                                         prev
                                     </Button>
+
+                                    {//this.newSprintButtonEnabled() && //TODO am i scrum master
+                                        <div className={classes.dialogCreateSprint}>
+                                        <CreateSprintDialog
+                                            project={this.getActiveProject()}
+                                            parentUpdateCallback={() => this.fetchAndSetSprints(projectId)}
+                                            disabled={!this.newSprintButtonEnabled()}
+                                            defaultStartDate={this.getDefaultNewSprintDate()}
+                                            history={this.props.history}
+                                        />
+                                        </div>
+                                    }
+
                                 </div>
                             </div>
                             <div className={classes.sprintSelection}>
