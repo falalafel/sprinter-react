@@ -138,7 +138,7 @@ class CreateSprintDialog extends React.Component {
         const data = {
             startDate: startDate,
             endDate: endDate,
-            originalEstimatedHours: estimated,
+            estimatedHours: estimated,
         };
 
         // TODO wait for backend fix
