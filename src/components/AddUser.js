@@ -6,12 +6,9 @@ import Button from "@material-ui/core/Button";
 import api from "../api";
 import {userRole} from '../userRole';
 import Typography from '@material-ui/core/Typography';
-import PeopleIcon from '@material-ui/icons/People';
-import IconButton from '@material-ui/core/IconButton/index';
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {Grid} from "@material-ui/core";
 import Switch from '@material-ui/core/Switch';
+import Snackbar from "@material-ui/core/Snackbar";
 
 const styles = {
     root: {},
@@ -47,6 +44,7 @@ class AddUser extends React.Component {
         name: '',
         mail: '',
         role: userRole.NORMAL,
+        createdMessageOpen: false,
     };
 
     handleNameChange = event => {
@@ -82,7 +80,12 @@ class AddUser extends React.Component {
         api.fetch(
             api.endpoints.addUser(data),
             (user) => {
-                this.props.history.push('/overview');
+                this.setState({
+                    name: '',
+                    mail: '',
+                    role: userRole.NORMAL,
+                    createdMessageOpen: true,
+                })
             }
         );
     };
@@ -151,6 +154,17 @@ class AddUser extends React.Component {
                         </Grid>
                     </Grid>
                 </form>
+
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.createdMessageOpen}
+                    onClose={() => this.setState({createdMessageOpen: false})}
+                    autoHideDuration={3500}
+                    message={'Account created successfully'}
+                />
             </div>
         );
     }

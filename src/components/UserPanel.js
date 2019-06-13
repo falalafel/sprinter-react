@@ -222,8 +222,8 @@ class UserPanel extends React.Component {
                                             <DoneIcon
                                                 fontSize="small"
                                                 className={classes.editIcon}
-                                                color={'disabled'}/
-                                            >
+                                                color={'disabled'}
+                                            />
                                         </IconButton>
                                         <IconButton
                                             size="small"
@@ -274,8 +274,8 @@ class UserPanel extends React.Component {
                                             <DoneIcon
                                                 fontSize="small"
                                                 className={classes.editIcon}
-                                                color={'disabled'}/
-                                            >
+                                                color={'disabled'}
+                                            />
                                         </IconButton>
                                         <IconButton
                                             size="small"
