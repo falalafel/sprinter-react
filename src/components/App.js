@@ -7,12 +7,15 @@ import SignIn from "./SignIn";
 import ProtectedRoute from "./ProtectedRoute";
 import AddUser from './AddUser';
 import UserPanel from './UserPanel';
+import Cookies from 'js-cookie';
 
-const RootRouter = (props) => {
+const check_cookie = () => Cookies.get('sprinter-client');
+
+const RootRouter = () => {
     return (
         <Route 
-            render={props => (
-                localStorage.getItem('user')
+            render={() => (
+                check_cookie() && localStorage.getItem('user')
                     ? <Redirect to={{pathname: "/overview"}}/>
                     : <Redirect to={{pathname: "/sign-in"}}/>
             )}
@@ -40,11 +43,13 @@ const InnerRouter = (props) => {
 
 class App extends React.Component {
     render() {
+
+        console.log()
+
         return (
             <div>
                 <Switch>
                     <Route exact strict path='/sign-in' component={SignIn}/>
-                    <Route exact strict path='/sign-up' component={SignIn}/> {/* TODO add proper component */}
                     <Route strict path='/' component={InnerRouter}/>
                 </Switch>
             </div>

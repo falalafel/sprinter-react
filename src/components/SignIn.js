@@ -16,6 +16,7 @@ import api from "../api";
 import {userRole} from "../userRole";
 import {Redirect} from "react-router-dom";
 import BeatLoader from 'react-spinners/BeatLoader';
+import Cookies from "js-cookie";
 
 const styles = theme => ({
     main: {
@@ -54,6 +55,8 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 3,
     },
 });
+
+const check_cookie = () => Cookies.get('sprinter-client');
 
 class SignIn extends React.Component {
 
@@ -116,7 +119,7 @@ class SignIn extends React.Component {
         const {classes} = this.props;
         const {loading, error} = this.state;
 
-        if(localStorage.getItem('user'))
+        if(check_cookie() && localStorage.getItem('user'))
             return (<Redirect to={{pathname: "/overview"}}/>);
 
         return (
