@@ -13,6 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton/index';
+import Snackbar from '@material-ui/core/Snackbar';
 import BeatLoader from 'react-spinners/BeatLoader';
 import TextField from '@material-ui/core/TextField';
 import ChangePasswordDialog from "./ChangePasswordDialog";
@@ -48,6 +49,11 @@ const styles = (theme) => ({
         display: 'flex',
         justifyContent:'center',
         alignItems:'center'
+    },
+    loader: {
+        display: 'flex',
+        justifyContent:'center',
+        alignItems:'center'
     }
 
 });
@@ -58,7 +64,11 @@ class UserPanel extends React.Component {
         user: undefined,
         loading: true,
         editName: false,
-        editMail: false
+        editMail: false,
+        name: "",
+        email: "",
+        passwordMessageOpen: false,
+        passwordChangeSuccess: false
     };
 
     componentDidMount() {
@@ -75,7 +85,10 @@ class UserPanel extends React.Component {
             (response) => {
                 this.setState({
                     user: response,
-                    loading: false
+                    loading: false,
+                    buttonsEnabled: true,
+                    name: response.name,
+                    mail: response.mail
                 })
             });
     }
@@ -87,7 +100,20 @@ class UserPanel extends React.Component {
     }
 
     submitNewName() {
-        // TODO
+        const data = {name: this.state.name}
+        this.setState({
+            editName: false,
+            editMail: false,
+            loading: true
+        });
+        api.fetchNoContent(
+            api.endpoints.updateUser(
+                this.getUserId(),
+                data
+            ),
+            () => {
+                this.fetchAndSetUser();
+            });
     }
 
     toggleEditMail() {
@@ -97,7 +123,53 @@ class UserPanel extends React.Component {
     }
 
     submitNewMail() {
-        // TODO
+        const data = {mail: this.state.mail}
+        this.setState({
+            editName: false,
+            editMail: false,
+            loading: true
+        });
+        api.fetchNoContent(
+            api.endpoints.updateUser(
+                this.getUserId(),
+                data
+            ),
+            () => {
+                this.fetchAndSetUser();
+            });
+    }
+
+    submitPasswordChange(old, newPassword) {
+        const data = {
+            oldPassword: old,
+            password: newPassword
+        }
+        this.setState({
+            editName: false,
+            editMail: false,
+            loading: true
+        });
+        api.fetchNoContent(
+            api.endpoints.updateUser(
+                this.getUserId(),
+                data
+            ),
+            (res) => {
+                if(res.status === 404) {
+                    this.setState({
+                        passwordMessageOpen: true,
+                        passwordChangeSuccess: false,
+                        loading: false
+                    });
+                }
+                else {
+                    this.setState({
+                        passwordMessageOpen: true,
+                        passwordChangeSuccess: true,
+                    });
+                    this.fetchAndSetUser();
+                }
+            });
     }
 
     render() {
@@ -106,22 +178,23 @@ class UserPanel extends React.Component {
         const {loading, user, editName, editMail} = this.state;
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root}>    
+                <div className={classes.title}>
+                    <Typography variant="h3">
+                        Your profile
+                    </Typography>
+                </div>
                 {loading
                     ?
-                    <BeatLoader
-                        loading={loading}
-                        size={10}
-                        color={'#0000f0'}
-                    />
+                    <div className={classes.loader}>
+                        <BeatLoader
+                            loading={loading}
+                            size={10}
+                            color={'#0000f0'}
+                        />
+                    </div>
                     :
                     <div>
-                        <div className={classes.title}>
-                            <Typography variant="h3">
-                                Your profile
-                            </Typography>
-                        </div>
-
                         <Grid container spacing={0} justify='center'>
 
                             <Grid item xs={6}>
@@ -133,21 +206,42 @@ class UserPanel extends React.Component {
                                         <TextField
                                             id="edit-name"
                                             className={classes.textField}
-                                            defaultValue={user.name}
+                                            defaultValue={this.state.name}
+                                            onChange={(event) => this.setState({name: event.target.value})}
                                             margin="normal"
                                             variant="outlined"
                                             inputProps={{'aria-label': 'edit-name'}}
                                         />
-                                        <IconButton size="small" className={classes.button} title='Submit' onClick={this.submitNewName.bind(this)}>
-                                            <DoneIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        <IconButton
+                                            size="small"
+                                            className={classes.button}
+                                            title='Submit'
+                                            onClick={this.submitNewName.bind(this)}
+                                            disabled={this.state.name === ""}
+                                        >
+                                            <DoneIcon
+                                                fontSize="small"
+                                                className={classes.editIcon}
+                                                color={'disabled'}/
+                                            >
                                         </IconButton>
-                                        <IconButton size="small" className={classes.button} title='Cancel' onClick={this.toggleEditName.bind(this)}>
+                                        <IconButton
+                                            size="small"
+                                            className={classes.button}
+                                            title='Cancel'
+                                            onClick={this.toggleEditName.bind(this)}
+                                        >
                                             <CloseIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
                                         </IconButton>
                                     </div>
                                     : <div className={classes.dataLine}>
                                         <Typography className={classes.dataTypography} variant='h5'>{user.name}</Typography>
-                                        <IconButton size="small" className={classes.button} title='Edit full name' onClick={this.toggleEditName.bind(this)}>
+                                        <IconButton
+                                            size="small"
+                                            className={classes.button}
+                                            title='Cancel'
+                                            onClick={this.toggleEditName.bind(this)}
+                                        >
                                             <EditIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
                                         </IconButton>
                                     </div>
@@ -164,15 +258,31 @@ class UserPanel extends React.Component {
                                         <TextField
                                             id="edit-mail"
                                             className={classes.textField}
-                                            defaultValue={user.mail}
+                                            defaultValue={this.state.mail}
+                                            onChange={(event) => this.setState({mail: event.target.value})}
                                             margin="normal"
                                             variant="outlined"
                                             inputProps={{'aria-label': 'edit-mail'}}
                                         />
-                                        <IconButton size="small" className={classes.button} title='Submit' onClick={this.submitNewMail.bind(this)}>
-                                            <DoneIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
+                                        <IconButton
+                                            size="small"
+                                            className={classes.button}
+                                            title='Submit'
+                                            onClick={this.submitNewMail.bind(this)}
+                                            disabled={this.state.mail === ""}
+                                        >
+                                            <DoneIcon
+                                                fontSize="small"
+                                                className={classes.editIcon}
+                                                color={'disabled'}/
+                                            >
                                         </IconButton>
-                                        <IconButton size="small" className={classes.button} title='Cancel' onClick={this.toggleEditMail.bind(this)}>
+                                        <IconButton
+                                            size="small"
+                                            className={classes.button}
+                                            title='Cancel'
+                                            onClick={this.toggleEditMail.bind(this)}
+                                        >
                                             <CloseIcon fontSize="small" className={classes.editIcon} color={'disabled'}/>
                                         </IconButton>
                                     </div>
@@ -199,13 +309,25 @@ class UserPanel extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <div className={classes.passwordChangeButton}>
-                                    <ChangePasswordDialog />
+                                    <ChangePasswordDialog passwordChangeCallback={this.submitPasswordChange.bind(this)} />
                                 </div>
                             </Grid>
                         </Grid>
-
                     </div>
                 }
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.passwordMessageOpen}
+                    onClose={() => this.setState({passwordMessageOpen: false})}
+                    autoHideDuration={3000}
+                    ContentProps={{
+                    'aria-describedby': 'message-id',
+                    }}
+                    message={this.state.passwordChangeSuccess ? 'Password changed successfully' : 'Password change failed!'}
+                />
             </div>
         );
     }
