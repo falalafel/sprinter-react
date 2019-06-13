@@ -61,7 +61,7 @@ const check_cookie = () => Cookies.get('sprinter-client');
 class SignIn extends React.Component {
 
     state = {
-        login: "",
+        mail: "",
         password: "",
         loading: false,
         error: false
@@ -87,7 +87,7 @@ class SignIn extends React.Component {
         });
     }
 
-    fetchLogin = (login, password) => event => {
+    fetchLogin = (mail, password) => event => {
         if (this.state.loading) {
             return;
         }
@@ -99,7 +99,7 @@ class SignIn extends React.Component {
         })
 
         api.fetchHandleError(
-            api.endpoints.signIn(login, password),
+            api.endpoints.signIn(mail, password),
             (response) => {
 
                 const user = {
@@ -143,15 +143,15 @@ class SignIn extends React.Component {
                         Sign in
                     </Typography>
                     {error &&
-                        <Typography color="secondary">Incorrect login or password</Typography>
+                        <Typography color="secondary">Incorrect mail or password</Typography>
                     }
-                    <form className={classes.form} onSubmit={this.fetchLogin(this.state.login, this.state.password)}>
+                    <form className={classes.form} onSubmit={this.fetchLogin(this.state.mail, this.state.password)}>
                         <FormControl margin="normal"
                                      required fullWidth
-                                     value={this.state.login}
+                                     value={this.state.mail}
                                      onChange={this.handleChange}>
-                            <InputLabel htmlFor="login">Login</InputLabel>
-                            <Input id="login" name="login" autoComplete="login" autoFocus/>
+                            <InputLabel htmlFor="mail">E-mail</InputLabel>
+                            <Input id="mail" name="mail" autoComplete="mail" autoFocus/>
                         </FormControl>
                         <FormControl margin="normal"
                                      required fullWidth
