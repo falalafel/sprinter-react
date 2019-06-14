@@ -21,7 +21,7 @@ import Cookies from "js-cookie";
 const styles = theme => ({
     main: {
         width: 'auto',
-        display: 'block', // Fix IE 11 issue.
+        display: 'block',
         marginLeft: theme.spacing.unit * 3,
         marginRight: theme.spacing.unit * 3,
         [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
@@ -48,7 +48,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.main,
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing.unit,
     },
     submit: {
@@ -64,8 +64,23 @@ class SignIn extends React.Component {
         mail: "",
         password: "",
         loading: false,
-        error: false
+        error: false,
     };
+
+    fetchUserAndRedirect(id) {
+        api.fetchHandleError(
+            api.endpoints.getUserById(id),
+            (response) => {
+                const user = {
+                    userId: id,
+                    role: response.role
+                };
+                console.log(user)
+                localStorage.setItem('user', JSON.stringify(user));
+                this.redirectAfterLogin();
+            },
+            this.handleLoginError.bind(this));
+    }
 
     handleChange = event => {
         this.setState({
@@ -101,15 +116,7 @@ class SignIn extends React.Component {
         api.fetchHandleError(
             api.endpoints.signIn(mail, password),
             (response) => {
-
-                const user = {
-                    userId: response,
-                    role: userRole.ADMIN, // TODO set proper role
-                };
-                localStorage.setItem('user', JSON.stringify(user));
-
-                this.redirectAfterLogin();
-
+                this.fetchUserAndRedirect(response)
             },
             this.handleLoginError.bind(this)
         )
