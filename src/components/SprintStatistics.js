@@ -66,7 +66,7 @@ const SprintStatistics = (props) => {
                 <Typography variant="h6" component="h2" className={classes.title}>
                     Details of sprint {sprint.sprintId} {sprint.closingStatus ? "(closed)" : "(open)"}
                 </Typography>
-                {!summariseDisabled && //TODO am i scrum master
+                {!summariseDisabled &&
                     <div className={classes.dialogCloseSprint}>
                         <CloseSprintDialog
                             project={project}

@@ -56,6 +56,11 @@ export default {
             method: "GET"
         }),
 
+        getUserProjectMemberships: (userId) => ({
+            path: url(`user/${userId}/memberships`),
+            method: "GET"
+        }),
+
         getUsers: () => ({
             path: url(`user`)
         }),
